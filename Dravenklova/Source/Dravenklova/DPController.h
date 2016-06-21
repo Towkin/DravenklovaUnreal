@@ -21,7 +21,7 @@ protected:
 	virtual void SetupInputComponent() override;
 	// End PlayerController interface		
 
-	void MoveForward(float a_Value);
+	virtual void MoveForward(float a_Value);
 
 	/** Navigate player to the given world location. */
 	//void SetNewMoveDestination(const FVector DestLocation);

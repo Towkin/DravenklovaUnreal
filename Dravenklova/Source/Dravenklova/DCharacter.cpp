@@ -10,3 +10,9 @@ ADCharacter::ADCharacter()
 ADCharacter::~ADCharacter()
 {
 }
+
+void ADCharacter::MoveForward(float a_Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Character on the move"));
+
+}

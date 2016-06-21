@@ -63,7 +63,7 @@ void ADPawn::Tick( float DeltaTime )
 
 void ADPawn::MoveForward(float a_Value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Pawn on the move"));
+	UE_LOG(LogTemp, Warning, TEXT("Pawn on the move"));
 	this->SetActorLocation(this->GetActorLocation() + FVector(m_Speed, 0, 0) * a_Value);
 }
 

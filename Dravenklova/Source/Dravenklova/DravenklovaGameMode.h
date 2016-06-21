@@ -14,7 +14,4 @@ class DRAVENKLOVA_API ADravenklovaGameMode : public AGameMode
 	GENERATED_BODY()
 
 		ADravenklovaGameMode();
-
-	
-	
 };

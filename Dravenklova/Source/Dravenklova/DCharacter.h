@@ -13,4 +13,8 @@ class DRAVENKLOVA_API ADCharacter : public ADPawn
 public:
 	ADCharacter();
 	~ADCharacter();
+	virtual void MoveForward(float a_Value) override;
+protected:
+
+
 };

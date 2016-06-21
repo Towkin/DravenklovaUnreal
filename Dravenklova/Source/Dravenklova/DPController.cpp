@@ -3,6 +3,7 @@
 #include "Dravenklova.h"
 #include "DPController.h"
 #include "DPawn.h"
+#include "DCharacter.h"
 
 
 ADPController::ADPController()
@@ -29,8 +30,8 @@ void ADPController::MoveForward(float a_Value)
 {
 	if (a_Value != 0.0f)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Move forward?"));
-		ADPawn* const pawn = (ADPawn*) GetPawn();
+		UE_LOG(LogTemp, Warning, TEXT("Move forward?"));
+		ADCharacter* const pawn = (ADCharacter*) GetPawn();
 
 		// This should not be done here? - different pawns have different movement attributes
 		//FVector MyDest = FVector(pawn->GetActorLocation() + FVector(120, 0, 0) * a_Value);
