@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "DPawn.generated.h"
 
 UCLASS()
-class DRAVENKLOVA_API ADPawn : public APawn
+class DRAVENKLOVA_API ADPawn : public ACharacter
 {
 	GENERATED_BODY()
 
