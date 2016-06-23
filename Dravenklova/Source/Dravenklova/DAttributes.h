@@ -1,30 +1,42 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "DAttributes.generated.h"
 
 /**
  * 
  */
-class DRAVENKLOVA_API DAttributes
+UCLASS()
+class DRAVENKLOVA_API UDAttributes : public UObject
 {
 public:
 
-	DAttributes();
-	~DAttributes();
+	GENERATED_BODY()
+
+	UDAttributes();
+	~UDAttributes();
+
 	// Perception-gets
-	float getViewDistance(float a_ViewDis);
-	float getDarknessVisionDistance(float a_DarknessVisDis);
-	float getListenDistance(float a_LisDis);
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Perception") 
+		const float getViewDistance();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Perception") 
+		const float getDarknessVisionDistance();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Perception") 
+		const float getListenDistance();
 
 
 	// Visiblity get/setters
 	/* */
 
 	//Health-gets
-	float getMaxHealth(float a_MaxHealth);
-	float getHealth(float a_Health);
-	float getHealthReg(float a_HealthReg);
-	float getHealthDelayTime(float a_HealthDelayTime);
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Health") 
+		const float getMaxHealth();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Health") 
+		const float getHealth();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Health") 
+		const float getHealthReg();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Health") 
+		const float getHealthDelayTime();
 
 	// Health-sets
 	void setMaxHealth(float a_MaxHealth);
@@ -34,14 +46,22 @@ public:
 
 
 	// Movement-gets
-	float getBaseSpeed(float m_BaseSpeed);
-	float getWalkSpeedMod(float a_WalkSpeedMod);
-	float getSprintingSpeedMod(float a_SprintingSpeedMod);
-	float getCrouchSpeedMod(float a_CrouchSpeedMod);
-	float getJumpForce(float a_JumpForce);
-	float getJumpAirMod(float a_JumpAirMod);
-	float getSprintingTime(float a_SprintingTime);
-	float getSprintingRechargeTime(float a_SprintingRechargeTime);
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getBaseSpeed();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getWalkSpeedMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getSprintingSpeedMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getCrouchSpeedMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getJumpForce();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getJumpAirMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getSprintingTime();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+		const float getSprintingRechargeTime();
 
 	// Movement-sets
 	void setBaseSpeed(float a_BaseSpeed);
