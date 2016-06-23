@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "DAttributes.h"
 #include "DCharacter.generated.h"
 
 UCLASS()
@@ -31,6 +32,6 @@ public:
 
 	void LookUp(float a_Value);
 
-	// ADAttributes* m_Attributes;
+	DAttributes* m_Attributes;
 	
 };
