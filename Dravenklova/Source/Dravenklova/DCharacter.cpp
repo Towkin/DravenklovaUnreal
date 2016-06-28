@@ -2,7 +2,9 @@
 
 #include "Dravenklova.h"
 #include "DCharacter.h"
+#include "DObject.h"
 #include "DAttributes.h"
+
 
 
 // Sets default a_Values
@@ -11,9 +13,17 @@ ADCharacter::ADCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//TODO: Initialize m_Attributes once the class has been written
 	m_Attributes = NewObject<UDAttributes>();
 
+	m_OtherBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OtherBox"));
+	m_OtherBox->bGenerateOverlapEvents = true;
+	m_OtherBox->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	//This might not be needed if it can be replaced with GetOverlappingActors()
+	m_OtherBox->OnComponentBeginOverlap.AddDynamic(this, &ADCharacter::TriggerEnter);
+	m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
+
+	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
 }
 
 // Called when the game starts or when spawned
@@ -50,7 +60,7 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ADCharacter::OnStartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ADCharacter::OnStopJump);
 
-	InputComponent->BindAction("Interact", IE_Pressed, this, &ADCharacter::Interact);
+	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
 }
 
 void ADCharacter::MoveForward(float a_Value)
@@ -138,20 +148,80 @@ void ADCharacter::OnStopJump()
 }
 
 
-void ADCharacter::Interact()
+void ADCharacter::Use()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact with ..."));
+	UE_LOG(LogTemp, Warning, TEXT("Use ..."));
 
+	//Replace this with an actor returned from trigger box collision check
+	
+	AActor* object = GetClosestActor();
+
+	if (object)
+	{
+		IInteractInterface* myInterface = Cast<IInteractInterface>(object);
+		if (myInterface)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found something to interact with."));
+			myInterface->Interact(this);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("This object is not interactable."));
+		}
+	}
+	
+	
 	//if(object == weapon) Equip(object);
 	//if(object == other) Use(object);
 }
 
-void ADCharacter::Use()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Use ..."));
-}
 
 void ADCharacter::Equip()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Equip ..."));
+}
+
+void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+
+	//Light->SetLightColor(FColor::Green);
+	//add otherActor to list
+}
+
+void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+
+	//Light->SetLightColor(FColor::Red);
+	//remove otheractor from list
+}
+
+AActor* ADCharacter::GetClosestActor()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
+	TArray<AActor*> listOfActors;
+	m_OtherBox->GetOverlappingActors(listOfActors);
+	
+	//Check that the array is not empty
+	if (listOfActors.Num() == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No overlapping actors."))
+		return nullptr;
+	}
+	
+	AActor* closestActor = listOfActors.Last();
+	
+	//Iterate through the array to find the member nearest to the character
+	for (auto& actor : listOfActors)
+	{
+		//Compare the distances between the character and the actors
+		if (GetDistanceTo(actor) < GetDistanceTo(closestActor))
+		{
+			closestActor = actor;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Found closest actor?"))
+	return closestActor;
 }

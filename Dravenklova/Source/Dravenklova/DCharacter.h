@@ -25,7 +25,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	
 
 protected:
 	UDAttributes* m_Attributes = nullptr;
@@ -41,18 +40,21 @@ protected:
 	void OnStartJump();
 
 	void OnStopJump();
-
-	void Interact();
-
-	//Should contain reference to object as argument
+	
 	void Use();
 
 	void Equip();
+	
+	UFUNCTION()
+	void TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherCOmp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherCOmp, int32 OtherBodyIndex);
+
+	AActor* GetClosestActor();
+
+	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = TriggerBox)
+		UBoxComponent* m_OtherBox = nullptr;
 
 private:
-	bool b_IsJumping = false;
-
-
-
-	
+	bool b_IsJumping = false;	
 };
