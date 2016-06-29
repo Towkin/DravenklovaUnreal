@@ -50,7 +50,7 @@ protected:
 	UFUNCTION()
 	void TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherCOmp, int32 OtherBodyIndex);
 
-	AActor* GetClosestActor();
+	AActor* GetClosestInteractableActor();
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = TriggerBox)
 		UBoxComponent* m_OtherBox = nullptr;

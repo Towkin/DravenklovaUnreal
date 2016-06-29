@@ -152,9 +152,10 @@ void ADCharacter::Use()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Use ..."));
 
-	//Replace this with an actor returned from trigger box collision check
-	
-	AActor* object = GetClosestActor();
+	//Returns the closest interactable actor
+	//If no overlapping actors, returns null
+
+	AActor* object = GetClosestInteractableActor();
 
 	if (object)
 	{
@@ -169,10 +170,7 @@ void ADCharacter::Use()
 			UE_LOG(LogTemp, Warning, TEXT("This object is not interactable."));
 		}
 	}
-	
-	
-	//if(object == weapon) Equip(object);
-	//if(object == other) Use(object);
+	UE_LOG(LogTemp, Warning, TEXT("No interactable objects within range."));	
 }
 
 
@@ -198,7 +196,7 @@ void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AA
 	//remove otheractor from list
 }
 
-AActor* ADCharacter::GetClosestActor()
+AActor* ADCharacter::GetClosestInteractableActor()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
 	TArray<AActor*> listOfActors;
@@ -219,9 +217,24 @@ AActor* ADCharacter::GetClosestActor()
 		//Compare the distances between the character and the actors
 		if (GetDistanceTo(actor) < GetDistanceTo(closestActor))
 		{
-			closestActor = actor;
+			//Only replace if interactable
+			IInteractInterface* myInterface = Cast<IInteractInterface>(actor);
+			if (myInterface)
+			{
+				closestActor = actor;
+			}			
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Found closest actor?"))
+
+	//TODO: remove superfluous casts
+
+	IInteractInterface* myInterface = Cast<IInteractInterface>(closestActor);
+	if (!myInterface)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No overlapping interactable actors."))
+		return nullptr;
+	}	
+	
+	UE_LOG(LogTemp, Warning, TEXT("Found closest actor"))
 	return closestActor;
 }
