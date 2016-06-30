@@ -25,9 +25,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UDAttributes* m_Attributes = nullptr;
 
 protected:
-	UDAttributes* m_Attributes = nullptr;
+	
 
 	void MoveForward(float a_Value);
 

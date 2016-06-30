@@ -6,14 +6,16 @@
 /**
  * 
  */
-UCLASS()
-class DRAVENKLOVA_API UDAttributes : public UObject
+//UCLASS( meta = (ShowOnlyInnerProperties))
+UCLASS(meta = (BlueprintSpawnableComponent))
+
+class DRAVENKLOVA_API UDAttributes : public UActorComponent
 {
+
+	GENERATED_UCLASS_BODY()
+
 public:
-
-	GENERATED_BODY()
-
-	UDAttributes();
+	//UDAttributes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	~UDAttributes();
 
 	// Perception-gets
@@ -76,16 +78,19 @@ public:
 	
 protected:
 
-private:
+
 	// General
 
 	bool b_IsAlive;
 	bool b_IsEnemy;
 
 	// Perception
-	float m_ViewDistance;
-	float m_DarknessVisionDistance;
-	float m_ListenDistance;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_ViewDistance;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_DarknessVisionDistance;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_ListenDistance;
 
 	/* Visiblity how well the character can be seen by others. This is a number continuously recalculated, /*
 	/*	using lightning and other factors, used by NPCs to determine if they see the character.)*/
@@ -95,30 +100,43 @@ private:
 	// float m_VisiblityModifier
 
 	// Health
-	float m_MaxHealth;
-	float m_Health;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		float m_MaxHealth = 10.0;
 
-	float m_HealthReg;
-	float m_HealthDelayTime;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_Health;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_HealthReg;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_HealthDelayTime;
 
 	// Movement
 
 	/* Base value for all movement related speeds*/
-	float m_BaseSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_BaseSpeed;
 	/* Modifer to base-speed when the character walks (Unnecessary)?*/
-	float m_WalkSpeedMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_WalkSpeedMod;
 	/* Modifier to base speed when the charcter is sprinting*/
-	float m_SprintingSpeedMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_SprintingSpeedMod;
 	/* Modifier to base speed when the character is crouching*/
-	float m_CrouchSpeedMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_CrouchSpeedMod;
 	/* Upwards force to apply while jumping*/
-	float m_JumpForce;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_JumpForce;
 
-	float m_JumpAirMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_JumpAirMod;
 	/*Time it takes before the character is fatigued.(linear)*/
-	float m_SprintingTime;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_SprintingTime;
 	/* Time it takes to go from 0 to full(linear)*/
-	float m_SprintingRechargeTime;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float m_SprintingRechargeTime;
 
 	/* Weapon Attributes */
 
@@ -130,5 +148,7 @@ private:
 
 
 	/* Humorism */
+
+private:
 	
 };

@@ -3,8 +3,11 @@
 #include "Dravenklova.h"
 #include "DAttributes.h"
 
-UDAttributes::UDAttributes()
+UDAttributes::UDAttributes(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Attributes constructor"));
+	m_MaxHealth = 20.0;
 }
 
 UDAttributes::~UDAttributes()

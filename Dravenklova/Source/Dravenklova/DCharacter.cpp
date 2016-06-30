@@ -13,7 +13,11 @@ ADCharacter::ADCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_Attributes = NewObject<UDAttributes>();
+	m_Attributes = CreateDefaultSubobject<UDAttributes>(TEXT("AttributesComponent"));
+	if (!m_Attributes)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("has attributes not"));
+	}
 
 	m_OtherBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OtherBox"));
 	m_OtherBox->bGenerateOverlapEvents = true;
@@ -78,7 +82,7 @@ void ADCharacter::MoveForward(float a_Value)
 
 		// add movement in that direction
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
-		AddMovementInput(Direction, a_Value);
+		AddMovementInput(Direction, a_Value * m_Attributes->getBaseSpeed());
 
 		//UE_LOG(LogTemp, Warning, TEXT("Moving forward"));
 	}
@@ -93,7 +97,7 @@ void ADCharacter::MoveRight(float a_Value)
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
 
 		// add movement in that direction
-		AddMovementInput(Direction, a_Value);
+		AddMovementInput(Direction, a_Value* m_Attributes->getBaseSpeed());
 
 		//UE_LOG(LogTemp, Warning, TEXT("Moving right"));
 	}	
@@ -170,7 +174,11 @@ void ADCharacter::Use()
 			UE_LOG(LogTemp, Warning, TEXT("This object is not interactable."));
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("No interactable objects within range."));	
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No interactable objects within range."));
+	}
+	
 }
 
 
