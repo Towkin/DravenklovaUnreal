@@ -189,7 +189,7 @@ void ADCharacter::Equip()
 
 void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
 
 	//Light->SetLightColor(FColor::Green);
 	//add otherActor to list
@@ -198,7 +198,7 @@ void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class A
 void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
 
 	//Light->SetLightColor(FColor::Red);
 	//remove otheractor from list
@@ -206,7 +206,7 @@ void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AA
 
 AActor* ADCharacter::GetClosestInteractableActor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
+	//UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
 	TArray<AActor*> listOfActors;
 	m_OtherBox->GetOverlappingActors(listOfActors);
 	

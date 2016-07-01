@@ -16,6 +16,9 @@ class DRAVENKLOVA_API ADoor : public ADObject
 	
 	ADoor();
 
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
+
 	virtual void Interact(ADCharacter* pawn) override;
 
 public:
@@ -49,14 +52,18 @@ protected:
 		float m_MinAngle = 0.0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float m_MaxAngle = 90.0;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool m_IsOpen = false;
+
+		float m_TargetAngle;
 
 
 private:
-
 	void OpenDoor();
 	void CloseDoor();
+	void MoveDoor(float a_DeltaTime, bool a_IsOpen);
+
+	float m_PreviousAngle;
 	//direction
 	
 	

@@ -8,7 +8,21 @@
 
 ADoor::ADoor()
 {
-	
+	m_TargetAngle = GetActorRotation().Yaw;
+	m_PreviousAngle = m_TargetAngle;
+}
+
+void ADoor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);	
+	float currentAngle = GetActorRotation().Yaw;
+
+	if ((IsOpen() &&  currentAngle < m_TargetAngle) || (!IsOpen() && currentAngle > m_TargetAngle))
+	{
+		MoveDoor(DeltaTime, IsOpen());
+
+		//TODO: register collisions and stop movement if blocked by something
+	}
 }
 
 void ADoor::Interact(ADCharacter* pawn)
@@ -26,26 +40,22 @@ void ADoor::Interact(ADCharacter* pawn)
 
 void ADoor::OpenDoor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Door opens"));
-	FRotator rotation;
-	rotation.Yaw = m_MaxAngle;
-	rotation.Pitch = 0.0f;
-	rotation.Roll = 0.0f;
-	RootComponent->SetWorldRotation(rotation);
-
 	m_IsOpen = true;
+
+	m_TargetAngle = m_MaxAngle;
+
+	int yaw = GetActorRotation().Yaw;
+	UE_LOG(LogTemp, Warning, TEXT("Open door: %d"), yaw);
 }
 
 void ADoor::CloseDoor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Door closes"));
-	FRotator rotation;
-	rotation.Yaw = m_MinAngle;
-	rotation.Pitch = 0.0f;
-	rotation.Roll = 0.0f;
-	RootComponent->SetWorldRotation(rotation);
-
 	m_IsOpen = false;
+
+	m_TargetAngle = m_MinAngle;
+
+	int yaw = GetActorRotation().Yaw;
+	UE_LOG(LogTemp, Warning, TEXT("Close door: %d"), yaw);
 }
 
 
@@ -82,4 +92,21 @@ void ADoor::SetSpeed(float a_Speed)
 bool ADoor::IsOpen()
 {
 	return m_IsOpen;
+}
+
+void ADoor::MoveDoor(float a_DeltaTime, bool a_IsOpen)
+{
+	//Move towards target angle
+	
+	// Calculate change in rotation this frame
+	FRotator DeltaRotation(0, 0, 0);
+	DeltaRotation.Yaw = m_Speed * a_DeltaTime;
+
+	if (!a_IsOpen)
+	{
+		DeltaRotation.Yaw = -DeltaRotation.Yaw;
+	}
+
+	// Rotate plane
+	AddActorLocalRotation(DeltaRotation);
 }
