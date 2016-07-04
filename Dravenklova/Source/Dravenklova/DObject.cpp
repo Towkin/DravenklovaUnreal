@@ -27,6 +27,9 @@ void ADObject::Tick( float DeltaTime )
 
 void ADObject::Interact(ADCharacter* pawn)
 {
-	IInteractInterface::Interact(pawn);
 	OnInteract(pawn);
+}
+void ADObject::EndInteract(ADCharacter* pawn)
+{
+	OnEndInteract(pawn);
 }

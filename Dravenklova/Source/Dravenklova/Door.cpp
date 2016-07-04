@@ -39,6 +39,10 @@ void ADoor::Interact(ADCharacter* pawn)
 		OpenDoor();
 	}
 }
+void ADoor::EndInteract(ADCharacter* pawn)
+{
+	Super::EndInteract(pawn);
+}
 
 void ADoor::OpenDoor()
 {

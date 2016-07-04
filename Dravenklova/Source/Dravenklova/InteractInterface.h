@@ -16,4 +16,5 @@ class IInteractInterface
 	GENERATED_IINTERFACE_BODY()
 
 	virtual void Interact(ADCharacter* pawn);
+	virtual void EndInteract(ADCharacter* pawn);
 };

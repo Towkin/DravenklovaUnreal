@@ -20,6 +20,7 @@ class DRAVENKLOVA_API ADoor : public ADObject
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void Interact(ADCharacter* pawn) override;
+	virtual void EndInteract(ADCharacter* pawn) override;
 
 public:
 

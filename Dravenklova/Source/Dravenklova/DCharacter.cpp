@@ -65,6 +65,7 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("Jump", IE_Released, this, &ADCharacter::OnStopJump);
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
+	InputComponent->BindAction("Use", IE_Released, this, &ADCharacter::EndUse);
 }
 
 void ADCharacter::MoveForward(float a_Value)
@@ -163,6 +164,11 @@ void ADCharacter::Use()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found something to interact with."));
 			myInterface->Interact(this);
+			
+			if (m_CurrentUseObject) {
+				m_CurrentUseObject->EndInteract(this);
+			}
+			m_CurrentUseObject = myInterface;
 		}
 		else
 		{
@@ -176,6 +182,13 @@ void ADCharacter::Use()
 	
 }
 
+void ADCharacter::EndUse()
+{
+	if (m_CurrentUseObject) {
+		m_CurrentUseObject->EndInteract(this);
+		m_CurrentUseObject = nullptr;
+	}
+}
 
 void ADCharacter::Equip()
 {

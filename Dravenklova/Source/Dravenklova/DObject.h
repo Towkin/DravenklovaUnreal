@@ -27,4 +27,11 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
 	void OnInteract(ADCharacter* User);
+
+
+	virtual void EndInteract(ADCharacter* pawn) override;
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
+	void OnEndInteract(ADCharacter* User);
+
 };

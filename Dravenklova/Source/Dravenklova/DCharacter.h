@@ -6,6 +6,7 @@
 #include "DCharacter.generated.h"
 
 class UDAttributes;
+class IInteractInterface;
 
 UCLASS()
 class DRAVENKLOVA_API ADCharacter : public ACharacter
@@ -44,6 +45,8 @@ protected:
 	
 	void Use();
 
+	void EndUse();
+
 	void Equip();
 	
 	UFUNCTION()
@@ -56,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = TriggerBox)
 		UBoxComponent* m_OtherBox = nullptr;
 
+	IInteractInterface* m_CurrentUseObject = nullptr;
+
 private:
 	bool b_IsJumping = false;	
+
 };
