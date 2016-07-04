@@ -85,11 +85,11 @@ protected:
 	bool b_IsEnemy;
 
 	// Perception
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
 		float m_ViewDistance;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
 		float m_DarknessVisionDistance;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
 		float m_ListenDistance;
 
 	/* Visiblity how well the character can be seen by others. This is a number continuously recalculated, /*
@@ -100,42 +100,42 @@ protected:
 	// float m_VisiblityModifier
 
 	// Health
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Attributes|Health")
 		float m_MaxHealth = 10.0;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
 		float m_Health;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
 		float m_HealthReg;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
 		float m_HealthDelayTime;
 
 	// Movement
 
 	/* Base value for all movement related speeds*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_BaseSpeed;
 	/* Modifer to base-speed when the character walks (Unnecessary)?*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_WalkSpeedMod;
 	/* Modifier to base speed when the charcter is sprinting*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_SprintingSpeedMod;
 	/* Modifier to base speed when the character is crouching*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_CrouchSpeedMod;
 	/* Upwards force to apply while jumping*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_JumpForce;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_JumpAirMod;
 	/*Time it takes before the character is fatigued.(linear)*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_SprintingTime;
 	/* Time it takes to go from 0 to full(linear)*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_SprintingRechargeTime;
 
 	/* Weapon Attributes */

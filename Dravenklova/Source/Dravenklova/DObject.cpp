@@ -16,8 +16,7 @@ ADObject::ADObject()
 // Called when the game starts or when spawned
 void ADObject::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 }
 
 // Called every frame
@@ -28,6 +27,6 @@ void ADObject::Tick( float DeltaTime )
 
 void ADObject::Interact(ADCharacter* pawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("I'm interacting with stuff"));
+	IInteractInterface::Interact(pawn);
+	OnInteract(pawn);
 }
-

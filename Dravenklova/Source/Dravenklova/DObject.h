@@ -23,6 +23,8 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	// IInteractInterface
-	virtual void Interact(ADCharacter* pawn) override;	
-	
+	virtual void Interact(ADCharacter* pawn) override;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
+	void OnInteract(ADCharacter* User);
 };

@@ -29,7 +29,6 @@ public:
 		UDAttributes* m_Attributes = nullptr;
 
 protected:
-	
 
 	void MoveForward(float a_Value);
 

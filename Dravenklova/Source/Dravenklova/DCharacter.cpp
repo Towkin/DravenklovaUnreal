@@ -129,8 +129,6 @@ void ADCharacter::OnStartJump()
 {
 	bPressedJump = true;
 	b_IsJumping = true;
-
-	UE_LOG(LogTemp, Warning, TEXT("Start jumping!"));
 }
 
 void ADCharacter::OnStopJump()
@@ -141,13 +139,10 @@ void ADCharacter::OnStopJump()
 
 		b_IsJumping = false;
 
-		//Reset jumptimer?
-
-		UE_LOG(LogTemp, Warning, TEXT("Stop jumping!"));		
+		//Reset jumptimer?		
 	}	
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("We are not jumping, stop shouting"));
 	}
 }
 

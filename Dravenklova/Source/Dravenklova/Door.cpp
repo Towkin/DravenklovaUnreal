@@ -27,6 +27,8 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::Interact(ADCharacter* pawn)
 {
+	Super::Interact(pawn);
+
 	UE_LOG(LogTemp, Warning, TEXT("I'm a door"));
 	if (m_IsOpen)
 	{
