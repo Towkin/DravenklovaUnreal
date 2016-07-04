@@ -212,18 +212,18 @@ AActor* ADCharacter::GetClosestInteractableActor()
 	
 	//Check that the array is not empty
 	if (listOfActors.Num() == 0)
-	{
+	{ 
 		UE_LOG(LogTemp, Warning, TEXT("No overlapping actors."))
 		return nullptr;
 	}
 	
-	AActor* closestActor = listOfActors.Last();
+	AActor* closestActor = nullptr;
 	
 	//Iterate through the array to find the member nearest to the character
 	for (auto& actor : listOfActors)
 	{
 		//Compare the distances between the character and the actors
-		if (GetDistanceTo(actor) < GetDistanceTo(closestActor))
+		if (closestActor == nullptr || GetDistanceTo(actor) < GetDistanceTo(closestActor))
 		{
 			//Only replace if interactable
 			IInteractInterface* myInterface = Cast<IInteractInterface>(actor);
@@ -235,8 +235,8 @@ AActor* ADCharacter::GetClosestInteractableActor()
 	}
 
 	//TODO: remove superfluous casts
-
-	IInteractInterface* myInterface = Cast<IInteractInterface>(closestActor);
+	IInteractInterface* myInterface = closestActor ? Cast<IInteractInterface>(closestActor) : nullptr;
+	
 	if (!myInterface)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No overlapping interactable actors."))
