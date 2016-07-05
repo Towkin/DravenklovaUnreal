@@ -34,6 +34,7 @@ ADCharacter::ADCharacter()
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
 	GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
+	GetCapsuleComponent()->SetCapsuleRadius(m_Attributes->getCharacterRadius());
 	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
 }
 // Called when the game starts or when spawned
@@ -111,8 +112,6 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	// Not done yet
 	InputComponent->BindAction("CheckStats", IE_Pressed, this, &ADCharacter::EnableCheckStats);
 	InputComponent->BindAction("CheckStats", IE_Released, this, &ADCharacter::DisableCheckStats);
-
-	InputComponent->BindAction("Attack", IE_Pressed, this, &ADCharacter::Attack);
 
 }
 
@@ -211,12 +210,12 @@ void ADCharacter::Use()
 		if (myInterface)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found something to interact with."));
-			myInterface->Interact(this);
 			
-			if (m_CurrentUseObject) {
-				m_CurrentUseObject->EndInteract(this);
-			}
-			m_CurrentUseObject = myInterface;
+			EndUse();
+
+			myInterface->Interact(this);
+			m_CurrentUseActor = object;
+			ProvideInteractBegin(m_CurrentUseActor);
 		}
 		else
 		{
@@ -269,9 +268,16 @@ void ADCharacter::DisableCrouch()
 
 void ADCharacter::EndUse()
 {
-	if (m_CurrentUseObject) {
-		m_CurrentUseObject->EndInteract(this);
-		m_CurrentUseObject = nullptr;
+	if(m_CurrentUseActor)
+	{
+		IInteractInterface* lastInteractObject = Cast<IInteractInterface>(m_CurrentUseActor);
+		if (lastInteractObject)
+		{
+			lastInteractObject->EndInteract(this);
+		}
+
+		ProvideInteractEnd(m_CurrentUseActor);
+		m_CurrentUseActor = nullptr;
 	}
 }
 

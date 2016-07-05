@@ -7,8 +7,7 @@
  * 
  */
 //UCLASS( meta = (ShowOnlyInnerProperties))
-UCLASS(meta = (BlueprintSpawnableComponent))
-
+UCLASS(/*meta = (BlueprintSpawnableComponent)*/)
 class DRAVENKLOVA_API UDAttributes : public UActorComponent
 {
 
@@ -112,20 +111,20 @@ protected:
 
 	// Character sizes
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
-		float m_CharacterHeight;
+		float m_CharacterHeight = 180.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
-		float m_CharacterCrouchHeight;
+		float m_CharacterCrouchHeight = 90.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
-		float m_CharacterRadius;
+		float m_CharacterRadius = 35.f;
 
 
 	// Perception
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_ViewDistance;
+		float m_ViewDistance = 20.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_DarknessVisionDistance;
+		float m_DarknessVisionDistance = 5.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_ListenDistance;
+		float m_ListenDistance = 30.f;
 
 	/* Visiblity how well the character can be seen by others. This is a number continuously recalculated, /*
 	/*	using lightning and other factors, used by NPCs to determine if they see the character.)*/
@@ -136,15 +135,15 @@ protected:
 
 	// Health
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Attributes|Health")
-		float m_MaxHealth = 10.0;
+		float m_MaxHealth = 10.f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_Health;
+		float m_Health = 10.f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_HealthReg;
+		float m_HealthRegenTme = 10.f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_HealthDelayTime;
+		float m_HealthDelayTime = 5.f;
 
 	// Movement
 
@@ -153,25 +152,25 @@ protected:
 		float m_BaseSpeed = 200;
 	/* Modifer to base-speed when the character walks (Unnecessary)?*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_WalkSpeedMod;
+		float m_WalkSpeedMod = 0.f;
 	/* Modifier to base speed when the charcter is sprinting*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingSpeedMod;
+		float m_SprintingSpeedMod = 1.5f;
 	/* Modifier to base speed when the character is crouching*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_CrouchSpeedMod;
+		float m_CrouchSpeedMod = -0.5f;
 	/* Upwards force to apply while jumping*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_JumpForce;
+		float m_JumpForce = 250.f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_JumpAirMod;
+		float m_JumpAirMod = -0.75f;
 	/*Time it takes before the character is fatigued.(linear)*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingTime;
+		float m_SprintingTime = 8.f;
 	/* Time it takes to go from 0 to full(linear)*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingRechargeTime;
+		float m_SprintingRechargeTime = 10.f;
 
 	/* Weapon Attributes */
 

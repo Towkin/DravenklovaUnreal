@@ -26,9 +26,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UDAttributes* m_Attributes = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
+	UDAttributes* m_Attributes;
+
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
+	void ProvideInteractBegin(AActor* Reciever);
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
+	void ProvideInteractEnd(AActor* Reciever);
+
 
 protected:
 
@@ -74,7 +82,7 @@ protected:
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = TriggerBox)
 		UBoxComponent* m_OtherBox = nullptr;
 
-	IInteractInterface* m_CurrentUseObject = nullptr;
+	AActor* m_CurrentUseActor = nullptr;
 
 private:
 	bool b_IsJumping = false;	

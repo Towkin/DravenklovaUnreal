@@ -27,9 +27,9 @@ void ADObject::Tick( float DeltaTime )
 
 void ADObject::Interact(ADCharacter* pawn)
 {
-	OnInteract(pawn);
+	RecieveInteractBegin(pawn);
 }
 void ADObject::EndInteract(ADCharacter* pawn)
 {
-	OnEndInteract(pawn);
+	RecieveInteractEnd(pawn);
 }

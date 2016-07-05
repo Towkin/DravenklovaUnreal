@@ -45,7 +45,7 @@ const float UDAttributes::getHealth()
 
 const float UDAttributes::getHealthReg()
 {
-	return m_HealthReg;
+	return m_HealthRegenTme;
 }
 
 const float UDAttributes::getHealthDelayTime()
@@ -66,7 +66,7 @@ void UDAttributes::setHealth(float a_Health)
 
 void UDAttributes::setHealthReg(float a_HealthReg)
 {
-	m_HealthReg = a_HealthReg;
+	m_HealthRegenTme = a_HealthReg;
 }
 
 void UDAttributes::setHeathDelayTime(float a_HealthDelayTime)
