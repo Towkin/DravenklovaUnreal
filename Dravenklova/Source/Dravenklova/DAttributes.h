@@ -15,6 +15,10 @@ class DRAVENKLOVA_API UDAttributes : public UActorComponent
 	GENERATED_UCLASS_BODY()
 
 public:
+
+
+	/* Character sizes  */
+
 	//UDAttributes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	~UDAttributes();
 
@@ -50,16 +54,24 @@ public:
 	// Movement-gets
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
 		const float getBaseSpeed();
-	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
 		const float getWalkSpeedMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
+		const float getWalkSpeedFactor();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
 		const float getSprintingSpeedMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
+		const float getSprintingSpeedFactor();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
 		const float getCrouchSpeedMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
+		const float getCrouchSpeedFactor();
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
 		const float getJumpForce();
-	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
 		const float getJumpAirMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement")
+		const float getJumpAirFactor();
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
 		const float getSprintingTime();
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
@@ -75,14 +87,37 @@ public:
 	void setSprintingTime(float a_SprintingTime);
 	void setSprintingRechargeTime(float a_SprintingRechargeTime);
 
-	
-protected:
+	// Character sizes
 
+	void setCharacterHeight(float a_CharacterHeight);
+	void setCharacterCrouchHeight(float a_CharacterCrouchHeight);
+	void setCharacterRadius(float a_CharacterRadius);
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
+		const float getCharacterHeight();
+	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
+		const float getCharacterCrouchHeight();
+	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
+		const float getCharacterRadius();
+
+	bool b_IsCrouching = false;
+	bool b_IsSprinting = false;
+
+protected:
 
 	// General
 
 	bool b_IsAlive;
 	bool b_IsEnemy;
+
+	// Character sizes
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
+		float m_CharacterHeight;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
+		float m_CharacterCrouchHeight;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Size")
+		float m_CharacterRadius;
+
 
 	// Perception
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
@@ -115,7 +150,7 @@ protected:
 
 	/* Base value for all movement related speeds*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_BaseSpeed;
+		float m_BaseSpeed = 200;
 	/* Modifer to base-speed when the character walks (Unnecessary)?*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
 		float m_WalkSpeedMod;

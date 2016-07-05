@@ -28,12 +28,19 @@ ADCharacter::ADCharacter()
 	m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
 
 	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();;
+	
 }
-
+void ADCharacter::OnConstruction(const FTransform& Transform)
+{
+	GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
+	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
+}
 // Called when the game starts or when spawned
 void ADCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	DisableSprint();
 	
 }
 
@@ -42,10 +49,37 @@ void ADCharacter::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	float CapsuleHalfHeight = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
+	if (CapsuleHalfHeight != m_HeightTarget) {
+		float CrouchSpeed = 350.f * DeltaTime;
+		float Diff = m_HeightTarget - CapsuleHalfHeight;
+		GetCapsuleComponent()->SetCapsuleHalfHeight(CapsuleHalfHeight + FMath::Sign(Diff) * FMath::Min(CrouchSpeed, FMath::Abs(Diff)));
+	}
+
+	if (m_Attributes->b_IsSprinting) {
+		float Product = FVector::DotProduct(GetActorForwardVector(), GetCharacterMovement()->GetLastInputVector());
+		if (Product < 0.5f) {
+			UE_LOG(LogTemp, Warning, TEXT("Product: %d"), Product);
+			DisableSprint();
+		}
+		m_SprintAccumulator -= DeltaTime;
+		if (m_SprintAccumulator <= 0.f) {
+			DisableSprint();
+		}
+		// TODO: Check sprint time
+	}
+	else 
+	{
+		m_SprintAccumulator = FMath::Min(m_SprintAccumulator + (DeltaTime * (m_Attributes->getSprintingTime() / m_Attributes->getSprintingRechargeTime())), m_Attributes->getSprintingTime());
+	}
+
+
+}
+
 	//Call OnStopJump after certain time
 	//Reset jumptimer?
 
-}
+
 
 // Called to bind functionality to input
 void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -66,11 +100,25 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
 	InputComponent->BindAction("Use", IE_Released, this, &ADCharacter::EndUse);
+
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &ADCharacter::EnableSprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &ADCharacter::DisableSprint);
+
+	InputComponent->BindAction("Crouch", IE_Pressed, this, &ADCharacter::EnableCrouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &ADCharacter::DisableCrouch);
+
+
+	// Not done yet
+	InputComponent->BindAction("CheckStats", IE_Pressed, this, &ADCharacter::EnableCheckStats);
+	InputComponent->BindAction("CheckStats", IE_Released, this, &ADCharacter::DisableCheckStats);
+
+	InputComponent->BindAction("Attack", IE_Pressed, this, &ADCharacter::Attack);
+
 }
 
 void ADCharacter::MoveForward(float a_Value)
 {	
-	if ((Controller != NULL) && (a_Value != 0.0f))
+	if ((Controller != nullptr) && (a_Value != 0.0f))
 	{
 		// find out which way is forward
 		FRotator Rotation = Controller->GetControlRotation();
@@ -91,7 +139,7 @@ void ADCharacter::MoveForward(float a_Value)
 
 void ADCharacter::MoveRight(float a_Value)
 {
-	if ((Controller != NULL) && (a_Value != 0.0f))
+	if ((Controller != nullptr) && (a_Value != 0.0f))
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -182,6 +230,43 @@ void ADCharacter::Use()
 	
 }
 
+void ADCharacter::EnableSprint()
+{
+	if (m_Attributes->b_IsCrouching)
+	{
+		return;
+	}
+	m_Attributes->b_IsSprinting = true;
+	
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getSprintingSpeedFactor();
+	
+}
+
+void ADCharacter::DisableSprint()
+{
+	m_Attributes->b_IsSprinting = false;
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
+	
+}
+
+void ADCharacter::EnableCrouch()
+{
+	m_Attributes->b_IsCrouching = true;
+	DisableSprint();
+	//GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterCrouchHeight() / 2);
+	m_HeightTarget = m_Attributes->getCharacterCrouchHeight() / 2;
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getCrouchSpeedFactor();
+
+}
+
+void ADCharacter::DisableCrouch()
+{
+	m_Attributes->b_IsCrouching = false;
+	//GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
+	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
+}
+
 void ADCharacter::EndUse()
 {
 	if (m_CurrentUseObject) {
@@ -190,9 +275,26 @@ void ADCharacter::EndUse()
 	}
 }
 
+void ADCharacter::EnableCheckStats()
+{
+	// Um... Animate check stats stuff
+	UE_LOG(LogTemp, Warning, TEXT("Checking Stats..."));
+
+}
+
+void ADCharacter::DisableCheckStats()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Not Checking Stats..."));
+}
+
 void ADCharacter::Equip()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Equip ..."));
+}
+
+void ADCharacter::Attack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attacking..."));
 }
 
 void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -28,6 +28,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UDAttributes* m_Attributes = nullptr;
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 protected:
 
@@ -42,7 +43,21 @@ protected:
 	void OnStartJump();
 
 	void OnStopJump();
+
+	void EnableSprint();
+
+	void DisableSprint();
 	
+	void EnableCrouch();
+	
+	void DisableCrouch();
+
+	void EnableCheckStats();
+
+	void DisableCheckStats();
+	
+	void Attack();
+
 	void Use();
 
 	void EndUse();
@@ -63,5 +78,6 @@ protected:
 
 private:
 	bool b_IsJumping = false;	
-
+	float m_SprintAccumulator = 0.f;
+	float m_HeightTarget = 0.f;
 };

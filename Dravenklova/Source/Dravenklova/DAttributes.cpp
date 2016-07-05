@@ -85,15 +85,27 @@ const float UDAttributes::getWalkSpeedMod()
 {
 	return m_WalkSpeedMod;
 }
+const float UDAttributes::getWalkSpeedFactor()
+{
+	return m_WalkSpeedMod + 1.f;
+}
 
 const float UDAttributes::getSprintingSpeedMod()
 {
 	return m_SprintingSpeedMod;
 }
+const float UDAttributes::getSprintingSpeedFactor()
+{
+	return m_SprintingSpeedMod + 1.f;
+}
 
 const float UDAttributes::getCrouchSpeedMod()
 {
 	return m_CrouchSpeedMod;
+}
+const float UDAttributes::getCrouchSpeedFactor()
+{
+	return m_CrouchSpeedMod + 1.f;
 }
 
 const float UDAttributes::getJumpForce()
@@ -105,6 +117,10 @@ const float UDAttributes::getJumpAirMod()
 {
 	return m_JumpAirMod;
 }
+const float UDAttributes::getJumpAirFactor()
+{
+	return m_JumpAirMod + 1.f;
+}
 
 const float UDAttributes::getSprintingTime()
 {
@@ -115,6 +131,10 @@ const float UDAttributes::getSprintingRechargeTime()
 {
 	return m_SprintingRechargeTime;
 }
+
+
+
+
 // Movement-sets
 void UDAttributes::setBaseSpeed(float a_BaseSpeed)
 {
@@ -154,4 +174,37 @@ void UDAttributes::setSprintingTime(float a_SprintingTime)
 void UDAttributes::setSprintingRechargeTime(float a_SprintingRechargeTime)
 {
 	m_SprintingRechargeTime = a_SprintingRechargeTime;
+}
+
+
+// Character size sets
+void UDAttributes::setCharacterHeight(float a_CharacterHeight)
+{
+	m_CharacterHeight = a_CharacterHeight;
+}
+
+void UDAttributes::setCharacterCrouchHeight(float a_CharacterCrouchHeight)
+{
+	m_CharacterCrouchHeight = a_CharacterCrouchHeight;
+}
+void UDAttributes::setCharacterRadius(float a_CharacterRadius)
+{
+	m_CharacterRadius = a_CharacterRadius;
+}
+
+// Character size gets
+
+const float UDAttributes::getCharacterHeight()
+{
+	return m_CharacterHeight;
+}
+
+const float UDAttributes::getCharacterCrouchHeight()
+{
+	return m_CharacterCrouchHeight;
+}
+
+const float UDAttributes::getCharacterRadius()
+{
+	return m_CharacterRadius;
 }
