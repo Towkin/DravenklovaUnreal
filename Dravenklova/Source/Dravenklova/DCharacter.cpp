@@ -28,7 +28,7 @@ ADCharacter::ADCharacter()
 	m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
 
 	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();;
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
 	
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
@@ -226,7 +226,6 @@ void ADCharacter::Use()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No interactable objects within range."));
 	}
-	
 }
 
 void ADCharacter::EnableSprint()
@@ -238,30 +237,25 @@ void ADCharacter::EnableSprint()
 	m_Attributes->b_IsSprinting = true;
 	
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getSprintingSpeedFactor();
-	
 }
 
 void ADCharacter::DisableSprint()
 {
 	m_Attributes->b_IsSprinting = false;
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
-	
 }
 
 void ADCharacter::EnableCrouch()
 {
 	m_Attributes->b_IsCrouching = true;
 	DisableSprint();
-	//GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterCrouchHeight() / 2);
 	m_HeightTarget = m_Attributes->getCharacterCrouchHeight() / 2;
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getCrouchSpeedFactor();
-
 }
 
 void ADCharacter::DisableCrouch()
 {
 	m_Attributes->b_IsCrouching = false;
-	//GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
 	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
 }

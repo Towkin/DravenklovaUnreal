@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+
 #include "DCharacter.generated.h"
 
 class UDAttributes;

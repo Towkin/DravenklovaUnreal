@@ -1,20 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "FAttribute.h"
 #include "DAttributes.generated.h"
+
+
+
 
 /**
  * 
  */
 //UCLASS( meta = (ShowOnlyInnerProperties))
-UCLASS(/*meta = (BlueprintSpawnableComponent)*/)
+UCLASS()
 class DRAVENKLOVA_API UDAttributes : public UActorComponent
 {
 
 	GENERATED_UCLASS_BODY()
 
 public:
-
 
 	/* Character sizes  */
 
@@ -29,7 +32,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Perception") 
 		const float getListenDistance();
 
-
 	// Visiblity get/setters
 	/* */
 
@@ -42,13 +44,6 @@ public:
 		const float getHealthReg();
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Health") 
 		const float getHealthDelayTime();
-
-	// Health-sets
-	void setMaxHealth(float a_MaxHealth);
-	void setHealth(float a_Health);
-	void setHealthReg(float a_HealthReg);
-	void setHeathDelayTime(float a_HealthDelayTime);
-
 
 	// Movement-gets
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
@@ -76,15 +71,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes/Movement") 
 		const float getSprintingRechargeTime();
 
-	// Movement-sets
-	void setBaseSpeed(float a_BaseSpeed);
-	void setWalkSpeedMod(float a_WalkSpeedMod);
-	void setSprintingSpeedMod(float a_SprintingSpeedMod);
-	void setCrouchSpeedMod(float a_CrouchSpeedMod);
-	void setJumpForce(float a_JumpForce);
-	void setJumpAirMod(float a_JumpAirMod);
-	void setSprintingTime(float a_SprintingTime);
-	void setSprintingRechargeTime(float a_SprintingRechargeTime);
+
+	// Weapon gets
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Weapon")
+		const float getAccuracyMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Weapon")
+		const float getReloadMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Weapon")
+		const float getMeleeDamageMod();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Weapon")
+		const float getMeleeTimeMod();
+
+
+
+	// Humor gets
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Humors")
+		const float getHumorBlack();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Humors")
+		const float getHumorYellow();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Humors")
+		const float getHumorRed();
+	UFUNCTION(BlueprintCallable, Category = "Attributes/Humors")
+		const float getHumorWhite();
 
 	// Character sizes
 
@@ -120,11 +129,18 @@ protected:
 
 	// Perception
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_ViewDistance = 20.f;
+		FAttribute m_ViewDistance;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_DarknessVisionDistance = 5.f;
+		FAttribute m_DarknessVisionDistance;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
-		float m_ListenDistance = 30.f;
+		FAttribute m_ListenDistance;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
+		FAttribute m_Visibility;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Perception")
+		FAttribute m_VisiblityMod;
+
+
 
 	/* Visiblity how well the character can be seen by others. This is a number continuously recalculated, /*
 	/*	using lightning and other factors, used by NPCs to determine if they see the character.)*/
@@ -135,53 +151,72 @@ protected:
 
 	// Health
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Attributes|Health")
-		float m_MaxHealth = 10.f;
+		FAttribute m_MaxHealth;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_Health = 10.f;
+		FAttribute m_Health;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_HealthRegenTme = 10.f;
+		FAttribute m_HealthRegenTime;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		float m_HealthDelayTime = 5.f;
+		FAttribute m_HealthDelayTime;
 
 	// Movement
 
 	/* Base value for all movement related speeds*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_BaseSpeed = 200;
+		FAttribute m_BaseSpeed;
 	/* Modifer to base-speed when the character walks (Unnecessary)?*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_WalkSpeedMod = 0.f;
+		FAttribute m_WalkSpeedMod;
 	/* Modifier to base speed when the charcter is sprinting*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingSpeedMod = 1.5f;
+		FAttribute m_SprintingSpeedMod;
 	/* Modifier to base speed when the character is crouching*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_CrouchSpeedMod = -0.5f;
+		FAttribute m_CrouchSpeedMod;
 	/* Upwards force to apply while jumping*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_JumpForce = 250.f;
+		FAttribute m_JumpForce;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_JumpAirMod = -0.75f;
+		FAttribute m_JumpAirMod;
 	/*Time it takes before the character is fatigued.(linear)*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingTime = 8.f;
+		FAttribute m_SprintingTime;
 	/* Time it takes to go from 0 to full(linear)*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Movement")
-		float m_SprintingRechargeTime = 10.f;
+		FAttribute m_SprintingRechargeTime;
+	
+	
+	/* Weapon*/
 
-	/* Weapon Attributes */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Weapon")
+		FAttribute m_AccuracyMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Weapon")
+		FAttribute m_ReloadMod;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Weapon")
+		FAttribute m_MeleeDamageMod;
+	// Modifies the melle cooldown time 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Weapon")
+		FAttribute m_MeleeTimeMod;
+	//A modifier to the modifier, Allows heavy weapons to slow characters down,
+	//but lets strong character negate the slowness modifier
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Weapon")
+		FAttribute m_MoveSpeedModModifier;
 
-	/* All */
+	/* Humors*/
 
-	/*Melee*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Humors")
+		float m_HumorBlack = 0.25f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Humors")
+		float m_HumorYellow = 0.25f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Humors")
+		float m_HumorRed = 0.25f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Humors")
+		float m_HumorWhite = 0.25f;
 
-	/* Ranged */
 
-
-	/* Humorism */
 
 private:
 	

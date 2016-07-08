@@ -7,7 +7,30 @@ UDAttributes::UDAttributes(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attributes constructor"));
-	m_MaxHealth = 20.0;
+	
+	TArray<EHumors> BlackOnly;	BlackOnly.Init(EHumors::Black,		1);
+	TArray<EHumors> YellowOnly;	YellowOnly.Init(EHumors::Yellow,	1);
+	TArray<EHumors> RedOnly;	RedOnly.Init(EHumors::Red,			1);
+	TArray<EHumors> WhiteOnly;	WhiteOnly.Init(EHumors::White,		1);
+	
+	m_ViewDistance =			FAttribute(30.f,	50.f,	BlackOnly);
+	m_DarknessVisionDistance =	FAttribute(5.f,		50.f,	BlackOnly);
+	m_ListenDistance =			FAttribute(20.f,	60.f,	BlackOnly);
+	m_MaxHealth =				FAttribute(5.f,		10.f,	RedOnly);
+	m_Health =					FAttribute(5.f,		10.f,	RedOnly);
+	m_HealthRegenTime =			FAttribute(10.f,	20.f,	RedOnly);
+	m_HealthDelayTime =			FAttribute(2.f,		10.f,	RedOnly);
+	m_BaseSpeed =				FAttribute(200.f,	600.f,	WhiteOnly);
+	m_WalkSpeedMod =			FAttribute(0.0f,	1.f,	YellowOnly);
+	m_SprintingSpeedMod =		FAttribute(0.0f,	1.f,	YellowOnly);
+	m_CrouchSpeedMod =			FAttribute(0.0f,	1.f,	YellowOnly);
+	m_JumpAirMod =				FAttribute(0.0f,	1.f,	YellowOnly);
+	m_SprintingTime =			FAttribute(3.f,		15.f,	YellowOnly);
+	m_SprintingRechargeTime =	FAttribute(2.f,		8.f,	YellowOnly);
+	m_AccuracyMod =				FAttribute(2.f,		8.f,	BlackOnly);
+	m_ReloadMod =				FAttribute(2.f,		8.f,	WhiteOnly);
+	m_MeleeDamageMod =			FAttribute(2.f,		8.f,	YellowOnly);
+	m_MeleeTimeMod =			FAttribute(2.f,		8.f,	WhiteOnly);
 }
 
 UDAttributes::~UDAttributes()
@@ -18,163 +41,146 @@ UDAttributes::~UDAttributes()
 /* Perception-gets */
 const float UDAttributes::getViewDistance()
 {
-	return m_ViewDistance;
+	return m_ViewDistance.GetCurrentValue();
 }
 
 const float UDAttributes::getDarknessVisionDistance()
 {
-	return m_DarknessVisionDistance;
+	return m_DarknessVisionDistance.GetCurrentValue();
 }
 
 const float UDAttributes::getListenDistance()
 {
-	return m_ListenDistance;
+	return m_ListenDistance.GetCurrentValue();
 }
 
 /* Health-gets */
 
 const float UDAttributes::getMaxHealth()
 {
-	return m_MaxHealth;
+	return m_MaxHealth.GetCurrentValue();
 }
 
 const float UDAttributes::getHealth()
 {
-	return m_Health;
+	return m_Health.GetCurrentValue();
 }
 
 const float UDAttributes::getHealthReg()
 {
-	return m_HealthRegenTme;
+	return m_HealthRegenTime.GetCurrentValue();
 }
 
 const float UDAttributes::getHealthDelayTime()
 {
-	return m_HealthDelayTime;
+	return m_HealthDelayTime.GetCurrentValue();
 }
 
-/* Health-sets */
-void UDAttributes::setMaxHealth(float a_MaxHealth)
-{
-	m_MaxHealth = a_MaxHealth;
-}
-
-void UDAttributes::setHealth(float a_Health)
-{
-	m_Health = a_Health;
-}
-
-void UDAttributes::setHealthReg(float a_HealthReg)
-{
-	m_HealthRegenTme = a_HealthReg;
-}
-
-void UDAttributes::setHeathDelayTime(float a_HealthDelayTime)
-{
-	m_HealthDelayTime = a_HealthDelayTime;
-}
 
 //Movement-gets
 
 const float UDAttributes::getBaseSpeed()
 {
-	return m_BaseSpeed;
+	return m_BaseSpeed.GetCurrentValue();
 }
 
 const float UDAttributes::getWalkSpeedMod()
 {
-	return m_WalkSpeedMod;
+	return m_WalkSpeedMod.GetCurrentValue();
 }
 const float UDAttributes::getWalkSpeedFactor()
 {
-	return m_WalkSpeedMod + 1.f;
+	return m_WalkSpeedMod.GetCurrentValue() + 1.f;
 }
-
+//
 const float UDAttributes::getSprintingSpeedMod()
 {
-	return m_SprintingSpeedMod;
+	return m_SprintingSpeedMod.GetCurrentValue();
 }
 const float UDAttributes::getSprintingSpeedFactor()
 {
-	return m_SprintingSpeedMod + 1.f;
+	return m_SprintingSpeedMod.GetCurrentValue() + 1.f;
 }
 
 const float UDAttributes::getCrouchSpeedMod()
 {
-	return m_CrouchSpeedMod;
+	return m_CrouchSpeedMod.GetCurrentValue();
 }
 const float UDAttributes::getCrouchSpeedFactor()
 {
-	return m_CrouchSpeedMod + 1.f;
+	return m_CrouchSpeedMod.GetCurrentValue() + 1.f;
 }
 
 const float UDAttributes::getJumpForce()
 {
-	return m_JumpForce;
+	return m_JumpForce.GetCurrentValue();
 }
 
 const float UDAttributes::getJumpAirMod()
 {
-	return m_JumpAirMod;
+	return m_JumpAirMod.GetCurrentValue();
 }
 const float UDAttributes::getJumpAirFactor()
 {
-	return m_JumpAirMod + 1.f;
+	return m_JumpAirMod.GetCurrentValue() + 1.f;
 }
 
 const float UDAttributes::getSprintingTime()
 {
-	return m_SprintingTime;
+	return m_SprintingTime.GetCurrentValue();
 }
 
 const float UDAttributes::getSprintingRechargeTime()
 {
-	return m_SprintingRechargeTime;
+	return m_SprintingRechargeTime.GetCurrentValue();
 }
 
+// Weapon-gets
 
 
-
-// Movement-sets
-void UDAttributes::setBaseSpeed(float a_BaseSpeed)
+const float UDAttributes::getAccuracyMod()
 {
-	m_BaseSpeed = a_BaseSpeed;
+	return m_AccuracyMod.GetCurrentValue();
 }
 
-void UDAttributes::setWalkSpeedMod(float a_WalkSpeedMod)
+const float UDAttributes::getReloadMod()
 {
-	m_WalkSpeedMod = a_WalkSpeedMod;
+	return m_ReloadMod.GetCurrentValue();
 }
 
-void UDAttributes::setSprintingSpeedMod(float a_SprintingSpeedMod)
+const float UDAttributes::getMeleeDamageMod()
 {
-	m_SprintingSpeedMod = a_SprintingSpeedMod;
+	return m_MeleeDamageMod.GetCurrentValue();
+}
+const float UDAttributes::getMeleeTimeMod()
+{
+	return m_MeleeTimeMod.GetCurrentValue();
 }
 
-void UDAttributes::setCrouchSpeedMod(float a_CrouchSpeedMod)
+// Humors-gets
+
+const float UDAttributes::getHumorBlack()
 {
-	m_CrouchSpeedMod = a_CrouchSpeedMod;
+	return m_HumorBlack;
 }
 
-void UDAttributes::setJumpForce(float a_JumpForce)
+const float UDAttributes::getHumorYellow()
 {
-	m_JumpForce = a_JumpForce;
+	return m_HumorYellow;
+
 }
 
-void UDAttributes::setJumpAirMod(float a_JumpAirMod)
+const float UDAttributes::getHumorRed()
 {
-	m_JumpAirMod = a_JumpAirMod;
+	return m_HumorRed;
 }
 
-void UDAttributes::setSprintingTime(float a_SprintingTime)
+const float UDAttributes::getHumorWhite()
 {
-	m_SprintingTime = a_SprintingTime;
+	return m_HumorWhite;
 }
 
-void UDAttributes::setSprintingRechargeTime(float a_SprintingRechargeTime)
-{
-	m_SprintingRechargeTime = a_SprintingRechargeTime;
-}
+
 
 
 // Character size sets
