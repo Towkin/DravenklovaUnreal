@@ -2,12 +2,11 @@
 
 #include "Dravenklova.h"
 #include "FAttribute.h"
-#include "DCharacter.h"
 #include "DAttributes.h"
 
 
 
-void FAttribute::UpdateAttribute(ADCharacter* pawn)
+void FAttribute::UpdateAttribute(UDAttributes* Attributes)
 {
 	float alpha = 0;
 	for (EHumors humor : m_StatTypes)
@@ -16,24 +15,24 @@ void FAttribute::UpdateAttribute(ADCharacter* pawn)
 		{
 			case EHumors::Black: 
 			{
-				alpha += pawn->m_Attributes->getHumorBlack();
+				alpha += Attributes->getHumorBlack();
 				break;
 			}
 			case EHumors::Yellow:
 			{
-				alpha += pawn->m_Attributes->getHumorYellow();
+				alpha += Attributes->getHumorYellow();
 				break;
 
 			}
 			case EHumors::Red:
 			{
-				alpha += pawn->m_Attributes->getHumorRed();
+				alpha += Attributes->getHumorRed();
 				break;
 
 			}
 			case EHumors::White:
 			{
-				alpha += pawn->m_Attributes->getHumorWhite();
+				alpha += Attributes->getHumorWhite();
 				break;
 
 			}

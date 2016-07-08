@@ -7,7 +7,7 @@
  * 
  */
 
-class ADCharacter;
+class UDAttributes;
 
 UENUM(BlueprintType) 
 enum class EHumors : uint8
@@ -23,7 +23,7 @@ struct FAttribute
 {
 	GENERATED_USTRUCT_BODY()
 
-	void UpdateAttribute(ADCharacter* pawn);
+	void UpdateAttribute(UDAttributes* Attributes);
 	
 	float GetCurrentValue() const;
 
