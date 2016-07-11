@@ -110,6 +110,12 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Block")
+	FIntVector GetLocalCoordinate(int Index);
+
+	UFUNCTION(BlueprintCallable, Category = "Block")
+	int GetLocalIndex(const FIntVector& Coordinate);
+
 };
 
 
