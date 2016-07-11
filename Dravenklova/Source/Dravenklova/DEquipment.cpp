@@ -21,9 +21,9 @@ void ADEquipment::Equip(ADCharacter* pawn)
 		}
 		break;
 	case Secondary:
-		if (!SecondaryIsOccupied(pawn))
+		if (!pawn->GetSecondary())
 		{
-			SetAsSecondary(pawn);
+			pawn->SetSecondary(this);
 		}
 		else
 		{

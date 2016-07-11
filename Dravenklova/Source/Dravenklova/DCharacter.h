@@ -40,6 +40,8 @@ public:
 
 	ADEquipment* GetPrimary();
 	void SetPrimary(ADEquipment* equipment);
+	ADEquipment* GetSecondary();
+	void SetSecondary(ADEquipment* equipment);
 
 
 protected:

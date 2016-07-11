@@ -126,6 +126,16 @@ void ADCharacter::SetPrimary(ADEquipment * equipment)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Setting primary"));
 }
+ADEquipment* ADCharacter::GetSecondary()
+{
+	// TODO: insert return statement here
+	return m_Secondary;
+}
+
+void ADCharacter::SetSecondary(ADEquipment * equipment)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Setting Secondary"));
+}
 
 void ADCharacter::MoveForward(float a_Value)
 {	
