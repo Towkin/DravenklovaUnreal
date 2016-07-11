@@ -24,14 +24,15 @@ public:
 
 	// IInteractInterface
 	virtual void Interact(ADCharacter* pawn) override;
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
-	void RecieveInteractBegin(ADCharacter* User);
-
-
+	
 	virtual void EndInteract(ADCharacter* pawn) override;
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
-	void RecieveInteractEnd(ADCharacter* User);
+	void ReceiveInteractBegin(ADCharacter* User);
+
+	
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
+	void ReceiveInteractEnd(ADCharacter* User);
 
 };

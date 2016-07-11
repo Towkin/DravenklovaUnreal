@@ -4,7 +4,7 @@
 #include "DCharacter.h"
 #include "DObject.h"
 #include "DAttributes.h"
-
+#include "DEquipment.h"
 
 
 // Sets default a_Values
@@ -29,7 +29,8 @@ ADCharacter::ADCharacter()
 
 	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
-	
+	m_Primary = nullptr;
+	m_Secondary = nullptr;
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
@@ -113,6 +114,17 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("CheckStats", IE_Pressed, this, &ADCharacter::EnableCheckStats);
 	InputComponent->BindAction("CheckStats", IE_Released, this, &ADCharacter::DisableCheckStats);
 
+}
+
+ADEquipment* ADCharacter::GetPrimary()
+{
+	// TODO: insert return statement here
+	return m_Primary;
+}
+
+void ADCharacter::SetPrimary(ADEquipment * equipment)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Setting primary"));
 }
 
 void ADCharacter::MoveForward(float a_Value)

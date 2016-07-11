@@ -8,7 +8,7 @@
 
 class UDAttributes;
 class IInteractInterface;
-
+class ADEquipment;
 UCLASS()
 class DRAVENKLOVA_API ADCharacter : public ACharacter
 {
@@ -37,6 +37,9 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
 	void ProvideInteractEnd(AActor* Reciever);
+
+	ADEquipment* GetPrimary();
+	void SetPrimary(ADEquipment* equipment);
 
 
 protected:
@@ -86,6 +89,8 @@ protected:
 	AActor* m_CurrentUseActor = nullptr;
 
 private:
+	ADEquipment* m_Primary;
+	ADEquipment* m_Secondary;
 	bool b_IsJumping = false;	
 	float m_SprintAccumulator = 0.f;
 	float m_HeightTarget = 0.f;
