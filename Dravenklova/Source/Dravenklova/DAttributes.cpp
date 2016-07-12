@@ -67,8 +67,6 @@ void UDAttributes::UpdateAttributes()
 	m_MeleeDamageMod.UpdateAttribute(this);
 	m_MeleeTimeMod.UpdateAttribute(this);
 }
-
-
 /* Perception-gets */
 const float UDAttributes::getViewDistance()
 {
