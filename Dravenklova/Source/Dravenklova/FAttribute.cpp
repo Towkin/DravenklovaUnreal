@@ -40,7 +40,7 @@ void FAttribute::UpdateAttribute(UDAttributes* Attributes)
 		}
 
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Alpha: %d"), alpha);
+	//UE_LOG(LogTemp, Warning, TEXT("Alpha: %d"), alpha);
 	m_CurrentValue = FMath::Lerp(m_Value0, m_Value1, alpha);
 
 }

@@ -40,8 +40,14 @@ public:
 
 	ADEquipment* GetPrimary();
 	void SetPrimary(ADEquipment* equipment);
-	ADEquipment* GetSecondary();
 	void SetSecondary(ADEquipment* equipment);
+	ADEquipment* GetSecondary();
+
+	void DropPrimary();
+	void DropSecondary();
+
+	void SetSampler(ADEquipment* a_Sampler);
+
 
 
 protected:
@@ -83,6 +89,8 @@ protected:
 	UFUNCTION()
 	void TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherCOmp, int32 OtherBodyIndex);
 
+	
+
 	AActor* GetClosestInteractableActor();
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = TriggerBox)
@@ -91,6 +99,7 @@ protected:
 	AActor* m_CurrentUseActor = nullptr;
 
 private:
+	ADEquipment* m_Sampler;
 	ADEquipment* m_Primary;
 	ADEquipment* m_Secondary;
 	bool b_IsJumping = false;	

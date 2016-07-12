@@ -103,6 +103,9 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
 	InputComponent->BindAction("Use", IE_Released, this, &ADCharacter::EndUse);
 
+	InputComponent->BindAction("DropPrimary", IE_Pressed, this, &ADCharacter::DropPrimary);
+	InputComponent->BindAction("DropSecondary", IE_Pressed, this, &ADCharacter::DropSecondary);
+
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &ADCharacter::EnableSprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &ADCharacter::DisableSprint);
 
@@ -124,7 +127,8 @@ ADEquipment* ADCharacter::GetPrimary()
 
 void ADCharacter::SetPrimary(ADEquipment * equipment)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Setting primary"));
+	m_Primary = equipment;
+	UE_LOG(LogTemp, Warning, TEXT("Setting as primary: %s"), *equipment->GetName());
 }
 ADEquipment* ADCharacter::GetSecondary()
 {
@@ -134,7 +138,37 @@ ADEquipment* ADCharacter::GetSecondary()
 
 void ADCharacter::SetSecondary(ADEquipment * equipment)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Setting Secondary"));
+	m_Secondary = equipment;
+	UE_LOG(LogTemp, Warning, TEXT("Setting as Secondary: %s"), *equipment->GetName());
+}
+
+void ADCharacter::DropPrimary()
+{	
+	if (m_Primary)
+	{
+		m_Primary->UnequipPrimary(this);
+		UE_LOG(LogTemp, Warning, TEXT("Droppping Primary:  %s"), *m_Primary->GetName());
+		m_Primary = nullptr;
+	}	
+}
+
+void ADCharacter::DropSecondary()
+{	
+	if (m_Secondary)
+	{
+		m_Secondary->UnequipSecondary(this);
+		UE_LOG(LogTemp, Warning, TEXT("Droppping Secondary: %s"), *m_Secondary->GetName());
+		m_Secondary = nullptr;
+	}	
+}
+
+void ADCharacter::SetSampler(ADEquipment* a_Sampler)
+{
+	if (!m_Sampler)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Picking up sampler"));
+		m_Sampler = a_Sampler;
+	}
 }
 
 void ADCharacter::MoveForward(float a_Value)

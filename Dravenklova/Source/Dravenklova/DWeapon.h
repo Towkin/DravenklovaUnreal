@@ -13,12 +13,18 @@ class DRAVENKLOVA_API ADWeapon : public ADEquipment
 {
 	GENERATED_BODY()
 
-	void BeginPrimaryAction();
-	void EndPrimaryAction();
-	void BeginSecondaryAction();
-	void EndSecondaryAction();
-	void BeginReloadAction();
-	void EndReloadAction();
+
+	float m_CharacterMoveSpeedMod;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+		const float getCharacterMoveSpeedMod();
+
+	void PrimaryActionBegin();
+	void PrimaryActionEnd();
+	void SecondaryActionBegin();
+	void SecondaryActionEnd();
+	void ReloadActionBegin();
+	void ReloadActionEnd();
 	
 	
 	

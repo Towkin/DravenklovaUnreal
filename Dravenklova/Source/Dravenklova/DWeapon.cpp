@@ -5,28 +5,31 @@
 
 
 
-void ADWeapon::BeginPrimaryAction()
+void ADWeapon::PrimaryActionBegin()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Begin Primary"));
 }
-void ADWeapon::EndPrimaryAction()
+void ADWeapon::PrimaryActionEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("End Primary"));
 }
-void ADWeapon::BeginSecondaryAction()
+void ADWeapon::SecondaryActionBegin()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Begin Secondary"));
 }
-void ADWeapon::EndSecondaryAction()
+void ADWeapon::SecondaryActionEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("End Secondary"));
 }
-void ADWeapon::BeginReloadAction()
+void ADWeapon::ReloadActionBegin()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Begin Reload"));
 }
-void ADWeapon::EndReloadAction()
+void ADWeapon::ReloadActionEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("End Reload"));
 }
-
+const float ADWeapon::getCharacterMoveSpeedMod()
+{
+	return m_CharacterMoveSpeedMod;
+}
