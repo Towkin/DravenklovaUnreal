@@ -37,6 +37,8 @@ void ADCharacter::OnConstruction(const FTransform& Transform)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
 	GetCapsuleComponent()->SetCapsuleRadius(m_Attributes->getCharacterRadius());
 	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
+
+	m_Attributes->UpdateAttributes();
 }
 // Called when the game starts or when spawned
 void ADCharacter::BeginPlay()
