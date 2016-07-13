@@ -27,5 +27,13 @@ public:
 
 	UPROPERTY()
 	TSubclassOf<class ABlock> m_BlockClass;
+
+	TArray<bool> m_OccupationGrid;
+	FIntVector m_TileCount;
+
+	int GridToIndex(FIntVector gridLocation);
+
+	FIntVector IndexToGrid(int index);
 	
+	void OccupyGrid(ABlock* a_Block, int a_BlockIndex);
 };

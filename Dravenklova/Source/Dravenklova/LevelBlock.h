@@ -88,6 +88,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tiles")
 	FVector TileSize;
 		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Block")
 	FIntVector BlockLocation;
 	EDirection BlockDirection;
 		
