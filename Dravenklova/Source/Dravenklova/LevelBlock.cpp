@@ -19,14 +19,6 @@ void ABlock::OnConstruction(const FTransform& Transform)
 ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	//m_BlockData = CreateDefaultSubobject<UBlockData>(TEXT("BlockData"));
-
-	//if (m_BlockData) 
-	//{
-	//	m_BlockData->TileCount = FIntVector::ZeroValue;
-	//	m_BlockData->TileSize = FVector(200, 200, 300);
-	//}
-
 	m_BlockData.TileCount = FIntVector::ZeroValue;
 	m_BlockData.TileSize = FVector(200, 200, 300);
 }

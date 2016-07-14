@@ -1,12 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-
-
 #include "LevelBlock.generated.h"
-
-
 /**
  * 
  */
@@ -24,7 +19,6 @@ enum class EDirection : uint8
 	Back = 2,
 	Left = 3
 };
-
 
 UCLASS()
 class AWall : public AActor
@@ -54,25 +48,6 @@ struct FPortalData
 	bool IsPortal = false;
 
 };
-
-//USTRUCT(BlueprintType)
-//struct FBlockData
-//{
-//	GENERATED_USTRUCT_BODY()
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
-//	TArray<FPortalData> PortalArray;
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tiles")
-//	FIntVector TileCount;
-//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tiles")
-//	FVector TileSize;
-//
-//	FIntVector BlockLocation;
-//	EDirection BlockDirection;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tiles")
-//	TArray<bool> OccupationGrid;
-//};
 
 USTRUCT(BlueprintType)
 struct FBlockData
@@ -115,7 +90,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Block")
 	int GetLocalIndex(const FIntVector& Coordinate);
-
 };
 
 
