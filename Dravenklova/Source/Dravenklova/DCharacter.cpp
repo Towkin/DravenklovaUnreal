@@ -19,18 +19,25 @@ ADCharacter::ADCharacter()
 		UE_LOG(LogTemp, Warning, TEXT("has attributes not"));
 	}
 
-	m_OtherBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OtherBox"));
-	m_OtherBox->bGenerateOverlapEvents = true;
-	m_OtherBox->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	// Changed m_OtherBox behaviours into more general m_InteractPrimitive behaviours. /E 16-07-13
 
-	//This might not be needed if it can be replaced with GetOverlappingActors()
-	m_OtherBox->OnComponentBeginOverlap.AddDynamic(this, &ADCharacter::TriggerEnter);
-	m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
+	m_InteractPrimitive = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractBox"));
+	m_InteractPrimitive->bGenerateOverlapEvents = true;
+	m_InteractPrimitive->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	//m_OtherBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OtherBox"));
+	//m_OtherBox->bGenerateOverlapEvents = true;
+	//m_OtherBox->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	////This might not be needed if it can be replaced with GetOverlappingActors()
+	//m_OtherBox->OnComponentBeginOverlap.AddDynamic(this, &ADCharacter::TriggerEnter);
+	//m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
 
 	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
 	m_Primary = nullptr;
 	m_Secondary = nullptr;
+	m_Sampler = nullptr;
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
@@ -119,24 +126,24 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 ADEquipment* ADCharacter::GetPrimary()
 {
-	// TODO: insert return statement here
 	return m_Primary;
 }
 
 void ADCharacter::SetPrimary(ADEquipment * equipment)
 {
 	m_Primary = equipment;
+	ProvideEquippedPrimary(equipment);
 	UE_LOG(LogTemp, Warning, TEXT("Setting as primary: %s"), *equipment->GetName());
 }
 ADEquipment* ADCharacter::GetSecondary()
 {
-	// TODO: insert return statement here
 	return m_Secondary;
 }
 
 void ADCharacter::SetSecondary(ADEquipment * equipment)
 {
 	m_Secondary = equipment;
+	ProvideEquippedSecondary(equipment);
 	UE_LOG(LogTemp, Warning, TEXT("Setting as Secondary: %s"), *equipment->GetName());
 }
 
@@ -144,7 +151,8 @@ void ADCharacter::DropPrimary()
 {	
 	if (m_Primary)
 	{
-		m_Primary->UnequipPrimary(this);
+		ProvideUnequippedPrimary(m_Primary);
+		m_Primary->Unequip(this);
 		UE_LOG(LogTemp, Warning, TEXT("Droppping Primary:  %s"), *m_Primary->GetName());
 		m_Primary = nullptr;
 	}	
@@ -154,7 +162,8 @@ void ADCharacter::DropSecondary()
 {	
 	if (m_Secondary)
 	{
-		m_Secondary->UnequipSecondary(this);
+		ProvideUnequippedSecondary(m_Secondary);
+		m_Secondary->Unequip(this);
 		UE_LOG(LogTemp, Warning, TEXT("Droppping Secondary: %s"), *m_Secondary->GetName());
 		m_Secondary = nullptr;
 	}	
@@ -351,29 +360,32 @@ void ADCharacter::Attack()
 	UE_LOG(LogTemp, Warning, TEXT("Attacking..."));
 }
 
-void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	//UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+// Old unused functions. Removed. /E 16-07-13
 
-	//Light->SetLightColor(FColor::Green);
-	//add otherActor to list
-}
-
-void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-
-	//UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
-
-	//Light->SetLightColor(FColor::Red);
-	//remove otheractor from list
-}
+//void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+//{
+//	//UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+//
+//	//Light->SetLightColor(FColor::Green);
+//	//add otherActor to list
+//}
+//
+//void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+//{
+//
+//	//UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
+//
+//	//Light->SetLightColor(FColor::Red);
+//	//remove otheractor from list
+//}
 
 AActor* ADCharacter::GetClosestInteractableActor()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
 	TArray<AActor*> listOfActors;
-	m_OtherBox->GetOverlappingActors(listOfActors);
-	
+
+	m_InteractPrimitive->GetOverlappingActors(listOfActors);
+
 	//Check that the array is not empty
 	if (listOfActors.Num() == 0)
 	{ 
@@ -389,8 +401,14 @@ AActor* ADCharacter::GetClosestInteractableActor()
 		//Compare the distances between the character and the actors
 		if (closestActor == nullptr || GetDistanceTo(actor) < GetDistanceTo(closestActor))
 		{
+			// If the actor is already equipped, skip /E, 16-07-13
+			if (actor == m_Primary || actor == m_Secondary || actor == m_Sampler) {
+				continue;
+			}
+
 			//Only replace if interactable
 			IInteractInterface* myInterface = Cast<IInteractInterface>(actor);
+			
 			if (myInterface)
 			{
 				closestActor = actor;
