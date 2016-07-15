@@ -28,6 +28,13 @@ public:
 
 };
 
+UCLASS()
+class AConnector : public AActor
+{
+	GENERATED_BODY()
+public:
+
+};
 
 USTRUCT(BlueprintType)
 struct FPortalData
@@ -87,10 +94,13 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Block")
-	FIntVector GetLocalCoordinate(int Index);
+	FIntVector GetLocalCoordinate(int Index) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Block")
-	int GetLocalIndex(const FIntVector& Coordinate);
+	int GetLocalIndex(const FIntVector& Coordinate)const;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Block")
+	void SpawnBlockComponents();
 };
 
 

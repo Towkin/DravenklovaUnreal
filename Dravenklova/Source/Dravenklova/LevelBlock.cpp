@@ -23,7 +23,7 @@ ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
 	m_BlockData.TileSize = FVector(200, 200, 300);
 }
 
-FIntVector ABlock::GetLocalCoordinate(int Index)
+FIntVector ABlock::GetLocalCoordinate(int Index) const
 {
 	FIntVector returnVector = FIntVector::ZeroValue;
 
@@ -39,7 +39,7 @@ FIntVector ABlock::GetLocalCoordinate(int Index)
 	return returnVector;
 }
 
-int ABlock::GetLocalIndex(const FIntVector& Coordinate)
+int ABlock::GetLocalIndex(const FIntVector& Coordinate) const
 {
 	return Coordinate.X + Coordinate.Y * m_BlockData.TileCount.X + Coordinate.Z * m_BlockData.TileCount.X * m_BlockData.TileCount.Y;
 }
