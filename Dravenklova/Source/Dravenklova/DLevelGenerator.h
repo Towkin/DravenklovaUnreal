@@ -7,6 +7,7 @@
 
 class ABlock;
 enum class EDirection : uint8;
+struct FBlockData;
 UCLASS()
 class DRAVENKLOVA_API ADLevelGenerator : public AActor
 {
@@ -36,11 +37,8 @@ public:
 
 	void RotateBounds(FIntVector& a_TileCount);
 
-	void RotateGrid(TArray<bool>& a_Grid, FIntVector a_TileCount);
-
-	void RotateBlock(ABlock& a_Block);
-
-
+	void RotateGrid(FBlockData& a_BlockData);
+	
 	UPROPERTY()
 	TSubclassOf<class ABlock> m_BlockClass;
 
@@ -51,8 +49,7 @@ public:
 
 	FIntVector IndexToGrid(int index, FIntVector a_TileCount);
 	
-	void OccupyGrid(ABlock* a_Block, int a_BlockIndex);
-
+	
 	void OccupyGrid(FIntVector a_BlockLocation, TArray<bool> a_BlockGrid, FIntVector a_TileCount);
 
 	void PlaceBlockInWorld(ABlock* a_Block);
