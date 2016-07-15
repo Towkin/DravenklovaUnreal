@@ -95,7 +95,7 @@ void ADLevelGenerator::BeginPlay()
 			//Find corresponding portal in other block
 			for (FPortalData& otherPortal : otherBlock->m_BlockData.PortalArray)
 			{
-				if ((int)wishedPortalDirection == ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4)
+				if ((int)wishedPortalDirection == ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4) //&& locationIsValid (ie grid is not occupied and is not out of bounds)
 				{
 					foundPortal = true;
 					otherPortal.IsPortal = true;
@@ -133,8 +133,14 @@ void ADLevelGenerator::BeginPlay()
 				UE_LOG(LogTemp, Warning, TEXT("Rotating Block: %d"), direction);
 			}	
 		}
-		
+		//TODO:
+		//if suitable portal not found,
+		//delete block and spawn new
+		//Repeat process
 
+
+		//after end loop
+		//If no suitable block is found, mark portal as closed
 
 		otherBlock->SpawnBlockComponents();
 		
