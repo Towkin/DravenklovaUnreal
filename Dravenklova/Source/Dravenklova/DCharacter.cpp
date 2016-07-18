@@ -83,14 +83,10 @@ void ADCharacter::Tick( float DeltaTime )
 	{
 		m_SprintAccumulator = FMath::Min(m_SprintAccumulator + (DeltaTime * (m_Attributes->getSprintingTime() / m_Attributes->getSprintingRechargeTime())), m_Attributes->getSprintingTime());
 	}
-
-
 }
 
 	//Call OnStopJump after certain time
-	//Reset jumptimer?
-
-
+	//Reset jumptimer?s
 
 // Called to bind functionality to input
 void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)

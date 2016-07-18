@@ -209,9 +209,6 @@ const float UDAttributes::getHumorWhite()
 	return m_HumorWhite;
 }
 
-
-
-
 // Character size sets
 void UDAttributes::setCharacterHeight(float a_CharacterHeight)
 {

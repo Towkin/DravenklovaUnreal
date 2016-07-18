@@ -1,12 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-
-
 #include "LevelBlock.generated.h"
-
-
 /**
  * 
  */
@@ -25,7 +20,6 @@ enum class EDirection : uint8
 	Left = 3
 };
 
-
 UCLASS()
 class AWall : public AActor
 {
@@ -34,6 +28,13 @@ public:
 
 };
 
+UCLASS()
+class AConnector : public AActor
+{
+	GENERATED_BODY()
+public:
+
+};
 
 USTRUCT(BlueprintType)
 struct FPortalData
@@ -54,25 +55,6 @@ struct FPortalData
 	bool IsPortal = false;
 
 };
-
-//USTRUCT(BlueprintType)
-//struct FBlockData
-//{
-//	GENERATED_USTRUCT_BODY()
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
-//	TArray<FPortalData> PortalArray;
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tiles")
-//	FIntVector TileCount;
-//	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tiles")
-//	FVector TileSize;
-//
-//	FIntVector BlockLocation;
-//	EDirection BlockDirection;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tiles")
-//	TArray<bool> OccupationGrid;
-//};
 
 USTRUCT(BlueprintType)
 struct FBlockData
@@ -112,11 +94,13 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Block")
-	FIntVector GetLocalCoordinate(int Index);
+	FIntVector GetLocalCoordinate(int Index) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Block")
-	int GetLocalIndex(const FIntVector& Coordinate);
+	int GetLocalIndex(const FIntVector& Coordinate)const;
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Block")
+	void SpawnBlockComponents();
 };
 
 

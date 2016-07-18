@@ -29,7 +29,6 @@ struct FAttribute
 
 	FAttribute(float A = 0.0f, float B = 1.0f, const TArray<EHumors>& Humors = TArray<EHumors>());
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attribute)
 		float m_Value0 = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attribute)

@@ -19,19 +19,11 @@ void ABlock::OnConstruction(const FTransform& Transform)
 ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	//m_BlockData = CreateDefaultSubobject<UBlockData>(TEXT("BlockData"));
-
-	//if (m_BlockData) 
-	//{
-	//	m_BlockData->TileCount = FIntVector::ZeroValue;
-	//	m_BlockData->TileSize = FVector(200, 200, 300);
-	//}
-
 	m_BlockData.TileCount = FIntVector::ZeroValue;
 	m_BlockData.TileSize = FVector(200, 200, 300);
 }
 
-FIntVector ABlock::GetLocalCoordinate(int Index)
+FIntVector ABlock::GetLocalCoordinate(int Index) const
 {
 	FIntVector returnVector = FIntVector::ZeroValue;
 
@@ -47,7 +39,7 @@ FIntVector ABlock::GetLocalCoordinate(int Index)
 	return returnVector;
 }
 
-int ABlock::GetLocalIndex(const FIntVector& Coordinate)
+int ABlock::GetLocalIndex(const FIntVector& Coordinate) const
 {
 	return Coordinate.X + Coordinate.Y * m_BlockData.TileCount.X + Coordinate.Z * m_BlockData.TileCount.X * m_BlockData.TileCount.Y;
 }

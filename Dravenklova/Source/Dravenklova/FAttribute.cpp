@@ -36,13 +36,11 @@ void FAttribute::UpdateAttribute(UDAttributes* Attributes)
 				break;
 
 			}
-			
 		}
 
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Alpha: %d"), alpha);
 	m_CurrentValue = FMath::Lerp(m_Value0, m_Value1, alpha);
-
 }
 
 float FAttribute::GetCurrentValue() const 
