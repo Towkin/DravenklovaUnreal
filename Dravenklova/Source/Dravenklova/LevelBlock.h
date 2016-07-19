@@ -72,6 +72,7 @@ public:
 		
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Block")
 	FIntVector BlockLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Block")
 	EDirection BlockDirection;
 		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tiles")
@@ -101,6 +102,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Block")
 	void SpawnBlockComponents();
+
+	
 };
 
 

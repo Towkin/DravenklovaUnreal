@@ -8,6 +8,7 @@
 class ABlock;
 enum class EDirection : uint8;
 struct FBlockData;
+
 UCLASS()
 class DRAVENKLOVA_API ADLevelGenerator : public AActor
 {
@@ -31,26 +32,37 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class AConnector>> m_ConnectorClasses;
 
-	void RotateCoordinate(FIntVector& xy, FIntVector a_TileCount);
+	void RotateCoordinate(FIntVector& xy, int a_RotationSteps);
 
 	void RotateDirection(EDirection& a_Dir);
 
 	void RotateBounds(FIntVector& a_TileCount);
 
-	void RotateGrid(FBlockData& a_BlockData);
+	void RotateGrid(ABlock* a_Block);
 	
 	UPROPERTY()
 	TSubclassOf<class ABlock> m_BlockClass;
 
+	UPROPERTY(BlueprintReadOnly)
 	TArray<bool> m_OccupationGrid;
+
+	UPROPERTY(BlueprintReadWrite)
 	FIntVector m_TileCount;
 
-	int GridToIndex(FIntVector gridLocation, FIntVector a_TileCount);
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	int GlobalGridToIndex(FIntVector gridCoord);
+	
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	int LocalGridToIndex(FIntVector gridCoord, ABlock* block);
 
-	FIntVector IndexToGrid(int index, FIntVector a_TileCount);
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	FIntVector GlobalIndexToGrid(int index);
+	UFUNCTION(BlueprintCallable, Category = "Level")
+	FIntVector LocalIndexToGrid(int index, ABlock* a_Block);
 	
-	
-	void OccupyGrid(FIntVector a_BlockLocation, TArray<bool> a_BlockGrid, FIntVector a_TileCount);
+	void OccupyGrid(ABlock* a_Block);
 
 	void PlaceBlockInWorld(ABlock* a_Block);
+
+	bool CheckUnoccupied(ABlock* a_Block);
 };
