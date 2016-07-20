@@ -3,11 +3,8 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "LevelBlock.h"
 #include "DLevelGenerator.generated.h"
-
-class ABlock;
-enum class EDirection : uint8;
-struct FBlockData;
 
 UCLASS()
 class DRAVENKLOVA_API ADLevelGenerator : public AActor
@@ -65,4 +62,7 @@ public:
 	void PlaceBlockInWorld(ABlock* a_Block);
 
 	bool CheckUnoccupied(ABlock* a_Block);
+
+	void SpawnConnector(ABlock* a_Block, FPortalData a_Portal);
+	UWorld* m_World;
 };

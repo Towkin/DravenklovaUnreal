@@ -2,7 +2,7 @@
 
 #include "Dravenklova.h"
 #include "DLevelGenerator.h"
-#include "LevelBlock.h"
+
 
 
 // Sets default values
@@ -31,15 +31,15 @@ void ADLevelGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UWorld * const World = GetWorld();
+	m_World = GetWorld();	
 
-	if (World)
+	if (m_World)
 	{
 		//TODO: Check if block is null
 		//TODO: Replace with starting block
 		//Place starting block
 
-		ABlock* block = World->SpawnActor<ABlock>(m_BlockClasses[0]);
+		ABlock* block = m_World->SpawnActor<ABlock>(m_BlockClasses[0]);
 		
 		//Get world coordinates
 
@@ -88,7 +88,7 @@ void ADLevelGenerator::BeginPlay()
 		//TODO: randomize block
 		//TODO: check that block is not null
 		//Spawn another block
-		ABlock* otherBlock = World->SpawnActor<ABlock>(m_BlockClasses[1]);
+		ABlock* otherBlock = m_World->SpawnActor<ABlock>(m_BlockClasses[1]);
 		
 		bool foundPortal = false;
 		for (int direction = 0; direction < 4  && !foundPortal; direction++)
@@ -111,31 +111,17 @@ void ADLevelGenerator::BeginPlay()
 		
 					//Position the other block next to the first one so that the portals can connect
 					FIntVector blockLocation = GlobalIndexToGrid(blockIndexValue);
+					otherBlock->m_BlockData.BlockLocation = blockLocation;
 		
 					//Check that the location is clear to build on
 					if (direction > 2)
 					{
 						if (CheckUnoccupied(otherBlock)) //&& not out of bounds
 						{
-							otherBlock->m_BlockData.BlockLocation = blockLocation;
-		
 							foundPortal = true;
-							otherPortal.IsPortal = true;
-		
-		
-							if (m_ConnectorClasses.Num() > 0)
-							{
-								AConnector* connector = World->SpawnActor<AConnector>(m_ConnectorClasses[0]);
-		
-								FIntVector portalLocation = block->m_BlockData.BlockLocation + portal.Location;
-		
-								connector->SetActorLocation(FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * block->m_BlockData.TileSize);
-								connector->SetActorRotation(FRotator(0, (((int)portal.Direction + (int)block->m_BlockData.BlockDirection) % 4) * 90, 0));
-							}
-							else
-							{
-								UE_LOG(LogTemp, Warning, TEXT("No connectors found"));
-							}
+							otherPortal.IsPortal = true;	
+
+							SpawnConnector(block, portal);							
 		
 							//Mark the grid tiles as occupied and set actor location and rotation
 							OccupyGrid(otherBlock);
@@ -324,14 +310,6 @@ bool ADLevelGenerator::CheckUnoccupied(ABlock* a_Block)
 			{
 				return false;
 			}
-
-
-			//FIntVector globalCoords = LocalIndexToGrid(index, a_Block) + a_Block->m_BlockData.BlockLocation;
-			//int gridIndex = GlobalGridToIndex(globalCoords);
-			//if (m_OccupationGrid[gridIndex])
-			//{
-			//	return false;
-			//}
 		}
 		
 	}
@@ -339,6 +317,21 @@ bool ADLevelGenerator::CheckUnoccupied(ABlock* a_Block)
 }
 
 
-
+void ADLevelGenerator::SpawnConnector(ABlock* a_Block, FPortalData a_Portal)
+{
+	if (m_ConnectorClasses.Num() > 0)
+	{
+		AConnector* connector = m_World->SpawnActor<AConnector>(m_ConnectorClasses[0]);
+	
+		FIntVector portalLocation = a_Block->m_BlockData.BlockLocation + a_Portal.Location;
+	
+		connector->SetActorLocation(FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * a_Block->m_BlockData.TileSize);
+		connector->SetActorRotation(FRotator(0, (((int)a_Portal.Direction + (int)a_Block->m_BlockData.BlockDirection) % 4) * 90, 0));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No connectors found"));
+	}
+}
 
 

@@ -20,7 +20,7 @@ ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	m_BlockData.TileCount = FIntVector::ZeroValue;
-	m_BlockData.TileSize = FVector(200, 200, 300);
+	m_BlockData.TileSize = FVector(200, 200, 400);
 }
 
 FIntVector ABlock::GetLocalCoordinate(int Index) const
