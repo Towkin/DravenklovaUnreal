@@ -24,79 +24,81 @@ public:
 	//UDAttributes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	~UDAttributes();
 
-	UFUNCTION(BlueprintCallable, Category = "Attributes")
-		void UpdateAttributes();
+	//UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void UpdateAttributes();
 
 	// Perception-gets
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Perception") 
-		const float getViewDistance();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Perception") 
-		const float getDarknessVisionDistance();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Perception") 
-		const float getListenDistance();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Perception") 
+		const float getViewDistance() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Perception")
+		const float getDarknessVisionDistance() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Perception")
+		const float getListenDistance() const;
 
 	// Visiblity get/setters
 	/* */
 
 	//Health-gets
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Health")
+		const float getMaxHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
-		const float getMaxHealth();
+		const float getHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
-		const float getHealth();
+		const float getHealthReg() const;
 	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
-		const float getHealthReg();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
-		const float getHealthDelayTime();
+		const float getHealthDelayTime() const;
 
 	// Movement-gets
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement") 
-		const float getBaseSpeed();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getWalkSpeedMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getWalkSpeedFactor();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getSprintingSpeedMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getSprintingSpeedFactor();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getCrouchSpeedMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getCrouchSpeedFactor();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement") 
-		const float getJumpForce();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getJumpAirMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement")
-		const float getJumpAirFactor();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement") 
-		const float getSprintingTime();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Movement") 
-		const float getSprintingRechargeTime();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getBaseSpeed() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getWalkSpeedMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getWalkSpeedFactor() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getSprintingSpeedMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getSprintingSpeedFactor() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getCrouchSpeedMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getCrouchSpeedFactor() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getJumpForce() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getJumpAirMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getJumpAirFactor() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getSprintingTime() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getSprintingRechargeTime() const;
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Movement")
+		const float getCurrentMaxSpeed() const;
 
 	// Weapon gets
 
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Weapon")
-		const float getAccuracyMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Weapon")
-		const float getReloadMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Weapon")
-		const float getMeleeDamageMod();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Weapon")
-		const float getMeleeTimeMod();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Weapon")
+		const float getAccuracyMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Weapon")
+		const float getReloadMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Weapon")
+		const float getMeleeDamageMod() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Weapon")
+		const float getMeleeTimeMod() const;
 
 
 
 	// Humor gets
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Humors")
-		const float getHumorBlack();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Humors")
-		const float getHumorYellow();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Humors")
-		const float getHumorRed();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Humors")
-		const float getHumorWhite();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Humors")
+		const float getHumorBlack() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Humors")
+		const float getHumorYellow() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Humors")
+		const float getHumorRed() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Humors")
+		const float getHumorWhite() const;
 
 	// Character sizes
 
@@ -104,12 +106,15 @@ public:
 	void setCharacterCrouchHeight(float a_CharacterCrouchHeight);
 	void setCharacterRadius(float a_CharacterRadius);
 
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
-		const float getCharacterHeight();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
-		const float getCharacterCrouchHeight();
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Size")
-		const float getCharacterRadius();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Size")
+		const float getCharacterHeight() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Size")
+		const float getCharacterCrouchHeight() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Size")
+		const float getCharacterRadius() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Size")
+		const float getCurrentCharacterHeight() const;
 
 	bool b_IsCrouching = false;
 	bool b_IsSprinting = false;

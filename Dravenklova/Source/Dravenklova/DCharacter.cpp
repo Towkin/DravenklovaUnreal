@@ -33,32 +33,38 @@ ADCharacter::ADCharacter()
 	//m_OtherBox->OnComponentBeginOverlap.AddDynamic(this, &ADCharacter::TriggerEnter);
 	//m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
 
-	UE_LOG(LogTemp, Warning, TEXT("Character constructor"));
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
 	m_Primary = nullptr;
 	m_Secondary = nullptr;
 	m_Sampler = nullptr;
+
+
+	UpdateAttributes();
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
+	m_Attributes->UpdateAttributes();
+	
 	GetCapsuleComponent()->SetCapsuleHalfHeight(m_Attributes->getCharacterHeight() / 2);
 	GetCapsuleComponent()->SetCapsuleRadius(m_Attributes->getCharacterRadius());
 	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
-
-	m_Attributes->UpdateAttributes();
 }
 // Called when the game starts or when spawned
 void ADCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	DisableSprint();
-	
 }
 
 // Called every frame
 void ADCharacter::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+
+	// UpdateAttributes call - 16-07-21 /E
+	if (b_NeedAttributeUpdate)
+	{
+		UpdateAttributes();
+	}
 
 	float CapsuleHalfHeight = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 	if (CapsuleHalfHeight != m_HeightTarget) {
@@ -77,7 +83,6 @@ void ADCharacter::Tick( float DeltaTime )
 		if (m_SprintAccumulator <= 0.f) {
 			DisableSprint();
 		}
-		// TODO: Check sprint time
 	}
 	else 
 	{
@@ -102,8 +107,8 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAxis("LookUp", this, &ADCharacter::LookUp);
 
 	// Jump
-	InputComponent->BindAction("Jump", IE_Pressed, this, &ADCharacter::OnStartJump);
-	InputComponent->BindAction("Jump", IE_Released, this, &ADCharacter::OnStopJump);
+	InputComponent->BindAction("Jump", IE_Pressed, this, &ADCharacter::StartJump);
+	InputComponent->BindAction("Jump", IE_Released, this, &ADCharacter::StopJump);
 
 	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
 	InputComponent->BindAction("Use", IE_Released, this, &ADCharacter::EndUse);
@@ -193,7 +198,7 @@ void ADCharacter::MoveForward(float a_Value)
 
 		// add movement in that direction
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
-		AddMovementInput(Direction, a_Value * m_Attributes->getBaseSpeed());
+		AddMovementInput(Direction, a_Value);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Moving forward"));
 	}
@@ -208,7 +213,7 @@ void ADCharacter::MoveRight(float a_Value)
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
 
 		// add movement in that direction
-		AddMovementInput(Direction, a_Value* m_Attributes->getBaseSpeed());
+		AddMovementInput(Direction, a_Value);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Moving right"));
 	}	
@@ -236,13 +241,15 @@ void ADCharacter::LookUp(float a_Value)
 }
 
 
-void ADCharacter::OnStartJump()
+void ADCharacter::StartJump()
 {
 	bPressedJump = true;
 	b_IsJumping = true;
+
+	OnStartJump();
 }
 
-void ADCharacter::OnStopJump()
+void ADCharacter::StopJump()
 {
 	if (b_IsJumping)
 	{
@@ -255,6 +262,8 @@ void ADCharacter::OnStopJump()
 	else
 	{
 	}
+
+	OnStopJump();
 }
 
 
@@ -298,29 +307,34 @@ void ADCharacter::EnableSprint()
 		return;
 	}
 	m_Attributes->b_IsSprinting = true;
-	
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getSprintingSpeedFactor();
+	CallUpdateAttributes();
+
+	OnSprintEnabled();
 }
 
 void ADCharacter::DisableSprint()
 {
 	m_Attributes->b_IsSprinting = false;
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
+	CallUpdateAttributes();
+
+	OnSprintDisabled();
 }
 
 void ADCharacter::EnableCrouch()
 {
 	m_Attributes->b_IsCrouching = true;
 	DisableSprint();
-	m_HeightTarget = m_Attributes->getCharacterCrouchHeight() / 2;
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed() * m_Attributes->getCrouchSpeedFactor();
+	CallUpdateAttributes();
+
+	OnCrouchEnabled();
 }
 
 void ADCharacter::DisableCrouch()
 {
 	m_Attributes->b_IsCrouching = false;
-	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getBaseSpeed();
+	CallUpdateAttributes();
+
+	OnCrouchDisabled();
 }
 
 void ADCharacter::EndUse()
@@ -427,4 +441,24 @@ AActor* ADCharacter::GetClosestInteractableActor()
 	
 	UE_LOG(LogTemp, Warning, TEXT("Found closest actor"))
 	return closestActor;
+}
+
+void ADCharacter::CallUpdateAttributes()
+{
+	b_NeedAttributeUpdate = true;
+}
+
+void ADCharacter::UpdateAttributes()
+{
+	m_Attributes->UpdateAttributes();
+
+	// All character values which rely on m_Attributes are updated below.
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getCurrentMaxSpeed();
+	GetCharacterMovement()->JumpZVelocity = m_Attributes->getJumpForce() / GetCharacterMovement()->Mass;
+	m_HeightTarget = m_Attributes->getCurrentCharacterHeight() / 2;
+	
+
+	OnAttributesUpdated();
+
+	b_NeedAttributeUpdate = false;
 }

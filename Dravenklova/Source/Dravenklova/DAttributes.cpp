@@ -68,39 +68,39 @@ void UDAttributes::UpdateAttributes()
 	m_MeleeTimeMod.UpdateAttribute(this);
 }
 /* Perception-gets */
-const float UDAttributes::getViewDistance()
+const float UDAttributes::getViewDistance() const
 {
 	return m_ViewDistance.GetCurrentValue();
 }
 
-const float UDAttributes::getDarknessVisionDistance()
+const float UDAttributes::getDarknessVisionDistance() const
 {
 	return m_DarknessVisionDistance.GetCurrentValue();
 }
 
-const float UDAttributes::getListenDistance()
+const float UDAttributes::getListenDistance() const
 {
 	return m_ListenDistance.GetCurrentValue();
 }
 
 /* Health-gets */
 
-const float UDAttributes::getMaxHealth()
+const float UDAttributes::getMaxHealth() const
 {
 	return m_MaxHealth.GetCurrentValue();
 }
 
-const float UDAttributes::getHealth()
+const float UDAttributes::getHealth() const
 {
 	return m_Health.GetCurrentValue();
 }
 
-const float UDAttributes::getHealthReg()
+const float UDAttributes::getHealthReg() const
 {
 	return m_HealthRegenTime.GetCurrentValue();
 }
 
-const float UDAttributes::getHealthDelayTime()
+const float UDAttributes::getHealthDelayTime() const
 {
 	return m_HealthDelayTime.GetCurrentValue();
 }
@@ -108,103 +108,112 @@ const float UDAttributes::getHealthDelayTime()
 
 //Movement-gets
 
-const float UDAttributes::getBaseSpeed()
+const float UDAttributes::getBaseSpeed() const
 {
 	return m_BaseSpeed.GetCurrentValue();
 }
 
-const float UDAttributes::getWalkSpeedMod()
+const float UDAttributes::getWalkSpeedMod() const
 {
 	return m_WalkSpeedMod.GetCurrentValue();
 }
-const float UDAttributes::getWalkSpeedFactor()
+const float UDAttributes::getWalkSpeedFactor() const
 {
 	return m_WalkSpeedMod.GetCurrentValue() + 1.f;
 }
 //
-const float UDAttributes::getSprintingSpeedMod()
+const float UDAttributes::getSprintingSpeedMod() const 
 {
 	return m_SprintingSpeedMod.GetCurrentValue();
 }
-const float UDAttributes::getSprintingSpeedFactor()
+const float UDAttributes::getSprintingSpeedFactor() const
 {
 	return m_SprintingSpeedMod.GetCurrentValue() + 1.f;
 }
 
-const float UDAttributes::getCrouchSpeedMod()
+const float UDAttributes::getCrouchSpeedMod() const
 {
 	return m_CrouchSpeedMod.GetCurrentValue();
 }
-const float UDAttributes::getCrouchSpeedFactor()
+const float UDAttributes::getCrouchSpeedFactor() const
 {
 	return m_CrouchSpeedMod.GetCurrentValue() + 1.f;
 }
 
-const float UDAttributes::getJumpForce()
+const float UDAttributes::getJumpForce() const
 {
 	return m_JumpForce.GetCurrentValue();
 }
 
-const float UDAttributes::getJumpAirMod()
+const float UDAttributes::getJumpAirMod() const
 {
 	return m_JumpAirMod.GetCurrentValue();
 }
-const float UDAttributes::getJumpAirFactor()
+const float UDAttributes::getJumpAirFactor() const
 {
 	return m_JumpAirMod.GetCurrentValue() + 1.f;
 }
 
-const float UDAttributes::getSprintingTime()
+const float UDAttributes::getSprintingTime() const
 {
 	return m_SprintingTime.GetCurrentValue();
 }
 
-const float UDAttributes::getSprintingRechargeTime()
+const float UDAttributes::getSprintingRechargeTime() const
 {
 	return m_SprintingRechargeTime.GetCurrentValue();
+}
+
+
+const float UDAttributes::getCurrentMaxSpeed() const
+{
+	return getBaseSpeed() * 
+		((!b_IsSprinting && !b_IsCrouching) ? getWalkSpeedFactor() : 1.f) * 
+		(b_IsSprinting ? getSprintingSpeedFactor() : 1.f) * 
+		(b_IsCrouching ? getCrouchSpeedFactor() : 1.f);
 }
 
 // Weapon-gets
 
 
-const float UDAttributes::getAccuracyMod()
+const float UDAttributes::getAccuracyMod() const
 {
 	return m_AccuracyMod.GetCurrentValue();
 }
 
-const float UDAttributes::getReloadMod()
+const float UDAttributes::getReloadMod() const
 {
 	return m_ReloadMod.GetCurrentValue();
 }
 
-const float UDAttributes::getMeleeDamageMod()
+const float UDAttributes::getMeleeDamageMod() const
 {
 	return m_MeleeDamageMod.GetCurrentValue();
 }
-const float UDAttributes::getMeleeTimeMod()
+const float UDAttributes::getMeleeTimeMod() const
 {
 	return m_MeleeTimeMod.GetCurrentValue();
 }
 
 // Humors-gets
 
-const float UDAttributes::getHumorBlack()
+const float UDAttributes::getHumorBlack() const
 {
 	return m_HumorBlack;
 }
 
-const float UDAttributes::getHumorYellow()
+const float UDAttributes::getHumorYellow() const
 {
 	return m_HumorYellow;
 
 }
 
-const float UDAttributes::getHumorRed()
+const float UDAttributes::getHumorRed() const
 {
 	return m_HumorRed;
 }
 
-const float UDAttributes::getHumorWhite()
+const float UDAttributes::getHumorWhite() const
 {
 	return m_HumorWhite;
 }
@@ -226,17 +235,22 @@ void UDAttributes::setCharacterRadius(float a_CharacterRadius)
 
 // Character size gets
 
-const float UDAttributes::getCharacterHeight()
+const float UDAttributes::getCharacterHeight() const
 {
 	return m_CharacterHeight;
 }
 
-const float UDAttributes::getCharacterCrouchHeight()
+const float UDAttributes::getCharacterCrouchHeight() const
 {
 	return m_CharacterCrouchHeight;
 }
 
-const float UDAttributes::getCharacterRadius()
+const float UDAttributes::getCharacterRadius() const
 {
 	return m_CharacterRadius;
+}
+
+const float UDAttributes::getCurrentCharacterHeight() const
+{
+	return b_IsCrouching ? getCharacterCrouchHeight() : getCharacterHeight();
 }

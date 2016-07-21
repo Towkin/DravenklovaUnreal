@@ -68,40 +68,46 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	void SetSampler(ADEquipment* a_Sampler);
 
-
+	// Sets b_NeedsAttributeUpdate to true, which'll make UpdateAttributes() called in the next tick. /E 16-07-21
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void CallUpdateAttributes();
 
 protected:
 
 	void MoveForward(float a_Value);
-
 	void MoveRight(float a_Value);
 
 	void Turn(float a_Value);
-
 	void LookUp(float a_Value);
 
+	void StartJump();
+	void StopJump();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnStartJump();
-
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnStopJump();
 
+	
 	void EnableSprint();
-
 	void DisableSprint();
-	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
+	void OnSprintEnabled();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
+	void OnSprintDisabled();
+
 	void EnableCrouch();
-	
 	void DisableCrouch();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
+	void OnCrouchEnabled();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
+	void OnCrouchDisabled();
 
 	void EnableCheckStats();
-
 	void DisableCheckStats();
 	
 	void Attack();
-
 	void Use();
-
 	void EndUse();
-
 	void Equip();
 
 	// Old unused functions. Removed. /E 16-07-13
@@ -130,9 +136,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
 	ADEquipment* m_Secondary = nullptr;
 
+	// Update function to update all attributes. Should only be externally through CallUpdateAttributes(), which calls it once in Tick(). 16-07-21 /E
+	virtual void UpdateAttributes();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Attributes")
+	void OnAttributesUpdated();
+
 private:
 	
-	bool b_IsJumping = false;	
+	bool b_NeedAttributeUpdate = false;
+
+	bool b_IsJumping = false;
 	float m_SprintAccumulator = 0.f;
 	float m_HeightTarget = 0.f;
 };
