@@ -57,12 +57,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	FIntVector LocalIndexToGrid(int index, ABlock* a_Block);
 	
-	void OccupyGrid(ABlock* a_Block);
+	bool OccupyGrid(ABlock* a_Block);
 
 	void PlaceBlockInWorld(ABlock* a_Block);
 
 	bool CheckUnoccupied(ABlock* a_Block);
 
 	void SpawnConnector(ABlock* a_Block, FPortalData a_Portal);
+
+	ABlock* SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, ABlock* a_PreviousBlock);
+
 	UWorld* m_World;
+	int m_BlockNumberLimit;
+	int m_BlockDepthLimit;
 };

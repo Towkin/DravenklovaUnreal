@@ -12,8 +12,6 @@ void ABlock::OnConstruction(const FTransform& Transform)
 	//OccupationGrid.Init(false, TileCount.X * TileCount.Y * TileCount.Z);
 	//m_BlockData->OccupationGrid.SetNum(m_BlockData->TileCount.X * m_BlockData->TileCount.Y * m_BlockData->TileCount.Z);
 	m_BlockData.OccupationGrid.SetNum(m_BlockData.TileCount.X * m_BlockData.TileCount.Y * m_BlockData.TileCount.Z);
-
-	UE_LOG(LogTemp, Warning, TEXT("ArraySize: %d"), m_BlockData.OccupationGrid.Num());
 }
 
 ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
