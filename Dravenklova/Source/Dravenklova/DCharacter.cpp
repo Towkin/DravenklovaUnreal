@@ -23,7 +23,10 @@ ADCharacter::ADCharacter()
 
 	m_InteractPrimitive = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractBox"));
 	m_InteractPrimitive->bGenerateOverlapEvents = true;
-	m_InteractPrimitive->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	
+	// Modification due to cooking error: AttachToComponent -> SetupAttachment as Unreal 4.12 doesn't seem to like the former in constructors... /E 16-07-22
+	//m_InteractPrimitive->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	m_InteractPrimitive->SetupAttachment(RootComponent);
 
 	//m_OtherBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OtherBox"));
 	//m_OtherBox->bGenerateOverlapEvents = true;
@@ -36,9 +39,6 @@ ADCharacter::ADCharacter()
 	m_Primary = nullptr;
 	m_Secondary = nullptr;
 	m_Sampler = nullptr;
-
-
-	UpdateAttributes();
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
@@ -396,42 +396,50 @@ void ADCharacter::Attack()
 AActor* ADCharacter::GetClosestInteractableActor()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Looking for object to interact with."))
-	TArray<AActor*> listOfActors;
 
-	m_InteractPrimitive->GetOverlappingActors(listOfActors);
+	//TArray<AActor*> listOfActors;
+	//m_InteractPrimitive->GetOverlappingActors(listOfActors);
+	TArray<UPrimitiveComponent*> listOfPrimitives;
+	m_InteractPrimitive->GetOverlappingComponents(listOfPrimitives);
 
 	//Check that the array is not empty
-	if (listOfActors.Num() == 0)
+	//if (listOfActors.Num() == 0)
+	if (listOfPrimitives.Num() == 0)
 	{ 
 		UE_LOG(LogTemp, Warning, TEXT("No overlapping actors."))
 		return nullptr;
 	}
 	
-	AActor* closestActor = nullptr;
-	
+	//AActor* closestActor = nullptr;
+	UPrimitiveComponent* closestPrimitive = nullptr;
+	IInteractInterface* myInterface = nullptr;
+
 	//Iterate through the array to find the member nearest to the character
-	for (auto& actor : listOfActors)
+	//for (auto& actor : listOfActors)
+	for (auto& primitive : listOfPrimitives)
 	{
 		//Compare the distances between the character and the actors
-		if (closestActor == nullptr || GetDistanceTo(actor) < GetDistanceTo(closestActor))
+
+		//if (closestActor == nullptr || GetDistanceTo(actor) < GetDistanceTo(closestActor))
+		if (closestPrimitive == nullptr || FVector::Dist(primitive->GetComponentLocation(), GetActorLocation()) < FVector::Dist(closestPrimitive->GetComponentLocation(), GetActorLocation()))
 		{
+			AActor* actor = primitive->GetOwner();
+
 			// If the actor is already equipped, skip /E, 16-07-13
-			if (actor == m_Primary || actor == m_Secondary || actor == m_Sampler) {
+			if (actor == this || actor == m_Primary || actor == m_Secondary || actor == m_Sampler) {
 				continue;
 			}
 
 			//Only replace if interactable
-			IInteractInterface* myInterface = Cast<IInteractInterface>(actor);
+			IInteractInterface* actorAsInterface = Cast<IInteractInterface>(actor);
 			
-			if (myInterface)
+			if (actorAsInterface)
 			{
-				closestActor = actor;
+				myInterface = actorAsInterface;
+				closestPrimitive = primitive;
 			}			
 		}
 	}
-
-	//TODO: remove superfluous casts
-	IInteractInterface* myInterface = closestActor ? Cast<IInteractInterface>(closestActor) : nullptr;
 	
 	if (!myInterface)
 	{
@@ -440,7 +448,7 @@ AActor* ADCharacter::GetClosestInteractableActor()
 	}	
 	
 	UE_LOG(LogTemp, Warning, TEXT("Found closest actor"))
-	return closestActor;
+	return Cast<AActor>(myInterface);
 }
 
 void ADCharacter::CallUpdateAttributes()
@@ -454,7 +462,7 @@ void ADCharacter::UpdateAttributes()
 
 	// All character values which rely on m_Attributes are updated below.
 	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getCurrentMaxSpeed();
-	GetCharacterMovement()->JumpZVelocity = m_Attributes->getJumpForce() / GetCharacterMovement()->Mass;
+	GetCharacterMovement()->JumpZVelocity = m_Attributes->getJumpForce();
 	m_HeightTarget = m_Attributes->getCurrentCharacterHeight() / 2;
 	
 

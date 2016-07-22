@@ -58,6 +58,7 @@ void UDAttributes::UpdateAttributes()
 	m_WalkSpeedMod.UpdateAttribute(this);
 	m_SprintingSpeedMod.UpdateAttribute(this);
 	m_CrouchSpeedMod.UpdateAttribute(this);
+	m_JumpForce.UpdateAttribute(this);
 	m_JumpAirMod.UpdateAttribute(this);
 	m_SprintingTime.UpdateAttribute(this);
 	m_SprintingRechargeTime.UpdateAttribute(this);
