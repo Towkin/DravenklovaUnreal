@@ -107,6 +107,7 @@ protected:
 	
 	void Attack();
 	void Use();
+	UFUNCTION(BlueprintCallable, Category = "Interact")
 	void EndUse();
 	void Equip();
 
