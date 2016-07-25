@@ -61,8 +61,7 @@ void ADLevelGenerator::BeginPlay()
 
 		//Spawn blocks from starting block to staircase
 		while (spawnedBlocks.Num() < m_BlockDepthLimit && !triedAll) // while number of rooms is less than room limit		
-		{	
-			
+		{				
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; //change to randomizing function returning block class
 			
 			ABlock* nextBlock = SpawnNextBlock(blockClass, previousBlock);
@@ -93,8 +92,12 @@ void ADLevelGenerator::BeginPlay()
 				}
 			}
 		}
-		UE_LOG(LogTemp, Display, TEXT("Number of blocks: %d"), spawnedBlocks.Num());
+		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnedBlocks.Num());
 		
+		//TODO: Spawn blocks next to the rest of the portals
+				
+		UE_LOG(LogTemp, Display, TEXT("Total number of blocks in level: %d"), spawnedBlocks.Num());
+
 		for (ABlock* block : spawnedBlocks)
 		{
 			block->SpawnBlockComponents();
@@ -170,7 +173,7 @@ bool ADLevelGenerator::OccupyGrid(ABlock* a_Block)
 			int globalIndex = GlobalGridToIndex(a_Block->m_BlockData.BlockLocation + localCoord);
 			if (globalIndex > m_OccupationGrid.Num() || globalIndex < 0)
 			{
-				UE_LOG(LogTemp, Display, TEXT("Failed occupation"));
+				UE_LOG(LogTemp, Display, TEXT("Failed occupation : LevelGenerator::OccupyGrid"));
 				return false;
 			}
 			indices.Add(globalIndex);			
@@ -276,132 +279,37 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 
 	for (FPortalData& portal : a_PreviousBlock->m_BlockData.PortalArray)
 	{
-		//FIntVector modifier = FIntVector(0, 0, 0);
-		//
-		////EDirection portalDirection = (EDirection)((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection % 4);
-		//
-		//EDirection portalDirection = portal.Direction;
-		//
-		//switch (portalDirection)
-		//{
-		//case EDirection::Forward:
-		//	modifier.X += 1;
-		//	break;
-		//case EDirection::Right:
-		//	modifier.Y += 1;
-		//	break;
-		//case EDirection::Back:
-		//	modifier.X -= 1;
-		//	break;
-		//case EDirection::Left:
-		//	modifier.Y -= 1;
-		//	break;
-		//default:
-		//	break;
-		//}
-		//
-		//FIntVector portalLocation = portal.Location;
-		//RotateCoordinate(portalLocation, (int)a_PreviousBlock->m_BlockData.BlockDirection);
-		//
-		//FIntVector suspectedTile = a_PreviousBlock->m_BlockData.BlockLocation + portalLocation + modifier;
-		//FIntVector wishedPortalTile = a_PreviousBlock->m_BlockData.BlockLocation + portal.Location + modifier;
-		//
-
-
 		////Choose one portal and find its direction, reverse it		
 		EDirection wishedPortalDirection = (EDirection)(((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection + 2) % 4);
 		
 		//STEP ONE NEW SOLUTION
+		//Find tile in front of current portal
 		FIntVector mod = FIntVector(1, 0, 0);
 		RotateCoordinate(mod, (int)portal.Direction);
 		FIntVector pLocMod = portal.Location + mod;
 		RotateCoordinate(pLocMod, (int)a_PreviousBlock->m_BlockData.BlockDirection);
 		FIntVector wT = a_PreviousBlock->m_BlockData.BlockLocation + pLocMod;
-
 				
 		bool foundPortal = false;
 		for (int direction = 0; direction < 4 && !foundPortal; direction++)
 		{
 			//Find corresponding portal in other block
-			//for (FPortalData& otherPortal : otherBlock->m_BlockData.PortalArray)
 			for (int portalIndex = 0; portalIndex < otherBlock->m_BlockData.PortalArray.Num(); portalIndex++)
 			{
 				FPortalData& otherPortal = otherBlock->m_BlockData.PortalArray[portalIndex];
 				int newPortalDirection = ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4;
-				//UE_LOG(LogTemp, Display, TEXT("New portal direction: %d"), newPortalDirection);
+				
 				if ((int)wishedPortalDirection == newPortalDirection)
 				{
-
 					//STEP TWO NEW SOLUTION
+					//Place the next block so that the portals are next to each other
 					FIntVector p2Loc = otherPortal.Location;
-					
-					//UE_LOG(LogTemp, Display, TEXT("wT: %d %d. b2Dir: %d. p2Loc: %d %d b2Bounds: %dx%d"), 
-					//	(int)wT.X, (int)wT.Y, 
-					//	(int)otherBlock->m_BlockData.BlockDirection,
-					//	(int)p2Loc.X, (int)p2Loc.Y, 
-					//	otherBlock->m_BlockData.TileCount.X, otherBlock->m_BlockData.TileCount.Y);
-
-					RotateCoordinate(p2Loc, (int)otherBlock->m_BlockData.BlockDirection);
-					FIntVector otherBlockTile = wT - p2Loc;
-
-					
-
-					//UE_LOG(LogTemp, Display, TEXT("Matched directions: %d %d"), (int)wishedPortalDirection, newPortalDirection);
-					// Rotate the portal and position the portals next to each other
-					//FIntVector RelativeLocalPortalLocation = otherPortal.Location;			
-					//
-					//RotateCoordinate(RelativeLocalPortalLocation, (int)otherBlock->m_BlockData.BlockDirection);	
-					//
-					//otherBlock->m_BlockData.BlockLocation = wishedPortalTile - RelativeLocalPortalLocation;
-					//
-					//FIntVector suspectedLocation = suspectedTile - RelativeLocalPortalLocation;
-
-					//if (((int)a_PreviousBlock->m_BlockData.BlockDirection + (int)otherBlock->m_BlockData.BlockDirection) % 2 != 0)
-
-					//if (((((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection) % 4) == 0)
-					//	&& (((int)otherPortal.Direction + (int)otherBlock->m_BlockData.BlockDirection) % 4) == 2
-					//	&& otherBlock->m_BlockData.BlockLocation != suspectedLocation)
-					//{
-					//	//FIntVector portalLocation = portal.Location;
-					//	//RotateCoordinate(portalLocation, (int)a_PreviousBlock->m_BlockData.BlockDirection);						
-					//	//FIntVector suspectedTile = a_PreviousBlock->m_BlockData.BlockLocation + portalLocation + modifier;
-					//	//FIntVector suspectedLocation = suspectedTile - RelativeLocalPortalLocation;
-					//	//UE_LOG(LogTemp, Display, TEXT("%s %d %d should change to %d %d"), *otherBlock->GetName(),
-					//	//	(int)otherBlock->m_BlockData.BlockLocation.X, (int)otherBlock->m_BlockData.BlockLocation.Y, 
-					//	//	(int)suspectedLocation.X, (int)suspectedLocation.Y);
-					//	//otherBlock->m_BlockData.BlockLocation = suspectedLocation;
-					//}
-					
-					//if (otherBlock->m_BlockData.BlockLocation != otherBlockTile)
-					//{
-					//	UE_LOG(LogTemp, Display, TEXT("Moved block from %d %d to %d %d"),
-					//		(int)otherBlock->m_BlockData.BlockLocation.X, (int)otherBlock->m_BlockData.BlockLocation.Y,
-					//		(int)otherBlockTile.X, (int)otherBlockTile.Y);
-					//}
-					
-					
-					otherBlock->m_BlockData.BlockLocation = otherBlockTile;
+					RotateCoordinate(p2Loc, (int)otherBlock->m_BlockData.BlockDirection);			
+					otherBlock->m_BlockData.BlockLocation = wT - p2Loc;
 					
 					//Check that the location is clear to build on				
-					if (CheckUnoccupied(otherBlock)) //&& not out of bounds
-					{
-						//if ((int)a_PreviousBlock->m_BlockData.BlockDirection != 0 && !(portalLocation.X == 0 && portalLocation.Y == 0 ))
-						//if( (int)a_PreviousBlock->m_BlockData.BlockDirection != 0 
-						//	&& a_PreviousBlock->m_BlockData.BlockDirection != otherBlock->m_BlockData.BlockDirection
-						//	&& wishedPortalTile != a_PreviousBlock->m_BlockData.BlockLocation
-						//	)
-
-						//if(((((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection) % 4) == 0) 
-						//	&& (((int)otherPortal.Direction + (int)otherBlock->m_BlockData.BlockDirection) % 4) == 2)
-						//{							
-						//	UE_LOG(LogTemp, Display, TEXT("From %s: Block %d to %d, portal %d to %d, at %d %d / %d %d"), 
-						//		*a_PreviousBlock->GetName(), 
-						//		(int)a_PreviousBlock->m_BlockData.BlockDirection, (int)otherBlock->m_BlockData.BlockDirection,
-						//		(int)portal.Direction, (int) otherPortal.Direction,
-						//		portal.Location.X, portal.Location.Y, portalLocation.X, portalLocation.Y);
-						//}
-
-						//UE_LOG(LogTemp, Display, TEXT("Block is placeable"));
+					if (CheckUnoccupied(otherBlock))
+					{						
 						SpawnConnector(a_PreviousBlock, portal);
 
 						foundPortal = true;						
@@ -414,21 +322,18 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 
 						return otherBlock;
 					}
-					//UE_LOG(LogTemp, Display, TEXT("Trying to place block out of bounds at portal %d"), (int)otherPortal.Direction);
 				}
 			}
 			if (!foundPortal)
 			{
-				//Rotatea_PreviousBlockdata used to fit portals
+				//Rotate block used to fit portals
 				RotateGrid(otherBlock);
-
-				//UE_LOG(LogTemp, Display, TEXT("Rotating block: %d"), direction);
 			}
 		}
 	}
 
 	otherBlock->Destroy();
-	UE_LOG(LogTemp, Display, TEXT("Destroying block"));
+	UE_LOG(LogTemp, Display, TEXT("Destroying block because it could not be placed : LevelGenerator::SpawnNextBlock"));
 
 	return nullptr;
 }
