@@ -68,6 +68,9 @@ public:
 	ABlock* SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, ABlock* a_PreviousBlock);
 
 	UWorld* m_World;
+
+	UPROPERTY(BlueprintReadWrite)
 	int m_BlockNumberLimit;
+	UPROPERTY(BlueprintReadWrite)
 	int m_BlockDepthLimit;
 };

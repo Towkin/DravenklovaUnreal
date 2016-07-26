@@ -12,8 +12,8 @@ ADLevelGenerator::ADLevelGenerator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
-	m_TileCount = FIntVector(20, 10, 1);
-	m_BlockNumberLimit = 6;
+	m_TileCount = FIntVector(50, 50, 1);
+	m_BlockNumberLimit = 50;
 	m_BlockDepthLimit = 5;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
@@ -45,7 +45,7 @@ void ADLevelGenerator::BeginPlay()
 		ABlock* startingBlock = m_World->SpawnActor<ABlock>(m_BlockClasses[0]);
 		
 		//Set world coordinates
-		startingBlock->m_BlockData.BlockLocation = FIntVector(10, 10, 0);
+		startingBlock->m_BlockData.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);
 		
 		OccupyGrid(startingBlock);
 		PlaceBlockInWorld(startingBlock);
@@ -62,7 +62,7 @@ void ADLevelGenerator::BeginPlay()
 		//Spawn blocks from starting block to staircase
 		while (spawnedBlocks.Num() < m_BlockDepthLimit && !triedAll) // while number of rooms is less than room limit		
 		{				
-			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; //change to randomizing function returning block class
+			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 
 			
 			ABlock* nextBlock = SpawnNextBlock(blockClass, previousBlock);
 			if (nextBlock != nullptr)
@@ -93,6 +93,84 @@ void ADLevelGenerator::BeginPlay()
 			}
 		}
 		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnedBlocks.Num());
+		
+
+		TArray<ABlock*> pathBlocks = spawnedBlocks;		
+
+		TArray<bool> triedBlocks = TArray<bool>();
+		triedBlocks.Init(false, pathBlocks.Num());
+
+		triedIndices = TArray<bool>();
+		triedIndices.Init(false, m_BlockClasses.Num());
+
+		TArray<TArray<bool>> triedClassesArray = TArray<TArray<bool>>();
+		triedClassesArray.Init(triedIndices, pathBlocks.Num());
+
+
+		triedAll = false;
+
+		//Spawn blocks surrounding the main path
+		while (spawnedBlocks.Num() < m_BlockNumberLimit && !triedAll)
+		{		
+			triedAll = true;
+			for (int blockIndex = 0; blockIndex < pathBlocks.Num(); blockIndex++)
+			{
+				if (triedBlocks[blockIndex])
+				{			
+					triedAll = true;
+					continue;
+				}
+				else
+				{
+					triedAll = false;
+				}
+
+				ABlock* block = pathBlocks[blockIndex];
+
+				triedIndices = triedClassesArray[blockIndex];
+				randomInt = rand() % m_BlockClasses.Num();				
+				
+				TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
+
+				ABlock* newBlock = SpawnNextBlock(blockClass, block);
+				if (newBlock != nullptr)
+				{
+					spawnedBlocks.Add(newBlock);
+				}
+				else
+				{
+					triedIndices[randomInt] = true;
+				}
+
+				randomInt = rand() % m_BlockClasses.Num();
+
+				for (int i = 0; i < m_BlockClasses.Num() && triedIndices[randomInt]; i++)
+				{
+					randomInt = (randomInt + 1) % m_BlockClasses.Num();
+					if ((i == m_BlockClasses.Num() - 1) && triedIndices[randomInt])
+					{
+						triedBlocks[blockIndex] = true;
+					}
+				}
+				triedClassesArray[blockIndex] = triedIndices;
+			}
+			if (triedAll && spawnedBlocks.Num() > pathBlocks.Num())
+			{
+				pathBlocks = spawnedBlocks;
+				triedAll = false;
+
+				triedBlocks = TArray<bool>();
+				triedBlocks.Init(false, pathBlocks.Num());
+
+				triedIndices = TArray<bool>();
+				triedIndices.Init(false, m_BlockClasses.Num());
+
+				triedClassesArray = TArray<TArray<bool>>();
+				triedClassesArray.Init(triedIndices, pathBlocks.Num());
+
+				UE_LOG(LogTemp, Display, TEXT("Adding a layer of blocks"));
+			}
+		}
 		
 		//TODO: Spawn blocks next to the rest of the portals
 				
@@ -291,7 +369,7 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 		FIntVector wT = a_PreviousBlock->m_BlockData.BlockLocation + pLocMod;
 				
 		bool foundPortal = false;
-		for (int direction = 0; direction < 4 && !foundPortal; direction++)
+		for (int direction = 0; direction < 4 && !foundPortal && !portal.IsPortal; direction++)
 		{
 			//Find corresponding portal in other block
 			for (int portalIndex = 0; portalIndex < otherBlock->m_BlockData.PortalArray.Num(); portalIndex++)
