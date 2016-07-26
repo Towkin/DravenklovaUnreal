@@ -9,6 +9,8 @@
 class UDAttributes;
 class IInteractInterface;
 class ADEquipment;
+class ADWeapon;
+
 UCLASS()
 class DRAVENKLOVA_API ADCharacter : public ACharacter
 {
@@ -40,33 +42,33 @@ public:
 
 	// Added unique equipment events /E, 16-07-13
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	void ProvideEquippedPrimary(ADEquipment* equipment);
+	void ProvideEquippedWeapon(ADWeapon* weapon);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	void ProvideUnequippedPrimary(ADEquipment* equipment);
+	void ProvideUnequippedWeapon(ADWeapon* weapon);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	void ProvideEquippedSecondary(ADEquipment* equipment);
+	void ProvideEquippedEquipment(ADEquipment* equipment);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	void ProvideUnequippedSecondary(ADEquipment* equipment);
+	void ProvideUnequippedEquipment(ADEquipment* equipment);
 
 	// Added UFUNCTION calls /E, 16-07-13
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	ADEquipment* GetPrimary();
+	ADWeapon* GetWeapon();
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void SetPrimary(ADEquipment* equipment);
+	void SetWeapon(ADWeapon* weapon);
 	
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	ADEquipment* GetSecondary();
+	ADEquipment* GetEquipment();
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void SetSecondary(ADEquipment* equipment);
+	void SetEquipment(ADEquipment* equipment);
 
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void DropPrimary();
+	void DropWeapon();
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void DropSecondary();
+	void DropEquipment();
 
-	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void SetSampler(ADEquipment* a_Sampler);
+	//UFUNCTION(BlueprintCallable, Category = "Equipment")
+	//void SetSampler(ADEquipment* a_Sampler);
 
 	// Sets b_NeedsAttributeUpdate to true, which'll make UpdateAttributes() called in the next tick. /E 16-07-21
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
@@ -104,12 +106,41 @@ protected:
 
 	void EnableCheckStats();
 	void DisableCheckStats();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sampler")
+	void OnEnableCheckStats();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sampler")
+	void OnDisableCheckStats();
 	
-	void Attack();
+
+	// Primary Equipment (Weapon) actions /E 16-07-25
+	void StartPrimaryAction();
+	void StopPrimaryAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStartPrimaryAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStopPrimaryAction();
+
+	void StartSecondaryAction();
+	void StopSecondaryAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStartSecondaryAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStopSecondaryAction();
+
+	void StartReloadAction();
+	void StopReloadAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStartReloadAction();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
+	void OnStopReloadAction();
+
+
+
+
 	void Use();
 	UFUNCTION(BlueprintCallable, Category = "Interact")
 	void EndUse();
-	void Equip();
 
 	// Old unused functions. Removed. /E 16-07-13
 
@@ -129,13 +160,20 @@ protected:
 	AActor* m_CurrentUseActor = nullptr;
 
 
-	 // Added UPROPERTY and moved to protected (BlueprintReadWrite doesn't work in private). /E, 16-07-13
+	// Added UPROPERTY and moved to protected (BlueprintReadWrite doesn't work in private). /E, 16-07-13
+	// Removed sampler from equipment - the sampler works differently /E 16-07-25
+		//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+		//ADEquipment* m_Sampler = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	ADEquipment* m_Sampler = nullptr;
+	ADWeapon* m_Weapon = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	ADEquipment* m_Primary = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	ADEquipment* m_Secondary = nullptr;
+	ADEquipment* m_Equipment = nullptr;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool b_ControlRotationEnabled = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool b_ControlMovementEnabled = true;
 
 	// Update function to update all attributes. Should only be externally through CallUpdateAttributes(), which calls it once in Tick(). 16-07-21 /E
 	virtual void UpdateAttributes();
@@ -149,4 +187,6 @@ private:
 	bool b_IsJumping = false;
 	float m_SprintAccumulator = 0.f;
 	float m_HeightTarget = 0.f;
+
+	
 };

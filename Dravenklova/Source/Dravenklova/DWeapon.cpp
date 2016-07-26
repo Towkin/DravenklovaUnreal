@@ -2,32 +2,36 @@
 
 #include "Dravenklova.h"
 #include "DWeapon.h"
+#include "DCharacter.h"
 
 
-
+void ADWeapon::Equip(ADCharacter* pawn)
+{
+	pawn->SetWeapon(this);
+}
 void ADWeapon::PrimaryActionBegin()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin Primary"));
+	OnPrimaryActionBegin();
 }
 void ADWeapon::PrimaryActionEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("End Primary"));
+	OnPrimaryActionEnd();
 }
 void ADWeapon::SecondaryActionBegin()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin Secondary"));
+	OnSecondaryActionBegin();
 }
 void ADWeapon::SecondaryActionEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("End Secondary"));
+	OnSecondaryActionEnd();
 }
 void ADWeapon::ReloadActionBegin()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin Reload"));
+	OnReloadActionBegin();
 }
 void ADWeapon::ReloadActionEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("End Reload"));
+	OnReloadActionEnd();
 }
 const float ADWeapon::getCharacterMoveSpeedMod()
 {

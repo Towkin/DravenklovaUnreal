@@ -5,6 +5,7 @@
 #include "DObject.h"
 #include "DAttributes.h"
 #include "DEquipment.h"
+#include "DWeapon.h"
 
 
 // Sets default a_Values
@@ -36,9 +37,8 @@ ADCharacter::ADCharacter()
 	//m_OtherBox->OnComponentBeginOverlap.AddDynamic(this, &ADCharacter::TriggerEnter);
 	//m_OtherBox->OnComponentEndOverlap.AddDynamic(this, &ADCharacter::TriggerExit);
 
-	m_Primary = nullptr;
-	m_Secondary = nullptr;
-	m_Sampler = nullptr;
+	m_Weapon = nullptr;
+	m_Equipment = nullptr;
 }
 void ADCharacter::OnConstruction(const FTransform& Transform)
 {
@@ -113,8 +113,18 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAction("Use", IE_Pressed, this, &ADCharacter::Use);
 	InputComponent->BindAction("Use", IE_Released, this, &ADCharacter::EndUse);
 
-	InputComponent->BindAction("DropPrimary", IE_Pressed, this, &ADCharacter::DropPrimary);
-	InputComponent->BindAction("DropSecondary", IE_Pressed, this, &ADCharacter::DropSecondary);
+	InputComponent->BindAction("Weapon Primary", IE_Pressed, this, &ADCharacter::StartPrimaryAction);
+	InputComponent->BindAction("Weapon Primary", IE_Released, this, &ADCharacter::StopPrimaryAction);
+
+	InputComponent->BindAction("Weapon Secondary", IE_Pressed, this, &ADCharacter::StartSecondaryAction);
+	InputComponent->BindAction("Weapon Secondary", IE_Released, this, &ADCharacter::StopSecondaryAction);
+
+	InputComponent->BindAction("Reload", IE_Pressed, this, &ADCharacter::StartReloadAction);
+	InputComponent->BindAction("Reload", IE_Released, this, &ADCharacter::StopReloadAction);
+
+
+	InputComponent->BindAction("DropPrimary", IE_Pressed, this, &ADCharacter::DropWeapon);
+	InputComponent->BindAction("DropSecondary", IE_Pressed, this, &ADCharacter::DropEquipment);
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &ADCharacter::EnableSprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &ADCharacter::DisableSprint);
@@ -129,63 +139,54 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 }
 
-ADEquipment* ADCharacter::GetPrimary()
+ADWeapon* ADCharacter::GetWeapon()
 {
-	return m_Primary;
+	return m_Weapon;
 }
 
-void ADCharacter::SetPrimary(ADEquipment * equipment)
+void ADCharacter::SetWeapon(ADWeapon* weapon)
 {
-	m_Primary = equipment;
-	ProvideEquippedPrimary(equipment);
-	UE_LOG(LogTemp, Warning, TEXT("Setting as primary: %s"), *equipment->GetName());
+	m_Weapon = weapon;
+	ProvideEquippedWeapon(weapon);
+	UE_LOG(LogTemp, Warning, TEXT("Setting as primary: %s"), *weapon->GetName());
 }
-ADEquipment* ADCharacter::GetSecondary()
+ADEquipment* ADCharacter::GetEquipment()
 {
-	return m_Secondary;
+	return m_Equipment;
 }
 
-void ADCharacter::SetSecondary(ADEquipment * equipment)
+void ADCharacter::SetEquipment(ADEquipment* equipment)
 {
-	m_Secondary = equipment;
-	ProvideEquippedSecondary(equipment);
+	m_Equipment = equipment;
+	ProvideEquippedEquipment(equipment);
 	UE_LOG(LogTemp, Warning, TEXT("Setting as Secondary: %s"), *equipment->GetName());
 }
 
-void ADCharacter::DropPrimary()
+void ADCharacter::DropWeapon()
 {	
-	if (m_Primary)
+	if (m_Weapon)
 	{
-		ProvideUnequippedPrimary(m_Primary);
-		m_Primary->Unequip(this);
-		UE_LOG(LogTemp, Warning, TEXT("Droppping Primary:  %s"), *m_Primary->GetName());
-		m_Primary = nullptr;
+		ProvideUnequippedWeapon(m_Weapon);
+		m_Weapon->Unequip(this);
+		UE_LOG(LogTemp, Warning, TEXT("Droppping Primary:  %s"), *m_Weapon->GetName());
+		m_Weapon = nullptr;
 	}	
 }
 
-void ADCharacter::DropSecondary()
+void ADCharacter::DropEquipment()
 {	
-	if (m_Secondary)
+	if (m_Equipment)
 	{
-		ProvideUnequippedSecondary(m_Secondary);
-		m_Secondary->Unequip(this);
-		UE_LOG(LogTemp, Warning, TEXT("Droppping Secondary: %s"), *m_Secondary->GetName());
-		m_Secondary = nullptr;
+		ProvideUnequippedEquipment(m_Equipment);
+		m_Equipment->Unequip(this);
+		UE_LOG(LogTemp, Warning, TEXT("Droppping Secondary: %s"), *m_Equipment->GetName());
+		m_Equipment = nullptr;
 	}	
-}
-
-void ADCharacter::SetSampler(ADEquipment* a_Sampler)
-{
-	if (!m_Sampler)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Picking up sampler"));
-		m_Sampler = a_Sampler;
-	}
 }
 
 void ADCharacter::MoveForward(float a_Value)
 {	
-	if ((Controller != nullptr) && (a_Value != 0.0f))
+	if ((Controller != nullptr) && (a_Value != 0.0f) && b_ControlMovementEnabled)
 	{
 		// find out which way is forward
 		FRotator Rotation = Controller->GetControlRotation();
@@ -199,14 +200,12 @@ void ADCharacter::MoveForward(float a_Value)
 		// add movement in that direction
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
 		AddMovementInput(Direction, a_Value);
-
-		//UE_LOG(LogTemp, Warning, TEXT("Moving forward"));
 	}
 }
 
 void ADCharacter::MoveRight(float a_Value)
 {
-	if ((Controller != nullptr) && (a_Value != 0.0f))
+	if ((Controller != nullptr) && (a_Value != 0.0f) && b_ControlMovementEnabled)
 	{
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -214,29 +213,22 @@ void ADCharacter::MoveRight(float a_Value)
 
 		// add movement in that direction
 		AddMovementInput(Direction, a_Value);
-
-		//UE_LOG(LogTemp, Warning, TEXT("Moving right"));
 	}	
 }
 
 void ADCharacter::Turn(float a_Value)
 {
-	if (a_Value != 0.0f)
+	if (a_Value != 0.0f && b_ControlRotationEnabled)
 	{
 		this->AddControllerYawInput(a_Value);
-
-		//UE_LOG(LogTemp, Warning, TEXT("Changing direction"));
 	}	
 }
 
 void ADCharacter::LookUp(float a_Value)
 {
-	if (a_Value != 0.0f)
+	if (a_Value != 0.0f && b_ControlRotationEnabled)
 	{
-		//Changing the sign of the input a_Value because the Y-axis seems to be reversed.
-		this->AddControllerPitchInput(-a_Value);
-
-		//UE_LOG(LogTemp, Warning, TEXT("Looking up"));
+		this->AddControllerPitchInput(a_Value);
 	}	
 }
 
@@ -299,6 +291,20 @@ void ADCharacter::Use()
 		UE_LOG(LogTemp, Warning, TEXT("No interactable objects within range."));
 	}
 }
+void ADCharacter::EndUse()
+{
+	if (m_CurrentUseActor)
+	{
+		IInteractInterface* lastInteractObject = Cast<IInteractInterface>(m_CurrentUseActor);
+		if (lastInteractObject)
+		{
+			lastInteractObject->EndInteract(this);
+		}
+
+		ProvideInteractEnd(m_CurrentUseActor);
+		m_CurrentUseActor = nullptr;
+	}
+}
 
 void ADCharacter::EnableSprint()
 {
@@ -337,61 +343,74 @@ void ADCharacter::DisableCrouch()
 	OnCrouchDisabled();
 }
 
-void ADCharacter::EndUse()
-{
-	if(m_CurrentUseActor)
-	{
-		IInteractInterface* lastInteractObject = Cast<IInteractInterface>(m_CurrentUseActor);
-		if (lastInteractObject)
-		{
-			lastInteractObject->EndInteract(this);
-		}
-
-		ProvideInteractEnd(m_CurrentUseActor);
-		m_CurrentUseActor = nullptr;
-	}
-}
 
 void ADCharacter::EnableCheckStats()
 {
 	// Um... Animate check stats stuff
-	UE_LOG(LogTemp, Warning, TEXT("Checking Stats..."));
-
+	//UE_LOG(LogTemp, Warning, TEXT("Checking Stats..."));
+	OnEnableCheckStats();
 }
 
 void ADCharacter::DisableCheckStats()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Not Checking Stats..."));
+	//UE_LOG(LogTemp, Warning, TEXT("Not Checking Stats..."));
+	OnDisableCheckStats();
 }
 
-void ADCharacter::Equip()
+void ADCharacter::StartPrimaryAction()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Equip ..."));
+	OnStartPrimaryAction();
+	if (m_Weapon)
+	{
+		m_Weapon->PrimaryActionBegin();
+	}
 }
 
-void ADCharacter::Attack()
+void ADCharacter::StopPrimaryAction()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attacking..."));
+	OnStopPrimaryAction();
+	if (m_Weapon)
+	{
+		m_Weapon->PrimaryActionEnd();
+	}
 }
 
-// Old unused functions. Removed. /E 16-07-13
+void ADCharacter::StartSecondaryAction()
+{
+	OnStartSecondaryAction();
+	if (m_Weapon)
+	{
+		m_Weapon->SecondaryActionBegin();
+	}
+}
 
-//void ADCharacter::TriggerEnter(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-//{
-//	//UE_LOG(LogTemp, Warning, TEXT("Added %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
-//
-//	//Light->SetLightColor(FColor::Green);
-//	//add otherActor to list
-//}
-//
-//void ADCharacter::TriggerExit(UPrimitiveComponent* OverlappedComponent, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-//{
-//
-//	//UE_LOG(LogTemp, Warning, TEXT("Removed %s with index %d"), *OtherActor->GetName(), OtherBodyIndex);
-//
-//	//Light->SetLightColor(FColor::Red);
-//	//remove otheractor from list
-//}
+void ADCharacter::StopSecondaryAction()
+{
+	OnStopSecondaryAction();
+	if (m_Weapon)
+	{
+		m_Weapon->SecondaryActionEnd();
+	}
+}
+
+void ADCharacter::StartReloadAction()
+{
+	OnStartReloadAction();
+	if (m_Weapon)
+	{
+		m_Weapon->ReloadActionBegin();
+	}
+}
+
+void ADCharacter::StopReloadAction()
+{
+	OnStopReloadAction();
+	if (m_Weapon)
+	{
+		m_Weapon->ReloadActionEnd();
+	}
+}
+
 
 AActor* ADCharacter::GetClosestInteractableActor()
 {
@@ -426,7 +445,7 @@ AActor* ADCharacter::GetClosestInteractableActor()
 			AActor* actor = primitive->GetOwner();
 
 			// If the actor is already equipped, skip /E, 16-07-13
-			if (actor == this || actor == m_Primary || actor == m_Secondary || actor == m_Sampler) {
+			if (actor == this || actor == m_Weapon || actor == m_Equipment) {
 				continue;
 			}
 

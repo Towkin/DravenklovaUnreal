@@ -19,13 +19,13 @@ class DRAVENKLOVA_API ARangeWeapon : public ADWeapon
 	float m_FireCooldownTime;
 
 
-	// gets
-	UFUNCTION(BlueprintCallable, Category = "Weapon|Range")
-	const float getAccuracy();
-	UFUNCTION(BlueprintCallable, Category = "Weapon|Range")
-	const float getReloadTime();
-	UFUNCTION(BlueprintCallable, Category = "Weapon|Range")
-	const float getFireCooldownTime();
+	// Getters
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Range")
+	const float getAccuracy() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Range")
+	const float getReloadTime() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Range")
+	const float getFireCooldownTime() const;
 
 
 

@@ -13,17 +13,14 @@ class DRAVENKLOVA_API AMeleeWeapon : public ADWeapon
 {
 	GENERATED_BODY()
 
-		
-	
 	float m_MeleeDamage;
 	float m_MeleeCooldownTime;
 
-	// gets
-
-	UFUNCTION(BlueprintCallable, Category = "Weapon|Melee")
-		const float getMeleeDamage();
-	UFUNCTION(BlueprintCallable, Category = "Weapon|Melee")
-		const float getMeleeCooldownTime();
+	// Getters
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Melee")
+	const float getMeleeDamage() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Melee")
+	const float getMeleeCooldownTime() const;
 
 
 	

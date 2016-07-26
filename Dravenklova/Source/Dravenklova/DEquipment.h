@@ -10,14 +10,6 @@
  */
 class ADCharacter;
 
-UENUM(BlueprintType)
-enum class EEquipmentSlot : uint8
-{
-	Primary,
-	Secondary,
-	Sampler
-};
-
 UCLASS()
 class DRAVENKLOVA_API ADEquipment : public ADObject
 {
@@ -28,28 +20,16 @@ public:
 	virtual void EndInteract(ADCharacter* pawn) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	void Equip(ADCharacter* pawn);
+	virtual void Equip(ADCharacter* pawn);
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	void Unequip(ADCharacter* pawn);
 
-	//void UnequipPrimary(ADCharacter* pawn);
-	//void UnequipSecondary(ADCharacter* pawn);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	EEquipmentSlot m_Slot;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Equipment")
+	void ReceiveEquipped(ADCharacter* User);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	void ReceiveEquipped(ADCharacter* User, EEquipmentSlot a_Slot);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Equipment")
 	void ReceiveUnequipped(ADCharacter* User);
-
-	//UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	//void ReceiveUnequipPrimary(ADCharacter* User);
-
-	//UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Equipment")
-	//void ReceiveUnequipSecondary(ADCharacter* User);
-
 };
 
 

@@ -6,15 +6,15 @@
 
 
 
-const float ARangeWeapon::getAccuracy()
+const float ARangeWeapon::getAccuracy() const
 {
 	return m_Accuracy;
 }
-const float ARangeWeapon::getReloadTime()
+const float ARangeWeapon::getReloadTime() const
 {
 	return m_ReloadTime;
 }
-const float ARangeWeapon::getFireCooldownTime()
+const float ARangeWeapon::getFireCooldownTime() const
 {
 	return m_FireCooldownTime;
 }

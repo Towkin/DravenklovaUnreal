@@ -6,11 +6,11 @@
 
 
 
-const float AMeleeWeapon::getMeleeDamage()
+const float AMeleeWeapon::getMeleeDamage() const
 {
 	return m_MeleeDamage;
 }
-const float AMeleeWeapon::getMeleeCooldownTime()
+const float AMeleeWeapon::getMeleeCooldownTime() const
 {
 	return m_MeleeCooldownTime;
 }
