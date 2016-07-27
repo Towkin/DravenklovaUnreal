@@ -13,8 +13,8 @@ ADLevelGenerator::ADLevelGenerator()
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
 	m_TileCount = FIntVector(50, 50, 1);
-	m_BlockNumberLimit = 50;
-	m_BlockDepthLimit = 5;
+	m_BlockNumberLimit = 30;
+	m_BlockDepthLimit = 7;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
 }
@@ -34,15 +34,19 @@ void ADLevelGenerator::BeginPlay()
 	Super::BeginPlay();
 
 	m_World = GetWorld();	
+	bool levelNotSpawned = true;
 
-	if (m_World)
+	while (m_World && levelNotSpawned)
 	{
 		TArray<ABlock*> spawnedBlocks;
 		//TODO: Check if block is null
 		//TODO: Replace with starting block
 		//Place starting block
+		int randomInt = rand() % m_StartingBlockClasses.Num();
 
-		ABlock* startingBlock = m_World->SpawnActor<ABlock>(m_BlockClasses[0]);
+		//m_StartingBlockClasses[0].GetDefaultObject()->m_BlockData
+
+		ABlock* startingBlock = m_World->SpawnActor<ABlock>(m_StartingBlockClasses[0]);
 		
 		//Set world coordinates
 		startingBlock->m_BlockData.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);
@@ -55,12 +59,12 @@ void ADLevelGenerator::BeginPlay()
 
 		TArray<bool> triedIndices = TArray<bool>();
 		triedIndices.Init(false, m_BlockClasses.Num());
-		int randomInt = rand() % m_BlockClasses.Num();
+		randomInt = rand() % m_BlockClasses.Num();
 		bool triedAll = false;
 
 
 		//Spawn blocks from starting block to staircase
-		while (spawnedBlocks.Num() < m_BlockDepthLimit && !triedAll) // while number of rooms is less than room limit		
+		while (spawnedBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
 		{				
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 
 			
@@ -72,7 +76,7 @@ void ADLevelGenerator::BeginPlay()
 				triedAll = false;
 				triedIndices = TArray<bool>();
 				triedIndices.Init(false, m_BlockClasses.Num());
-				//UE_LOG(LogTemp, Display, TEXT("Placed block: %d"), randomInt);
+				UE_LOG(LogTemp, Display, TEXT("Placed block: %s"), *previousBlock->GetName());
 			}
 			else
 			{
@@ -92,9 +96,36 @@ void ADLevelGenerator::BeginPlay()
 				}
 			}
 		}
-		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnedBlocks.Num());
+
+		ABlock* lastBlock = nullptr;
+
+		triedIndices = TArray<bool>();
+		triedIndices.Init(false, m_StartingBlockClasses.Num());
+		
+		//Spawn staircase block - start over if not possible to place
+		while (lastBlock == nullptr && !triedAll)
+		{
+			randomInt = rand() % m_StaircaseBlockClasses.Num();
+			for (int i = 0; i < m_StaircaseBlockClasses.Num() && triedIndices[randomInt]; i++)
+			{
+				randomInt = (randomInt + 1) % m_StaircaseBlockClasses.Num();
+				if ((i == m_StaircaseBlockClasses.Num() - 1) && triedIndices[randomInt])
+				{
+					triedAll = true;
+					UE_LOG(LogTemp, Display, TEXT("Tried all block classes"));
+				}
+			}
+			ABlock* lastBlock = SpawnNextBlock(m_StaircaseBlockClasses[0], spawnedBlocks.Last());
+			if (lastBlock)
+			{
+				spawnedBlocks.Add(lastBlock);
+				break;
+			}
+		}
 		
 
+		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnedBlocks.Num());
+		
 		TArray<ABlock*> pathBlocks = spawnedBlocks;		
 
 		TArray<bool> triedBlocks = TArray<bool>();
@@ -105,7 +136,6 @@ void ADLevelGenerator::BeginPlay()
 
 		TArray<TArray<bool>> triedClassesArray = TArray<TArray<bool>>();
 		triedClassesArray.Init(triedIndices, pathBlocks.Num());
-
 
 		triedAll = false;
 
@@ -170,17 +200,18 @@ void ADLevelGenerator::BeginPlay()
 
 				UE_LOG(LogTemp, Display, TEXT("Adding a layer of blocks"));
 			}
-		}
-		
-		//TODO: Spawn blocks next to the rest of the portals
+		}		
 				
 		UE_LOG(LogTemp, Display, TEXT("Total number of blocks in level: %d"), spawnedBlocks.Num());
 
 		for (ABlock* block : spawnedBlocks)
 		{
 			block->SpawnBlockComponents();
+			//UE_LOG(LogTemp, Display, TEXT("%s : %d"), block->GetName(), (int)block->m_BlockData.BlockDirection);
 		}
-	}
+		levelNotSpawned = false;
+		m_Blocks = spawnedBlocks;
+	}	
 }
 
 // Called every frame
@@ -251,7 +282,7 @@ bool ADLevelGenerator::OccupyGrid(ABlock* a_Block)
 			int globalIndex = GlobalGridToIndex(a_Block->m_BlockData.BlockLocation + localCoord);
 			if (globalIndex > m_OccupationGrid.Num() || globalIndex < 0)
 			{
-				UE_LOG(LogTemp, Display, TEXT("Failed occupation : LevelGenerator::OccupyGrid"));
+				//UE_LOG(LogTemp, Display, TEXT("Failed occupation : LevelGenerator::OccupyGrid"));
 				return false;
 			}
 			indices.Add(globalIndex);			
@@ -355,8 +386,11 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 {
 	ABlock* otherBlock = m_World->SpawnActor<ABlock>(a_BlockClass);
 
-	for (FPortalData& portal : a_PreviousBlock->m_BlockData.PortalArray)
+	int randomPortal = rand() % a_PreviousBlock->m_BlockData.PortalArray.Num();
+	//for (FPortalData& portal : a_PreviousBlock->m_BlockData.PortalArray)
+	for (int i = 0; i < a_PreviousBlock->m_BlockData.PortalArray.Num(); i++)
 	{
+		FPortalData& portal = a_PreviousBlock->m_BlockData.PortalArray[(randomPortal + i) % a_PreviousBlock->m_BlockData.PortalArray.Num()];
 		////Choose one portal and find its direction, reverse it		
 		EDirection wishedPortalDirection = (EDirection)(((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection + 2) % 4);
 		
@@ -372,9 +406,14 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 		for (int direction = 0; direction < 4 && !foundPortal && !portal.IsPortal; direction++)
 		{
 			//Find corresponding portal in other block
+			if(otherBlock->m_BlockData.PortalArray.Num() == 0)
+			{ 
+				return nullptr;
+			}
+			int randomInt = rand() % otherBlock->m_BlockData.PortalArray.Num();
 			for (int portalIndex = 0; portalIndex < otherBlock->m_BlockData.PortalArray.Num(); portalIndex++)
 			{
-				FPortalData& otherPortal = otherBlock->m_BlockData.PortalArray[portalIndex];
+				FPortalData& otherPortal = otherBlock->m_BlockData.PortalArray[(randomInt + portalIndex) % otherBlock->m_BlockData.PortalArray.Num()];
 				int newPortalDirection = ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4;
 				
 				if ((int)wishedPortalDirection == newPortalDirection)
@@ -397,7 +436,7 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 						//Mark the grid tiles as occupied and set actor location and rotation
 						OccupyGrid(otherBlock);
 						PlaceBlockInWorld(otherBlock);
-
+						
 						return otherBlock;
 					}
 				}
@@ -411,7 +450,7 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 	}
 
 	otherBlock->Destroy();
-	UE_LOG(LogTemp, Display, TEXT("Destroying block because it could not be placed : LevelGenerator::SpawnNextBlock"));
+	//UE_LOG(LogTemp, Display, TEXT("Destroying block because it could not be placed : LevelGenerator::SpawnNextBlock"));
 
 	return nullptr;
 }

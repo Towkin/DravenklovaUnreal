@@ -24,8 +24,21 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	TArray<ABlock*> m_Blocks;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+	TArray<TSubclassOf<class ABlock>> m_StartingBlockClasses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+	TArray<TSubclassOf<class ABlock>> m_StaircaseBlockClasses;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class ABlock>> m_BlockClasses;
+
+	UPROPERTY(BlueprintReadWrite)
+	int m_BlockNumberLimit;
+	UPROPERTY(BlueprintReadWrite)
+	int m_BlockDepthLimit;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class AConnector>> m_ConnectorClasses;
 
@@ -69,8 +82,5 @@ public:
 
 	UWorld* m_World;
 
-	UPROPERTY(BlueprintReadWrite)
-	int m_BlockNumberLimit;
-	UPROPERTY(BlueprintReadWrite)
-	int m_BlockDepthLimit;
+	
 };
