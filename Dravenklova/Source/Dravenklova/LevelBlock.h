@@ -20,6 +20,14 @@ enum class EDirection : uint8
 	Left = 3
 };
 
+UENUM(BlueprintType)
+enum class EType : uint8
+{
+	Door = 0,	
+	Fireplace = 1,
+	Rathole = 2
+};
+
 UCLASS()
 class AWall : public AActor
 {
@@ -33,6 +41,7 @@ class AConnector : public AActor
 {
 	GENERATED_BODY()
 public:
+	EType Type;
 
 };
 
@@ -51,9 +60,15 @@ struct FPortalData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
 	TSubclassOf<AWall> PortalType;
 
+	FPortalData* ConnectedPortal = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
 	bool IsPortal = false;
+	bool IsExhausted = false;
+	int LayerIndex = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
+	EType Type;
 };
 
 USTRUCT(BlueprintType)
@@ -65,6 +80,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Portal")
 	TArray<FPortalData> PortalArray;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tiles")
 	FIntVector TileCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tiles")
@@ -77,6 +93,10 @@ public:
 		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tiles")
 	TArray<bool> OccupationGrid;
+
+	TArray<FBlockData*> Neighbours;
+
+	int Distance;
 };
 
 
@@ -103,6 +123,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Block")
 	void SpawnBlockComponents();
 
+	TArray<ABlock*> Neighbours;
 	
 };
 

@@ -207,7 +207,7 @@ void ADLevelGenerator::BeginPlay()
 		for (ABlock* block : spawnedBlocks)
 		{
 			block->SpawnBlockComponents();
-			//UE_LOG(LogTemp, Display, TEXT("%s : %d"), block->GetName(), (int)block->m_BlockData.BlockDirection);
+			UE_LOG(LogTemp, Display, TEXT("%s : %d"), *block->GetName(), (int)block->m_BlockData.BlockDirection);
 		}
 		levelNotSpawned = false;
 		m_Blocks = spawnedBlocks;
@@ -403,8 +403,16 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 		FIntVector wT = a_PreviousBlock->m_BlockData.BlockLocation + pLocMod;
 				
 		bool foundPortal = false;
+
+		int randomDirection = rand() % 4;
+		for (int i = 0; i < randomDirection; i++)
+		{
+			RotateGrid(otherBlock);
+		}		
+
 		for (int direction = 0; direction < 4 && !foundPortal && !portal.IsPortal; direction++)
 		{
+
 			//Find corresponding portal in other block
 			if(otherBlock->m_BlockData.PortalArray.Num() == 0)
 			{ 
@@ -416,7 +424,7 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 				FPortalData& otherPortal = otherBlock->m_BlockData.PortalArray[(randomInt + portalIndex) % otherBlock->m_BlockData.PortalArray.Num()];
 				int newPortalDirection = ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4;
 				
-				if ((int)wishedPortalDirection == newPortalDirection)
+				if ((int)wishedPortalDirection == newPortalDirection && portal.PortalType == otherPortal.PortalType)
 				{
 					//STEP TWO NEW SOLUTION
 					//Place the next block so that the portals are next to each other
@@ -432,6 +440,18 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 						foundPortal = true;						
 						portal.IsPortal = true;
 						otherPortal.IsPortal = true;						
+
+						portal.ConnectedPortal = &otherPortal;
+						otherPortal.ConnectedPortal = &portal;
+
+						if (!a_PreviousBlock->Neighbours.Contains(otherBlock))
+						{
+							a_PreviousBlock->Neighbours.Add(otherBlock);
+						}
+						if (!otherBlock->Neighbours.Contains(a_PreviousBlock))
+						{
+							otherBlock->Neighbours.Add(a_PreviousBlock);
+						}
 
 						//Mark the grid tiles as occupied and set actor location and rotation
 						OccupyGrid(otherBlock);
