@@ -121,12 +121,11 @@ void ADLevelGenerator::BeginPlay()
 					UE_LOG(LogTemp, Display, TEXT("Tried all block classes"));
 				}
 			}
-			int index = 0; //should be randomInt
-
-			success = SpawnNextBlock(m_StaircaseBlockClasses[index], lastBlock, spawnBlocks.Last());
+			
+			success = SpawnNextBlock(m_StaircaseBlockClasses[randomInt], lastBlock, spawnBlocks.Last());
 			if (success)
 			{			
-				blockTypes.Add(m_StaircaseBlockClasses[index]);
+				blockTypes.Add(m_StaircaseBlockClasses[randomInt]);
 				spawnBlocks.Add(lastBlock);
 
 				//Update list of connections between blocks
