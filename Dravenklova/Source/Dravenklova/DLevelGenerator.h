@@ -23,7 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	TArray<ABlock*> m_Blocks;
+	TArray<ABlock> m_Blocks;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class ABlock>> m_StartingBlockClasses;
@@ -48,7 +48,7 @@ public:
 
 	void RotateBounds(FIntVector& a_TileCount);
 
-	void RotateGrid(ABlock* a_Block);
+	void RotateGrid(FBlockData& a_Block);
 	
 	UPROPERTY()
 	TSubclassOf<class ABlock> m_BlockClass;
@@ -63,22 +63,22 @@ public:
 	int GlobalGridToIndex(FIntVector gridCoord);
 	
 	UFUNCTION(BlueprintCallable, Category = "Level")
-	int LocalGridToIndex(FIntVector gridCoord, ABlock* block);
+	int LocalGridToIndex(FIntVector gridCoord, FBlockData& a_Block);
 
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	FIntVector GlobalIndexToGrid(int index);
 	UFUNCTION(BlueprintCallable, Category = "Level")
-	FIntVector LocalIndexToGrid(int index, ABlock* a_Block);
+	FIntVector LocalIndexToGrid(int index, FBlockData& a_Block);
 	
-	bool OccupyGrid(ABlock* a_Block);
+	bool OccupyGrid(FBlockData& a_Block);
 
-	void PlaceBlockInWorld(ABlock* a_Block);
+	//void PlaceBlockInWorld(ABlock& a_Block);
 
-	bool CheckUnoccupied(ABlock* a_Block);
+	bool CheckUnoccupied(FBlockData& a_Block);
 
-	void SpawnConnector(ABlock* a_Block, FPortalData a_Portal);
+	void SpawnConnector(FBlockData& a_Block, FPortalData a_Portal);
 
-	ABlock* SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, ABlock* a_PreviousBlock);
+	bool SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FBlockData& a_NewBlock, FBlockData& a_PreviousBlock);
 
 	UWorld* m_World;
 

@@ -13,8 +13,8 @@ ADLevelGenerator::ADLevelGenerator()
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
 	m_TileCount = FIntVector(50, 50, 1);
-	m_BlockNumberLimit = 30;
-	m_BlockDepthLimit = 7;
+	m_BlockNumberLimit = 50;
+	m_BlockDepthLimit = 10;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
 }
@@ -38,7 +38,8 @@ void ADLevelGenerator::BeginPlay()
 
 	while (m_World && levelNotSpawned)
 	{
-		TArray<ABlock*> spawnedBlocks;
+		TArray<FBlockData> spawnBlocks;
+		TArray < TSubclassOf<ABlock>> blockTypes;
 		//TODO: Check if block is null
 		//TODO: Replace with starting block
 		//Place starting block
@@ -46,17 +47,17 @@ void ADLevelGenerator::BeginPlay()
 
 		//m_StartingBlockClasses[0].GetDefaultObject()->m_BlockData
 
-		ABlock* startingBlock = m_World->SpawnActor<ABlock>(m_StartingBlockClasses[0]);
+
+		FBlockData startingBlock = m_StartingBlockClasses[randomInt].GetDefaultObject()->m_BlockData;
 		
 		//Set world coordinates
-		startingBlock->m_BlockData.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);
+		startingBlock.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);
 		
 		OccupyGrid(startingBlock);
-		PlaceBlockInWorld(startingBlock);
-		spawnedBlocks.Add(startingBlock);
-
-		ABlock* previousBlock = startingBlock;	
-
+		//PlaceBlockInWorld(startingBlock);
+		spawnBlocks.Add(startingBlock);
+		blockTypes.Add(m_StartingBlockClasses[randomInt]);
+		
 		TArray<bool> triedIndices = TArray<bool>();
 		triedIndices.Init(false, m_BlockClasses.Num());
 		randomInt = rand() % m_BlockClasses.Num();
@@ -64,19 +65,20 @@ void ADLevelGenerator::BeginPlay()
 
 
 		//Spawn blocks from starting block to staircase
-		while (spawnedBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
+		while (spawnBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
 		{				
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 
 			
-			ABlock* nextBlock = SpawnNextBlock(blockClass, previousBlock);
-			if (nextBlock != nullptr)
+			FBlockData nextBlock;
+			bool success = SpawnNextBlock(blockClass, nextBlock, spawnBlocks.Last());
+			if (success) //TODO: How to check if spawned correctly or not? Pass a block reference as return argument and return a boolean?
 			{				
-				spawnedBlocks.Add(nextBlock);
-				previousBlock = nextBlock;
+				spawnBlocks.Add(nextBlock);
+				blockTypes.Add(blockClass);
 				triedAll = false;
 				triedIndices = TArray<bool>();
 				triedIndices.Init(false, m_BlockClasses.Num());
-				UE_LOG(LogTemp, Display, TEXT("Placed block: %s"), *previousBlock->GetName());
+				UE_LOG(LogTemp, Display, TEXT("Placed block: %s"), *m_BlockClasses[randomInt].GetDefaultObject()->GetName());
 			}
 			else
 			{
@@ -97,13 +99,13 @@ void ADLevelGenerator::BeginPlay()
 			}
 		}
 
-		ABlock* lastBlock = nullptr;
-
+		FBlockData lastBlock;
+		bool success = false;
 		triedIndices = TArray<bool>();
 		triedIndices.Init(false, m_StartingBlockClasses.Num());
 		
 		//Spawn staircase block - start over if not possible to place
-		while (lastBlock == nullptr && !triedAll)
+		while (!success && !triedAll)
 		{
 			randomInt = rand() % m_StaircaseBlockClasses.Num();
 			for (int i = 0; i < m_StaircaseBlockClasses.Num() && triedIndices[randomInt]; i++)
@@ -115,18 +117,20 @@ void ADLevelGenerator::BeginPlay()
 					UE_LOG(LogTemp, Display, TEXT("Tried all block classes"));
 				}
 			}
-			ABlock* lastBlock = SpawnNextBlock(m_StaircaseBlockClasses[0], spawnedBlocks.Last());
-			if (lastBlock)
-			{
-				spawnedBlocks.Add(lastBlock);
+			int index = 0; //should be randomInt
+
+			success = SpawnNextBlock(m_StaircaseBlockClasses[index], lastBlock, spawnBlocks.Last());
+			if (success)
+			{			
+				blockTypes.Add(m_StaircaseBlockClasses[index]);
+				spawnBlocks.Add(lastBlock);
 				break;
 			}
-		}
-		
+		}		
 
-		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnedBlocks.Num());
+		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnBlocks.Num());
 		
-		TArray<ABlock*> pathBlocks = spawnedBlocks;		
+		TArray<FBlockData> pathBlocks = spawnBlocks;		
 
 		TArray<bool> triedBlocks = TArray<bool>();
 		triedBlocks.Init(false, pathBlocks.Num());
@@ -140,7 +144,7 @@ void ADLevelGenerator::BeginPlay()
 		triedAll = false;
 
 		//Spawn blocks surrounding the main path
-		while (spawnedBlocks.Num() < m_BlockNumberLimit && !triedAll)
+		while (spawnBlocks.Num() < m_BlockNumberLimit && !triedAll)
 		{		
 			triedAll = true;
 			for (int blockIndex = 0; blockIndex < pathBlocks.Num(); blockIndex++)
@@ -153,19 +157,20 @@ void ADLevelGenerator::BeginPlay()
 				else
 				{
 					triedAll = false;
-				}
-
-				ABlock* block = pathBlocks[blockIndex];
+				}				
 
 				triedIndices = triedClassesArray[blockIndex];
 				randomInt = rand() % m_BlockClasses.Num();				
 				
 				TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
 
-				ABlock* newBlock = SpawnNextBlock(blockClass, block);
-				if (newBlock != nullptr)
+				FBlockData newBlock;
+				bool success = SpawnNextBlock(blockClass, newBlock, pathBlocks[blockIndex]);
+				if (success)
 				{
-					spawnedBlocks.Add(newBlock);
+					blockTypes.Add(blockClass);
+					spawnBlocks.Add(newBlock);
+					spawnBlocks[blockIndex] = pathBlocks[blockIndex];
 				}
 				else
 				{
@@ -184,9 +189,9 @@ void ADLevelGenerator::BeginPlay()
 				}
 				triedClassesArray[blockIndex] = triedIndices;
 			}
-			if (triedAll && spawnedBlocks.Num() > pathBlocks.Num())
+			if (triedAll && spawnBlocks.Num() > pathBlocks.Num())
 			{
-				pathBlocks = spawnedBlocks;
+				pathBlocks = spawnBlocks;
 				triedAll = false;
 
 				triedBlocks = TArray<bool>();
@@ -202,15 +207,27 @@ void ADLevelGenerator::BeginPlay()
 			}
 		}		
 				
-		UE_LOG(LogTemp, Display, TEXT("Total number of blocks in level: %d"), spawnedBlocks.Num());
-
-		for (ABlock* block : spawnedBlocks)
+		UE_LOG(LogTemp, Display, TEXT("Total number of blocks in level: %d"), spawnBlocks.Num());
+				
+		for (int i = 0; i < spawnBlocks.Num(); i++)
 		{
+			FBlockData blockData = spawnBlocks[i];
+			TSubclassOf<class ABlock> blockClass = blockTypes[i];
+
+			FVector location = FVector(blockData.BlockLocation.X*blockData.TileSize.X,
+				blockData.BlockLocation.Y*blockData.TileSize.Y,
+				blockData.BlockLocation.Z*blockData.TileSize.Z);
+
+			FRotator rotation = FRotator(0, (int)blockData.BlockDirection * 90, 0);
+
+			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);			
+			block->m_BlockData = blockData;
+			
 			block->SpawnBlockComponents();
-			UE_LOG(LogTemp, Display, TEXT("%s : %d"), *block->GetName(), (int)block->m_BlockData.BlockDirection);
+			//m_Blocks.Add(*block);
+			//UE_LOG(LogTemp, Display, TEXT("%s : %d"), *block->GetName(), (int)block->m_BlockData.BlockDirection);
 		}
 		levelNotSpawned = false;
-		m_Blocks = spawnedBlocks;
 	}	
 }
 
@@ -228,9 +245,9 @@ int ADLevelGenerator::GlobalGridToIndex(FIntVector gridCoord)
 	return index;
 }
 
-int ADLevelGenerator::LocalGridToIndex(FIntVector gridCoord, ABlock* a_Block)
+int ADLevelGenerator::LocalGridToIndex(FIntVector gridCoord, FBlockData& a_Block)
 {	
-	int index = gridCoord.X + (gridCoord.Y * a_Block->m_BlockData.TileCount.X) + (gridCoord.Z * a_Block->m_BlockData.TileCount.X * a_Block->m_BlockData.TileCount.Y);
+	int index = gridCoord.X + (gridCoord.Y * a_Block.TileCount.X) + (gridCoord.Z * a_Block.TileCount.X * a_Block.TileCount.Y);
 	
 	return index;
 }
@@ -252,34 +269,34 @@ FIntVector ADLevelGenerator::GlobalIndexToGrid(int a_Index)
 	return gridLocation;
 }
 
-FIntVector ADLevelGenerator::LocalIndexToGrid(int a_Index, ABlock* a_Block)
+FIntVector ADLevelGenerator::LocalIndexToGrid(int a_Index, FBlockData& a_Block)
 {
 	FIntVector gridCoord = FIntVector::ZeroValue;
 	
-	if (a_Block->m_BlockData.TileCount.X == 0 || a_Block->m_BlockData.TileCount.Y == 0) {
+	if (a_Block.TileCount.X == 0 || a_Block.TileCount.Y == 0) {
 		UE_LOG(LogTemp, Display, TEXT("Division by zero! in levelgenerator"))
 			return gridCoord;
 	}
 
-	gridCoord.X = a_Index % a_Block->m_BlockData.TileCount.X;
-	gridCoord.Y = (a_Index / a_Block->m_BlockData.TileCount.X) % a_Block->m_BlockData.TileCount.Y;
-	gridCoord.Z = (a_Index / a_Block->m_BlockData.TileCount.X) / a_Block->m_BlockData.TileCount.Y;
+	gridCoord.X = a_Index % a_Block.TileCount.X;
+	gridCoord.Y = (a_Index / a_Block.TileCount.X) % a_Block.TileCount.Y;
+	gridCoord.Z = (a_Index / a_Block.TileCount.X) / a_Block.TileCount.Y;
 
-	RotateCoordinate(gridCoord, (int)a_Block->m_BlockData.BlockDirection);
+	RotateCoordinate(gridCoord, (int)a_Block.BlockDirection);
 
 	return gridCoord;
 }
 
-bool ADLevelGenerator::OccupyGrid(ABlock* a_Block)
+bool ADLevelGenerator::OccupyGrid(FBlockData& a_Block)
 {	
 	TArray<int> indices;
-	for (int i = 0; i < a_Block->m_BlockData.OccupationGrid.Num(); i++)
+	for (int i = 0; i < a_Block.OccupationGrid.Num(); i++)
 	{
-		if (a_Block->m_BlockData.OccupationGrid[i] == true)
+		if (a_Block.OccupationGrid[i] == true)
 		{
 			FIntVector localCoord = LocalIndexToGrid(i, a_Block);
 
-			int globalIndex = GlobalGridToIndex(a_Block->m_BlockData.BlockLocation + localCoord);
+			int globalIndex = GlobalGridToIndex(a_Block.BlockLocation + localCoord);
 			if (globalIndex > m_OccupationGrid.Num() || globalIndex < 0)
 			{
 				//UE_LOG(LogTemp, Display, TEXT("Failed occupation : LevelGenerator::OccupyGrid"));
@@ -295,16 +312,16 @@ bool ADLevelGenerator::OccupyGrid(ABlock* a_Block)
 	return true;
 }
 
-void ADLevelGenerator::PlaceBlockInWorld(ABlock* a_Block)
-{
-	a_Block->SetActorLocation(
-		FVector(a_Block->m_BlockData.BlockLocation.X*a_Block->m_BlockData.TileSize.X,
-			a_Block->m_BlockData.BlockLocation.Y*a_Block->m_BlockData.TileSize.Y,
-			a_Block->m_BlockData.BlockLocation.Z*a_Block->m_BlockData.TileSize.Z));
-	
-	a_Block->SetActorRotation(FRotator(0, (int)a_Block->m_BlockData.BlockDirection * 90, 0));
-	
-}
+//void ADLevelGenerator::PlaceBlockInWorld(FBlock a_Block)
+//{
+//	a_Block->SetActorLocation(
+//		FVector(a_Block->m_BlockData.BlockLocation.X*a_Block->m_BlockData.TileSize.X,
+//			a_Block->m_BlockData.BlockLocation.Y*a_Block->m_BlockData.TileSize.Y,
+//			a_Block->m_BlockData.BlockLocation.Z*a_Block->m_BlockData.TileSize.Z));
+//	
+//	a_Block->SetActorRotation(FRotator(0, (int)a_Block->m_BlockData.BlockDirection * 90, 0));
+//	
+//}
 
 void ADLevelGenerator::RotateCoordinate(FIntVector& xy, int a_RotationSteps)
 {
@@ -333,25 +350,25 @@ void ADLevelGenerator::RotateBounds(FIntVector& a_TileCount)
 	a_TileCount.X = temp;
 }
 
-void ADLevelGenerator::RotateGrid(ABlock* a_Block)
+void ADLevelGenerator::RotateGrid(FBlockData& a_Block)
 {	
-	RotateDirection(a_Block->m_BlockData.BlockDirection);	
+	RotateDirection(a_Block.BlockDirection);	
 }
 
-bool ADLevelGenerator::CheckUnoccupied(ABlock* a_Block)
+bool ADLevelGenerator::CheckUnoccupied(FBlockData& a_Block)
 {
-	for (int index = 0; index < a_Block->m_BlockData.OccupationGrid.Num(); index++)
+	for (int index = 0; index < a_Block.OccupationGrid.Num(); index++)
 	{
-		if (a_Block->m_BlockData.OccupationGrid[index])
+		if (a_Block.OccupationGrid[index])
 		{
 			FIntVector localCoord = LocalIndexToGrid(index, a_Block);
-			FIntVector location = a_Block->m_BlockData.BlockLocation + localCoord;
+			FIntVector location = a_Block.BlockLocation + localCoord;
 			if (location.X < 0 || location.Y < 0 || location.X > m_TileCount.X || location.Y > m_TileCount.Y )
 			{				
 				//UE_LOG(LogTemp, Display, TEXT("Block out of bounds : LevelGenerator::CheckUnoccupied"));
 				return false;
 			}
-			int globalIndex = GlobalGridToIndex(a_Block->m_BlockData.BlockLocation + localCoord);
+			int globalIndex = GlobalGridToIndex(a_Block.BlockLocation + localCoord);
 
 			//If occupied or out of bounds
 			if (globalIndex > m_OccupationGrid.Num() || globalIndex < 0 || m_OccupationGrid[globalIndex] == true)
@@ -363,18 +380,18 @@ bool ADLevelGenerator::CheckUnoccupied(ABlock* a_Block)
 	return true;
 }
 
-void ADLevelGenerator::SpawnConnector(ABlock* a_Block, FPortalData a_Portal)
+void ADLevelGenerator::SpawnConnector(FBlockData& a_Block, FPortalData a_Portal)
 {
 	if (m_ConnectorClasses.Num() > 0)
 	{
 		FIntVector relativePortalLocation = a_Portal.Location;
-		RotateCoordinate(relativePortalLocation, (int) a_Block->m_BlockData.BlockDirection);
+		RotateCoordinate(relativePortalLocation, (int) a_Block.BlockDirection);
 
-		FIntVector portalLocation = a_Block->m_BlockData.BlockLocation + relativePortalLocation;
+		FIntVector portalLocation = a_Block.BlockLocation + relativePortalLocation;
 
 		AConnector* connector = m_World->SpawnActor<AConnector>(m_ConnectorClasses[0]);
-		connector->SetActorLocation(FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * a_Block->m_BlockData.TileSize);
-		connector->SetActorRotation(FRotator(0, (((int)a_Portal.Direction + (int)a_Block->m_BlockData.BlockDirection) % 4) * 90, 0));
+		connector->SetActorLocation(FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * a_Block.TileSize);
+		connector->SetActorRotation(FRotator(0, (((int)a_Portal.Direction + (int)a_Block.BlockDirection) % 4) * 90, 0));
 	}
 	else
 	{
@@ -382,25 +399,25 @@ void ADLevelGenerator::SpawnConnector(ABlock* a_Block, FPortalData a_Portal)
 	}
 }
 
-ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, ABlock* a_PreviousBlock)
+bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FBlockData& a_NewBlock, FBlockData& a_PreviousBlock)
 {
-	ABlock* otherBlock = m_World->SpawnActor<ABlock>(a_BlockClass);
+	FBlockData otherBlock = a_BlockClass.GetDefaultObject()->m_BlockData;
 
-	int randomPortal = rand() % a_PreviousBlock->m_BlockData.PortalArray.Num();
+	int randomPortal = rand() % a_PreviousBlock.PortalArray.Num();
 	//for (FPortalData& portal : a_PreviousBlock->m_BlockData.PortalArray)
-	for (int i = 0; i < a_PreviousBlock->m_BlockData.PortalArray.Num(); i++)
+	for (int i = 0; i < a_PreviousBlock.PortalArray.Num(); i++)
 	{
-		FPortalData& portal = a_PreviousBlock->m_BlockData.PortalArray[(randomPortal + i) % a_PreviousBlock->m_BlockData.PortalArray.Num()];
+		FPortalData& portal = a_PreviousBlock.PortalArray[(randomPortal + i) % a_PreviousBlock.PortalArray.Num()];
 		////Choose one portal and find its direction, reverse it		
-		EDirection wishedPortalDirection = (EDirection)(((int)portal.Direction + (int)a_PreviousBlock->m_BlockData.BlockDirection + 2) % 4);
+		EDirection wishedPortalDirection = (EDirection)(((int)portal.Direction + (int)a_PreviousBlock.BlockDirection + 2) % 4);
 		
 		//STEP ONE NEW SOLUTION
 		//Find tile in front of current portal
 		FIntVector mod = FIntVector(1, 0, 0);
 		RotateCoordinate(mod, (int)portal.Direction);
 		FIntVector pLocMod = portal.Location + mod;
-		RotateCoordinate(pLocMod, (int)a_PreviousBlock->m_BlockData.BlockDirection);
-		FIntVector wT = a_PreviousBlock->m_BlockData.BlockLocation + pLocMod;
+		RotateCoordinate(pLocMod, (int)a_PreviousBlock.BlockDirection);
+		FIntVector wT = a_PreviousBlock.BlockLocation + pLocMod;
 				
 		bool foundPortal = false;
 
@@ -414,23 +431,23 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 		{
 
 			//Find corresponding portal in other block
-			if(otherBlock->m_BlockData.PortalArray.Num() == 0)
+			if(otherBlock.PortalArray.Num() == 0)
 			{ 
-				return nullptr;
+				return false;
 			}
-			int randomInt = rand() % otherBlock->m_BlockData.PortalArray.Num();
-			for (int portalIndex = 0; portalIndex < otherBlock->m_BlockData.PortalArray.Num(); portalIndex++)
+			int randomInt = rand() % otherBlock.PortalArray.Num();
+			for (int portalIndex = 0; portalIndex < otherBlock.PortalArray.Num(); portalIndex++)
 			{
-				FPortalData& otherPortal = otherBlock->m_BlockData.PortalArray[(randomInt + portalIndex) % otherBlock->m_BlockData.PortalArray.Num()];
-				int newPortalDirection = ((int)otherBlock->m_BlockData.BlockDirection + (int)otherPortal.Direction) % 4;
+				FPortalData& otherPortal = otherBlock.PortalArray[(randomInt + portalIndex) % otherBlock.PortalArray.Num()];
+				int newPortalDirection = ((int)otherBlock.BlockDirection + (int)otherPortal.Direction) % 4;
 				
 				if ((int)wishedPortalDirection == newPortalDirection && portal.PortalType == otherPortal.PortalType)
 				{
 					//STEP TWO NEW SOLUTION
 					//Place the next block so that the portals are next to each other
 					FIntVector p2Loc = otherPortal.Location;
-					RotateCoordinate(p2Loc, (int)otherBlock->m_BlockData.BlockDirection);			
-					otherBlock->m_BlockData.BlockLocation = wT - p2Loc;
+					RotateCoordinate(p2Loc, (int)otherBlock.BlockDirection);			
+					otherBlock.BlockLocation = wT - p2Loc;
 					
 					//Check that the location is clear to build on				
 					if (CheckUnoccupied(otherBlock))
@@ -439,25 +456,25 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 
 						foundPortal = true;						
 						portal.IsPortal = true;
-						otherPortal.IsPortal = true;						
+						otherPortal.IsPortal = true;		
 
 						portal.ConnectedPortal = &otherPortal;
 						otherPortal.ConnectedPortal = &portal;
 
-						if (!a_PreviousBlock->Neighbours.Contains(otherBlock))
-						{
-							a_PreviousBlock->Neighbours.Add(otherBlock);
-						}
-						if (!otherBlock->Neighbours.Contains(a_PreviousBlock))
-						{
-							otherBlock->Neighbours.Add(a_PreviousBlock);
-						}
+						//if (!a_PreviousBlock.Neighbours.Contains(otherBlock))
+						//{
+						//	a_PreviousBlock.Neighbours.Add(&otherBlock);
+						//}
+						//if (!otherBlock.Neighbours.Contains(a_PreviousBlock))
+						//{
+						//	otherBlock.Neighbours.Add(&a_PreviousBlock);
+						//}
 
 						//Mark the grid tiles as occupied and set actor location and rotation
 						OccupyGrid(otherBlock);
-						PlaceBlockInWorld(otherBlock);
 						
-						return otherBlock;
+						a_NewBlock = otherBlock;
+						return true;
 					}
 				}
 			}
@@ -468,9 +485,5 @@ ABlock* ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass,
 			}
 		}
 	}
-
-	otherBlock->Destroy();
-	//UE_LOG(LogTemp, Display, TEXT("Destroying block because it could not be placed : LevelGenerator::SpawnNextBlock"));
-
-	return nullptr;
+	return false;
 }
