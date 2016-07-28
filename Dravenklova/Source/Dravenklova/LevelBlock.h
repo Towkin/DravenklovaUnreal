@@ -123,6 +123,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Block")
 	void SpawnBlockComponents();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Block")
 	TArray<ABlock*> Neighbours;
 	
 };

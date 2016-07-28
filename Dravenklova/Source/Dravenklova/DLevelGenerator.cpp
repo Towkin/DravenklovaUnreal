@@ -35,29 +35,26 @@ void ADLevelGenerator::BeginPlay()
 
 	m_World = GetWorld();	
 	bool levelNotSpawned = true;
-
+	
 	while (m_World && levelNotSpawned)
 	{
 		TArray<FBlockData> spawnBlocks;
-		TArray < TSubclassOf<ABlock>> blockTypes;
+		TArray<TSubclassOf<ABlock>> blockTypes;
+		TArray<TArray<int>> neighbourIndices;
+
 		//TODO: Check if block is null
-		//TODO: Replace with starting block
-		//Place starting block
+		//Choose block
 		int randomInt = rand() % m_StartingBlockClasses.Num();
-
-		//m_StartingBlockClasses[0].GetDefaultObject()->m_BlockData
-
-
-		FBlockData startingBlock = m_StartingBlockClasses[randomInt].GetDefaultObject()->m_BlockData;
-		
+		FBlockData startingBlock = m_StartingBlockClasses[randomInt].GetDefaultObject()->m_BlockData;		
 		//Set world coordinates
-		startingBlock.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);
-		
+		startingBlock.BlockLocation = FIntVector(m_TileCount.X/2, m_TileCount.Y/2, 0);		
 		OccupyGrid(startingBlock);
-		//PlaceBlockInWorld(startingBlock);
+		//Add to lists
 		spawnBlocks.Add(startingBlock);
 		blockTypes.Add(m_StartingBlockClasses[randomInt]);
+		neighbourIndices.Add(TArray<int>());
 		
+		//Reset control variables
 		TArray<bool> triedIndices = TArray<bool>();
 		triedIndices.Init(false, m_BlockClasses.Num());
 		randomInt = rand() % m_BlockClasses.Num();
@@ -67,14 +64,22 @@ void ADLevelGenerator::BeginPlay()
 		//Spawn blocks from starting block to staircase
 		while (spawnBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
 		{				
-			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 
-			
+			//Choose block and set world coordinates
+			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 			
 			FBlockData nextBlock;
 			bool success = SpawnNextBlock(blockClass, nextBlock, spawnBlocks.Last());
-			if (success) //TODO: How to check if spawned correctly or not? Pass a block reference as return argument and return a boolean?
+			if (success) 
 			{				
+				//Add to lists
 				spawnBlocks.Add(nextBlock);
 				blockTypes.Add(blockClass);
+
+				//Update list of connections between blocks
+				neighbourIndices.Last().Add(neighbourIndices.Num());
+				neighbourIndices.Add(TArray<int>());
+				neighbourIndices.Last().Add(neighbourIndices.Num() - 2);
+
+				//Reset control variables
 				triedAll = false;
 				triedIndices = TArray<bool>();
 				triedIndices.Init(false, m_BlockClasses.Num());
@@ -83,7 +88,6 @@ void ADLevelGenerator::BeginPlay()
 			else
 			{
 				triedIndices[randomInt] = true;
-				//UE_LOG(LogTemp, Display, TEXT("Failed to place block: %d"), randomInt);
 			}
 
 			randomInt = rand() % m_BlockClasses.Num();
@@ -98,7 +102,7 @@ void ADLevelGenerator::BeginPlay()
 				}
 			}
 		}
-
+		//Reset control variables
 		FBlockData lastBlock;
 		bool success = false;
 		triedIndices = TArray<bool>();
@@ -124,29 +128,40 @@ void ADLevelGenerator::BeginPlay()
 			{			
 				blockTypes.Add(m_StaircaseBlockClasses[index]);
 				spawnBlocks.Add(lastBlock);
+
+				//Update list of connections between blocks
+				neighbourIndices.Last().Add(neighbourIndices.Num());
+				neighbourIndices.Add(TArray<int>());
+				neighbourIndices.Last().Add(neighbourIndices.Num() - 2);
+
 				break;
 			}
 		}		
+		//If the last block could not be placed, start over from the beginning
+		if (triedAll)
+		{
+			continue;
+		}
 
 		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnBlocks.Num());
 		
 		TArray<FBlockData> pathBlocks = spawnBlocks;		
 
+		//Reset control variables
 		TArray<bool> triedBlocks = TArray<bool>();
 		triedBlocks.Init(false, pathBlocks.Num());
-
 		triedIndices = TArray<bool>();
 		triedIndices.Init(false, m_BlockClasses.Num());
-
 		TArray<TArray<bool>> triedClassesArray = TArray<TArray<bool>>();
 		triedClassesArray.Init(triedIndices, pathBlocks.Num());
-
 		triedAll = false;
 
 		//Spawn blocks surrounding the main path
 		while (spawnBlocks.Num() < m_BlockNumberLimit && !triedAll)
 		{		
+			//If this is not changed through the for-loop, ie all blocks have been tried, the while-loop will end if the limit has been reached.
 			triedAll = true;
+
 			for (int blockIndex = 0; blockIndex < pathBlocks.Num(); blockIndex++)
 			{
 				if (triedBlocks[blockIndex])
@@ -160,10 +175,10 @@ void ADLevelGenerator::BeginPlay()
 				}				
 
 				triedIndices = triedClassesArray[blockIndex];
-				randomInt = rand() % m_BlockClasses.Num();				
-				
-				TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
 
+				//Choose block and set world coordinates
+				randomInt = rand() % m_BlockClasses.Num();							
+				TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
 				FBlockData newBlock;
 				bool success = SpawnNextBlock(blockClass, newBlock, pathBlocks[blockIndex]);
 				if (success)
@@ -171,6 +186,11 @@ void ADLevelGenerator::BeginPlay()
 					blockTypes.Add(blockClass);
 					spawnBlocks.Add(newBlock);
 					spawnBlocks[blockIndex] = pathBlocks[blockIndex];
+
+					//Update list of connections between blocks
+					neighbourIndices[blockIndex].Add(neighbourIndices.Num());
+					neighbourIndices.Add(TArray<int>());
+					neighbourIndices.Last().Add(blockIndex);
 				}
 				else
 				{
@@ -189,17 +209,19 @@ void ADLevelGenerator::BeginPlay()
 				}
 				triedClassesArray[blockIndex] = triedIndices;
 			}
+			//If all blocks have been tried but there is not enough blocks, the list of blocks to try to make portals from is enlarged.
 			if (triedAll && spawnBlocks.Num() > pathBlocks.Num())
 			{
+				TArray<bool> newIndices;
+				newIndices.Init(false, spawnBlocks.Num() - pathBlocks.Num());
+				triedBlocks.Append(newIndices);
+
 				pathBlocks = spawnBlocks;
-				triedAll = false;
 
-				triedBlocks = TArray<bool>();
-				triedBlocks.Init(false, pathBlocks.Num());
-
+				//Reset control variables
+				triedAll = false;				
 				triedIndices = TArray<bool>();
 				triedIndices.Init(false, m_BlockClasses.Num());
-
 				triedClassesArray = TArray<TArray<bool>>();
 				triedClassesArray.Init(triedIndices, pathBlocks.Num());
 
@@ -221,12 +243,21 @@ void ADLevelGenerator::BeginPlay()
 			FRotator rotation = FRotator(0, (int)blockData.BlockDirection * 90, 0);
 
 			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);			
-			block->m_BlockData = blockData;
+			block->m_BlockData = blockData;					
 			
 			block->SpawnBlockComponents();
-			//m_Blocks.Add(*block);
-			//UE_LOG(LogTemp, Display, TEXT("%s : %d"), *block->GetName(), (int)block->m_BlockData.BlockDirection);
+			m_Blocks.Add(block);
 		}
+		//Add pointers to neighbouring blocks
+		for( int j = 0; j < m_Blocks.Num(); j++)
+		{
+			for (int k = 0; k < neighbourIndices[j].Num(); k++)
+			{
+				m_Blocks[j]->Neighbours.Add(m_Blocks[k]);
+			}
+		}
+		
+
 		levelNotSpawned = false;
 	}	
 }

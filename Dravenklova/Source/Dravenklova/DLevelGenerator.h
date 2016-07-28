@@ -23,7 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	TArray<ABlock> m_Blocks;
+	TArray<ABlock*> m_Blocks;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class ABlock>> m_StartingBlockClasses;
