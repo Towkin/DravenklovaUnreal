@@ -96,7 +96,7 @@ public:
 
 	TArray<FBlockData*> Neighbours;
 
-	TArray<FString> PreferredNeighbours;
+	TArray<FString> BlockType;
 
 	int Distance;
 };
