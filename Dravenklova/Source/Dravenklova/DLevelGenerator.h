@@ -6,6 +6,17 @@
 #include "LevelBlock.h"
 #include "DLevelGenerator.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSpawnItem
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	TSubclassOf<AActor> Item;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
+	int Value;
+};
+
 UCLASS()
 class DRAVENKLOVA_API ADLevelGenerator : public AActor
 {
@@ -33,6 +44,24 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class ABlock>> m_BlockClasses;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_HumorItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_HealthItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_WeaponItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_NoteItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_EnemyItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	TArray<FSpawnItem> m_EquipmentItems;
 
 	UPROPERTY(BlueprintReadWrite)
 	int m_BlockNumberLimit;

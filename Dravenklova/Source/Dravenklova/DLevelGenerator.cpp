@@ -2,8 +2,7 @@
 
 #include "Dravenklova.h"
 #include "DLevelGenerator.h"
-
-
+#include "Spawner.h"
 
 // Sets default values
 ADLevelGenerator::ADLevelGenerator()
@@ -60,6 +59,7 @@ void ADLevelGenerator::BeginPlay()
 		randomInt = rand() % m_BlockClasses.Num();
 		bool triedAll = false;
 
+		//TODO?: refactoring the creation of the level in order to avoid having basically the same code repeatedly, as well as to avoid mistakes with resetting variables.
 
 		//Spawn blocks from starting block to staircase
 		while (spawnBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
@@ -256,6 +256,96 @@ void ADLevelGenerator::BeginPlay()
 			}
 		}
 		
+		//Here starts the part of the code responsible for spawning items and enemies in levels
+
+		TArray < TArray<ASpawner*>> spawners;
+		spawners.Init(TArray<ASpawner*>(), 6); //number of different types of spawners
+		
+		int tempLimit = 10;
+
+		//Split the spawners into arrays depending on type
+		for (TActorIterator<ASpawner> itr (GetWorld()); itr; ++itr)
+		{
+			spawners[(int)itr->m_TypeOfSpawner].Add(*itr);
+		}
+
+		//for each type
+		//for each spawner
+		//pick an item 
+		//check that its value is less than the level limit
+		//if so, subtract its value and spawn item
+
+		int typeLimit = tempLimit;
+
+		for (int i = 0; i < spawners.Num(); i++)
+		{
+			if (spawners[i].Num() != 0)
+			{
+				int randomValue = rand() % spawners[i].Num();
+				for (int j = 0; j < spawners[i].Num() && typeLimit > 0; j++)
+				{
+					int k = (randomValue + j) % spawners[i].Num();
+					ASpawner* itemSpawner = spawners[i][k];
+					ESpawnItem item = (ESpawnItem)k;
+
+					TArray<FSpawnItem>* itemArray;
+					switch (item)
+					{
+					case ESpawnItem::Humor:
+						itemArray = &m_HumorItems;
+						break;
+
+					case ESpawnItem::Health:
+						itemArray = &m_HealthItems;
+						break;
+
+					case ESpawnItem::Weapon:
+						itemArray = &m_WeaponItems;
+						break;
+
+					case ESpawnItem::Note:
+						itemArray = &m_NoteItems;
+						break;
+
+					case ESpawnItem::Enemy:
+						itemArray = &m_EnemyItems;
+						break;
+
+					case ESpawnItem::Equipment:
+						itemArray = &m_EquipmentItems;
+						break;
+
+					default:
+						itemArray = &m_EquipmentItems;
+						UE_LOG(LogTemp, Warning, TEXT("Uninitialized itemArray in DLevelGenerator"));
+						break;
+					}
+
+					if (itemArray->Num() != 0)
+					{
+						FSpawnItem randomItem = (*itemArray)[rand() % itemArray->Num()];
+						if (randomItem.Value < typeLimit)
+						{
+							if (!itemSpawner->Spawn(randomItem.Item))
+							{
+								itemSpawner->DidNotSpawn();
+							}
+							else
+							{
+								typeLimit -= randomItem.Value;
+								itemSpawner->Destroy();
+							}
+						}
+						else
+						{
+							itemSpawner->DidNotSpawn();
+						}
+					}
+				}
+			}
+			
+		}
+
 
 		levelNotSpawned = false;
 	}	
