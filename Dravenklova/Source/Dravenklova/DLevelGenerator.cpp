@@ -259,7 +259,8 @@ void ADLevelGenerator::BeginPlay()
 		//Here starts the part of the code responsible for spawning items and enemies in levels
 
 		TArray < TArray<ASpawner*>> spawners;
-		spawners.Init(TArray<ASpawner*>(), 6); //number of different types of spawners
+		int numberOfSpawners = (int)ESpawnItem::END;
+		spawners.Init(TArray<ASpawner*>(), numberOfSpawners); //number of different types of spawners
 		
 		int tempLimit = 10;
 
@@ -286,7 +287,7 @@ void ADLevelGenerator::BeginPlay()
 				{
 					int k = (randomValue + j) % spawners[i].Num();
 					ASpawner* itemSpawner = spawners[i][k];
-					ESpawnItem item = (ESpawnItem)k;
+					ESpawnItem item = itemSpawner->m_TypeOfSpawner;
 
 					TArray<FSpawnItem>* itemArray;
 					switch (item)
@@ -324,7 +325,7 @@ void ADLevelGenerator::BeginPlay()
 					if (itemArray->Num() != 0)
 					{
 						FSpawnItem randomItem = (*itemArray)[rand() % itemArray->Num()];
-						if (randomItem.Value < typeLimit)
+						if (randomItem.Value <= typeLimit)
 						{
 							if (!itemSpawner->Spawn(randomItem.Item))
 							{
@@ -491,7 +492,7 @@ bool ADLevelGenerator::CheckUnoccupied(FBlockData& a_Block)
 			int globalIndex = GlobalGridToIndex(a_Block.BlockLocation + localCoord);
 
 			//If occupied or out of bounds
-			if (globalIndex > m_OccupationGrid.Num() || globalIndex < 0 || m_OccupationGrid[globalIndex] == true)
+			if (globalIndex >= m_OccupationGrid.Num() || globalIndex < 0 || m_OccupationGrid[globalIndex] == true)
 			{
 				return false;
 			}			

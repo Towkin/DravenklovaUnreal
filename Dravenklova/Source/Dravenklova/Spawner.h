@@ -16,7 +16,8 @@ enum class ESpawnItem : uint8
 	Weapon = 2,
 	Note = 3,
 	Enemy = 4,
-	Equipment = 5
+	Equipment = 5,
+	END = 6
 };
 
 UCLASS()

@@ -45,23 +45,41 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 	TArray<TSubclassOf<class ABlock>> m_BlockClasses;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_HumorItems;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_HealthItems;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_WeaponItems;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_NoteItems;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_EnemyItems;
 
-	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Level")
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
 	TArray<FSpawnItem> m_EquipmentItems;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_HumorLimitValue;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_HealthLimitValue;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_WeaponLimitValue;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_NoteLimitValue;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_EnemyLimitValue;
+
+	UPROPERTY(EditAnywhere, BLueprintReadWrite, Category = "Spawner")
+	int m_EquipmentLimitValue;
 
 	UPROPERTY(BlueprintReadWrite)
 	int m_BlockNumberLimit;
