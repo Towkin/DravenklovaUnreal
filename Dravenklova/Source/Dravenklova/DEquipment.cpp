@@ -8,8 +8,15 @@
 
 void ADEquipment::Equip(ADCharacter* pawn)
 {
-	ReceiveEquipped(pawn);
-	pawn->SetEquipment(this);
+	if (!pawn->GetEquipment())
+	{
+		ReceiveEquipped(pawn);
+		pawn->SetEquipment(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Tried to pick up multiple equipment : DEquipment::Equip"))
+	}
 }
 
 void ADEquipment::Unequip(ADCharacter* pawn)
