@@ -7,6 +7,7 @@
 
 void ADWeapon::Equip(ADCharacter* pawn)
 {
+	ReceiveEquipped(pawn);
 	pawn->SetWeapon(this);
 }
 void ADWeapon::PrimaryActionBegin()
