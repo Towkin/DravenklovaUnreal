@@ -543,7 +543,9 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 		bool foundPortal = false;
 
 		int randomDirection = rand() % 4;
-		for (int i = 0; i < randomDirection; i++)
+
+		// Switched 'int i' - which was interfering with outer loop - to 'int j' /Emanuel - 16-08-08
+		for (int j = 0; j < randomDirection; j++)
 		{
 			RotateGrid(otherBlock);
 		}		
