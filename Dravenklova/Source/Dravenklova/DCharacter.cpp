@@ -7,10 +7,10 @@
 #include "DEquipment.h"
 #include "DWeapon.h"
 
-
 // Sets default a_Values
 ADCharacter::ADCharacter()
 {
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -53,6 +53,7 @@ void ADCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	DisableSprint();
+
 }
 
 // Called every frame

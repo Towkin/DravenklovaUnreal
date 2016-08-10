@@ -3,7 +3,6 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-
 #include "DCharacter.generated.h"
 
 class UDAttributes;
@@ -137,7 +136,7 @@ protected:
 
 
 
-
+	UFUNCTION(BlueprintCallable, Category = "Interact")
 	void Use();
 	UFUNCTION(BlueprintCallable, Category = "Interact")
 	void EndUse();
@@ -180,6 +179,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Attributes")
 	void OnAttributesUpdated();
 
+	
 private:
 	
 	bool b_NeedAttributeUpdate = false;
