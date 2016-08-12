@@ -52,13 +52,13 @@ public:
 	void ProvideUnequippedEquipment(ADEquipment* equipment);
 
 	// Added UFUNCTION calls /E, 16-07-13
-	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	ADWeapon* GetWeapon();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Equipment")
+	ADWeapon* GetWeapon() const;
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	void SetWeapon(ADWeapon* weapon);
 	
-	UFUNCTION(BlueprintCallable, Category = "Equipment")
-	ADEquipment* GetEquipment();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Equipment")
+	ADEquipment* GetEquipment() const;
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	void SetEquipment(ADEquipment* equipment);
 
@@ -174,6 +174,14 @@ protected:
 	bool b_ControlRotationEnabled = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool b_ControlMovementEnabled = true;
+
+	// UGLY: Added speed factor that can be modified by blueprints in runtime. /E 16-08-12
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float m_SpeedFactor = 1.f;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Movement")
+	float GetSpeedFactor() const;
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void SetSpeedFactor(float newFactor);
 
 	// Update function to update all attributes. Should only be externally through CallUpdateAttributes(), which calls it once in Tick(). 16-07-21 /E
 	virtual void UpdateAttributes();

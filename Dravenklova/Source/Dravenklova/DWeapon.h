@@ -13,11 +13,11 @@ class DRAVENKLOVA_API ADWeapon : public ADEquipment
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	float m_CharacterMoveSpeedMod;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	float m_CharacterMoveSpeedMod = 0.f;
 public:
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	const float getCharacterMoveSpeedMod();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon")
+	const float getCharacterMoveSpeedMod() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Equipment")
 	virtual void Equip(ADCharacter* pawn) override;

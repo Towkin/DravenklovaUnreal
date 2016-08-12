@@ -34,7 +34,7 @@ void ADWeapon::ReloadActionEnd()
 {
 	OnReloadActionEnd();
 }
-const float ADWeapon::getCharacterMoveSpeedMod()
+const float ADWeapon::getCharacterMoveSpeedMod() const
 {
 	return m_CharacterMoveSpeedMod;
 }

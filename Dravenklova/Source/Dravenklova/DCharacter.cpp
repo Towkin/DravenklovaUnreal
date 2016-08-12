@@ -139,7 +139,7 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 }
 
-ADWeapon* ADCharacter::GetWeapon()
+ADWeapon* ADCharacter::GetWeapon() const
 {
 	return m_Weapon;
 }
@@ -150,7 +150,7 @@ void ADCharacter::SetWeapon(ADWeapon* weapon)
 	ProvideEquippedWeapon(weapon);
 	UE_LOG(LogTemp, Warning, TEXT("Setting as primary: %s"), *weapon->GetName());
 }
-ADEquipment* ADCharacter::GetEquipment()
+ADEquipment* ADCharacter::GetEquipment() const
 {
 	return m_Equipment;
 }
@@ -470,6 +470,17 @@ AActor* ADCharacter::GetClosestInteractableActor()
 	return Cast<AActor>(myInterface);
 }
 
+float ADCharacter::GetSpeedFactor() const
+{
+	return m_SpeedFactor;
+}
+void ADCharacter::SetSpeedFactor(float newFactor)
+{
+	m_SpeedFactor = newFactor;
+	CallUpdateAttributes();
+}
+
+
 void ADCharacter::CallUpdateAttributes()
 {
 	b_NeedAttributeUpdate = true;
@@ -480,7 +491,7 @@ void ADCharacter::UpdateAttributes()
 	m_Attributes->UpdateAttributes();
 
 	// All character values which rely on m_Attributes are updated below.
-	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getCurrentMaxSpeed();
+	GetCharacterMovement()->MaxWalkSpeed = m_Attributes->getCurrentMaxSpeed() * m_SpeedFactor;
 	GetCharacterMovement()->JumpZVelocity = m_Attributes->getJumpForce();
 	m_HeightTarget = m_Attributes->getCurrentCharacterHeight() / 2;
 	

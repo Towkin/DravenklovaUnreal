@@ -12,13 +12,16 @@ UCLASS()
 class DRAVENKLOVA_API ARangeWeapon : public ADWeapon
 {
 	GENERATED_BODY()
-	
-	// Arbitary number representing likeihood to it where aimied. Higher means more likely.
-	float m_Accuracy;
-	float m_ReloadTime;
-	float m_FireCooldownTime;
+protected:
+	// Arbitary number representing likelyhood to it where aimied. Higher means more likely.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|Range")
+	float m_Accuracy = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|Range")
+	float m_ReloadTime = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon|Range")
+	float m_FireCooldownTime = 0.f;
 
-
+public:
 	// Getters
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Weapon|Range")
 	const float getAccuracy() const;
