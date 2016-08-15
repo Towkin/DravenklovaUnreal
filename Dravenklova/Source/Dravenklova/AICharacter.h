@@ -8,16 +8,18 @@
 /**
  * 
  */
+
+class Ghoul_Ai_CON;
 UCLASS()
 class DRAVENKLOVA_API AAICharacter : public ADCharacter
 {
 	GENERATED_BODY()
 public:
 	// Sets default values for this character's properties
-	AAICharacter();
+	//AAICharacter();
+	AAICharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void OnConstruction(const FTransform& Transform) override;
-
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,9 +33,17 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FVector m_LastSeenLocation;
+
 	
 private:
 	UFUNCTION()
-		void OnPlayerCaught(APawn* Pawn);
+		void OnPawnCaught(APawn* Pawn);
+	/*UFUNCTION()
+		void SetLastSeenLocation(APawn* Pawn);
+		*/
+
 	
 };

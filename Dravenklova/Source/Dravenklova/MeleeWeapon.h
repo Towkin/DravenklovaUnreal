@@ -12,6 +12,8 @@ UCLASS()
 class DRAVENKLOVA_API AMeleeWeapon : public ADWeapon
 {
 	GENERATED_BODY()
+public:
+	AMeleeWeapon(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	float m_MeleeDamage;
 	float m_MeleeCooldownTime;

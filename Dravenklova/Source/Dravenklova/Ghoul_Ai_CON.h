@@ -29,14 +29,20 @@ class DRAVENKLOVA_API AGhoul_Ai_CON : public AAIController
 	
 public:
 
-	AGhoul_Ai_CON();
+	AGhoul_Ai_CON(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName PlayerKey;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName TargetKey;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName LastSeenLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		FVector m_LastSeenLocation;
+		
 
-	void SetPlayerCaught(APawn* Pawn);
+	void SetPawnCaught(APawn* Pawn);
+	//void CanSeePawn(APawn* Pawn);
 
 	int32 CurrentPatrolPoint;
 

@@ -14,7 +14,7 @@ class DRAVENKLOVA_API ADoor : public ADObject
 {
 	GENERATED_BODY()
 	
-	ADoor();
+	ADoor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;

@@ -15,13 +15,13 @@ UCLASS()
 class DRAVENKLOVA_API UDAttributes : public UActorComponent
 {
 
-	GENERATED_UCLASS_BODY()
+	GENERATED_BODY()
 
 public:
 
 	/* Character sizes  */
 
-	//UDAttributes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UDAttributes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	~UDAttributes();
 
 	//UFUNCTION(BlueprintCallable, Category = "Attributes")

@@ -14,6 +14,8 @@ class UInteractInterface : public UInterface
 class IInteractInterface
 {
 	GENERATED_IINTERFACE_BODY()
+public:
+	//IInteractInterface(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void Interact(ADCharacter* pawn);
 	virtual void EndInteract(ADCharacter* pawn);

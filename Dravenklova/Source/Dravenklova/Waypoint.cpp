@@ -6,3 +6,8 @@
 
 
 
+AWaypoint::AWaypoint(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+
+}

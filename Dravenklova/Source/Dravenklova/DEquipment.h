@@ -15,6 +15,7 @@ class DRAVENKLOVA_API ADEquipment : public ADObject
 {
 	GENERATED_BODY()
 public:
+	ADEquipment(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	virtual void Interact(ADCharacter* pawn) override;
 
 	virtual void EndInteract(ADCharacter* pawn) override;

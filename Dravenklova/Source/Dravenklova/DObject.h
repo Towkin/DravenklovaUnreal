@@ -14,7 +14,7 @@ class DRAVENKLOVA_API ADObject : public AActor, public IInteractInterface
 	
 public:	
 	// Sets default values for this actor's properties
-	ADObject();
+	ADObject(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

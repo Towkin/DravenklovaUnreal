@@ -12,6 +12,8 @@ UCLASS()
 class DRAVENKLOVA_API ARangeWeapon : public ADWeapon
 {
 	GENERATED_BODY()
+public:
+	ARangeWeapon(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	// Arbitary number representing likeihood to it where aimied. Higher means more likely.
 	float m_Accuracy;

@@ -4,7 +4,11 @@
 #include "DWeapon.h"
 #include "DCharacter.h"
 
+ADWeapon::ADWeapon(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
 
+}
 void ADWeapon::Equip(ADCharacter* pawn)
 {
 	ReceiveEquipped(pawn);

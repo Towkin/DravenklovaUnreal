@@ -27,7 +27,7 @@ class DRAVENKLOVA_API ASpawner : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	ASpawner();
+	ASpawner(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void OnConstruction(const FTransform& transform) override;
 

@@ -16,6 +16,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
 	float m_CharacterMoveSpeedMod;
 public:
+	ADWeapon(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	const float getCharacterMoveSpeedMod();
 

@@ -5,7 +5,11 @@
 #include "DCharacter.h"
 
 
+ADEquipment::ADEquipment(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
 
+}
 void ADEquipment::Equip(ADCharacter* pawn)
 {
 	if (!pawn->GetEquipment())

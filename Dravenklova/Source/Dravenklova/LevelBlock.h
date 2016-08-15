@@ -108,7 +108,7 @@ class DRAVENKLOVA_API ABlock : public AActor
 	GENERATED_BODY()
 public:
 
-	ABlock(const FObjectInitializer& ObjectInitializer);
+	ABlock(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block")
 	//UBlockData* m_BlockData = nullptr;

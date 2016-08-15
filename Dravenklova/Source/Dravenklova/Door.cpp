@@ -6,7 +6,8 @@
 
 
 
-ADoor::ADoor()
+ADoor::ADoor(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	m_TargetAngle = GetActorRotation().Yaw;
 	m_PreviousAngle = m_TargetAngle;

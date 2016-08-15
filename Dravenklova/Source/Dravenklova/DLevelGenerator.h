@@ -24,7 +24,7 @@ class DRAVENKLOVA_API ADLevelGenerator : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	ADLevelGenerator();
+	ADLevelGenerator(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

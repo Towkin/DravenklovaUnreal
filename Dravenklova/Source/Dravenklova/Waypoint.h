@@ -12,6 +12,8 @@ UCLASS()
 class DRAVENKLOVA_API AWaypoint : public ATargetPoint
 {
 	GENERATED_BODY()
+public:
+	AWaypoint(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 
 	

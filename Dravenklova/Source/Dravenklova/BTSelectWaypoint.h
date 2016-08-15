@@ -15,8 +15,8 @@ class DRAVENKLOVA_API UBTSelectWaypoint : public UBTTaskNode
 	
 		virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 public:
-	UPROPERTY(EditAnywhere, Category = "AI")
-		FVector LastSeenLocation;
+
+	
 	
 	
 	

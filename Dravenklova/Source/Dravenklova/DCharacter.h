@@ -17,7 +17,7 @@ class DRAVENKLOVA_API ADCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ADCharacter();
+	ADCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

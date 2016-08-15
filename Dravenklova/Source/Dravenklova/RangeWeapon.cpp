@@ -4,8 +4,11 @@
 #include "RangeWeapon.h"
 
 
+ARangeWeapon::ARangeWeapon(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
 
-
+}
 const float ARangeWeapon::getAccuracy() const
 {
 	return m_Accuracy;
