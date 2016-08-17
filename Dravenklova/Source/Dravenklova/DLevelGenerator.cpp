@@ -13,8 +13,8 @@ ADLevelGenerator::ADLevelGenerator(const FObjectInitializer& ObjectInitializer)
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
 	m_TileCount = FIntVector(50, 50, 1);
-	m_BlockNumberLimit = 50;
-	m_BlockDepthLimit = 10;
+	m_BlockNumberLimit = 20;
+	m_BlockDepthLimit = 5;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
 }
@@ -69,6 +69,10 @@ void ADLevelGenerator::BeginPlay()
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 			
 			FBlockData nextBlock;
 			bool success = SpawnNextBlock(blockClass, nextBlock, spawnBlocks.Last());
+
+			bool tass = success;
+			tass;
+
 			if (success) 
 			{				
 				//Add to lists
@@ -136,10 +140,20 @@ void ADLevelGenerator::BeginPlay()
 
 				break;
 			}
+			else
+			{
+				triedIndices[randomInt] = true;
+			}
 		}		
+
+		UE_LOG(LogTemp, Display, TEXT("Last block: %s"), *blockTypes.Last().GetDefaultObject()->GetName());
 		//If the last block could not be placed, start over from the beginning
 		if (triedAll)
 		{
+			UE_LOG(LogTemp, Display, TEXT("Discarding blocks: %d"), spawnBlocks.Num());
+			//Reset used variables - occupationgrid, spawnblocks etc.
+			m_OccupationGrid.Empty();
+			m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 			continue;
 		}
 
