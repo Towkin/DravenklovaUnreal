@@ -270,21 +270,26 @@ void ADLevelGenerator::BeginPlay()
 
 			FRotator rotation = FRotator(0, (int)blockData.BlockDirection * 90, 0);
 
-			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);			
-			block->m_BlockData = blockData;					
-			
-			block->SpawnBlockComponents();
-			for (FPortalData& portal : block->m_BlockData.PortalArray)
-			{
-				if (portal.IsPortal && !portal.IsExhausted && portal.ConnectedPortal)
-				{
-					SpawnConnector(block->m_BlockData, portal);
-					portal.IsExhausted = true;
+			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);
 
-					portal.ConnectedPortal->IsExhausted = true;
-				}				
+			// TODO: Make sure block ALWAYS spawn. As of now, SpawnActor may return nullptr.
+			if (block)
+			{
+				block->m_BlockData = blockData;
+
+				block->SpawnBlockComponents();
+				for (FPortalData& portal : block->m_BlockData.PortalArray)
+				{
+					if (portal.IsPortal && !portal.IsExhausted && portal.ConnectedPortal)
+					{
+						SpawnConnector(block->m_BlockData, portal);
+						portal.IsExhausted = true;
+
+						portal.ConnectedPortal->IsExhausted = true;
+					}
+				}
+				m_Blocks.Add(block);
 			}
-			m_Blocks.Add(block);
 		}
 		//Add pointers to neighbouring blocks
 		for( int j = 0; j < m_Blocks.Num(); j++)
@@ -679,7 +684,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 		///////////////////////////////////
 		//Spawn pathblocks
 		///////////////////////////////////				
-		while (a_NewBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
+		while (a_NewBlocks.Num() < m_BlockDepthLimit && !triedAll) // while number of rooms is less than room limit		
 		{			
 			int randomInt = RandomiseBlockClassIndex(m_BlockClasses, triedIndices);
 
@@ -688,10 +693,15 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 				//remove latest block and that all its connections are tried
 				triedIndicesArray.Last().Empty(); 
 				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());				
+				
 				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
 
 				triedIndices = triedIndicesArray[a_NewBlocks.Num()];
 				levelNotDone = true;
+
+				// restart for previous block
+				continue;
 			}
 			else
 			{
@@ -714,7 +724,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 
 				//Reset control variables
 				triedAll = false;
-				triedIndicesArray[a_NewBlocks.Num()] = triedIndices; //Save tried indices in case the next block has to be removed
+				triedIndicesArray[a_NewBlocks.Num() - 1] = triedIndices; //Save tried indices in case the next block has to be removed
 				triedIndices.Empty();
 				triedIndices.Init(false, m_BlockClasses.Num());
 			}				
@@ -728,7 +738,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 		triedIndices.Init(false, m_StaircaseBlockClasses.Num());
 
 		//Spawn staircase block - start over if not possible to place
-		while (!triedAll && a_NewBlocks.Num() < m_BlockDepthLimit - 1)
+		while (!triedAll && a_NewBlocks.Num() >= m_BlockDepthLimit)
 		{
 			int randomInt = RandomiseBlockClassIndex(m_StaircaseBlockClasses, triedIndices);			
 			if (randomInt < 0)
@@ -761,7 +771,10 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 			//Remove latest block and reset that block's tried connections
 			triedIndicesArray.Last().Empty();
 			triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
+			
 			a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+			a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
+
 			triedIndices = triedIndicesArray[a_NewBlocks.Num() - 1];			
 			levelNotDone = true;
 			//Reset used variables - occupationgrid, spawnblocks etc.
