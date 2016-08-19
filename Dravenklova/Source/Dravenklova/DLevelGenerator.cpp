@@ -656,33 +656,48 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FIntVector a_Location, TArray<FBlockData>& a_NewBlocks, TArray<TSubclassOf<ABlock>>& a_NewBlockTypes, TArray<TArray<int>>& a_NeighbourIndices)
 {
 	bool levelNotDone = true;
+	bool startNotDone = true;
+	bool triedAll = false;
+	TArray<bool> triedIndices;
+	triedIndices.Init(false, m_BlockClasses.Num());
+	TArray<TArray<bool>> triedIndicesArray;
+	triedIndicesArray.Init(triedIndices, m_BlockDepthLimit);
 	while (levelNotDone)
 	{
 		///////////////////////////////////
 		//Spawn startingblock
 		///////////////////////////////////
 		FBlockData newBlock;
-		if (CreateStartingBlock(a_StartingBlockClass, newBlock, a_Location))
+		if ( startNotDone && CreateStartingBlock(a_StartingBlockClass, newBlock, a_Location))
 		{
 			a_NewBlocks.Add(newBlock);
 			a_NewBlockTypes.Add(a_StartingBlockClass);
 			a_NeighbourIndices.Add(TArray<int>());
+			startNotDone = false;
 		}
 
 		///////////////////////////////////
 		//Spawn pathblocks
-		///////////////////////////////////
-		bool triedAll = false;
-		TArray<bool> triedIndices;
-		triedIndices.Init(false, m_BlockClasses.Num());
+		///////////////////////////////////				
 		while (a_NewBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
-		{
+		{			
 			int randomInt = RandomiseBlockClassIndex(m_BlockClasses, triedIndices);
-			if (randomInt < 0)
+
+			if (randomInt < 0) //tried all blocks
 			{
-				triedAll = true;
-				break;
+				//remove latest block and that all its connections are tried
+				triedIndicesArray.Last().Empty(); 
+				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());				
+				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+
+				triedIndices = triedIndicesArray[a_NewBlocks.Num()];
+				levelNotDone = true;
 			}
+			else
+			{
+				triedIndices[randomInt] = true;
+			}
+
 			//Choose block and set world coordinates
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
 			FBlockData nextBlock;
@@ -699,15 +714,12 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 
 				//Reset control variables
 				triedAll = false;
+				triedIndicesArray[a_NewBlocks.Num()] = triedIndices; //Save tried indices in case the next block has to be removed
 				triedIndices.Empty();
 				triedIndices.Init(false, m_BlockClasses.Num());
-			}
-			else
-			{
-				triedIndices[randomInt] = true;
-			}
+			}				
 		}
-
+				
 		///////////////////////////////////
 		//Spawn staircase block
 		///////////////////////////////////		
@@ -716,7 +728,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 		triedIndices.Init(false, m_StaircaseBlockClasses.Num());
 
 		//Spawn staircase block - start over if not possible to place
-		while (!triedAll)
+		while (!triedAll && a_NewBlocks.Num() < m_BlockDepthLimit - 1)
 		{
 			int randomInt = RandomiseBlockClassIndex(m_StaircaseBlockClasses, triedIndices);			
 			if (randomInt < 0)
@@ -734,7 +746,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num());
 				a_NeighbourIndices.Add(TArray<int>());
 				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num() - 2);
-
+				levelNotDone = false;
 				break;
 			}
 			else
@@ -743,16 +755,24 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 			}
 		}
 
-		//If the last block could not be placed, start over from the beginning. CHANGE THIS TO SOMETHING BETTER!!
-		if (triedAll)
+		//If the last block could not be placed, start over from the beginning. CHANGE THIS TO SOMETHING BETTER? Kinda did.
+		if (triedAll && levelNotDone)
 		{
+			//Remove latest block and reset that block's tried connections
+			triedIndicesArray.Last().Empty();
+			triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
+			a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+			triedIndices = triedIndicesArray[a_NewBlocks.Num() - 1];			
+			levelNotDone = true;
 			//Reset used variables - occupationgrid, spawnblocks etc.
 			//m_OccupationGrid.Empty();
 			//m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 			//continue;
 		}
-
-		levelNotDone = false;
+		else
+		{
+			levelNotDone = false;
+		}		
 	}
 
 	return false;
