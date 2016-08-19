@@ -41,7 +41,23 @@ void ADLevelGenerator::BeginPlay()
 		TArray<FBlockData> spawnBlocks;
 		TArray<TSubclassOf<ABlock>> blockTypes;
 		TArray<TArray<int>> neighbourIndices;
+		TArray<bool> triedIndices = TArray<bool>();
+		triedIndices.Init(false, m_StartingBlockClasses.Num());
+		bool triedAll = false;
 
+		//|-----
+		int randomInt = RandomiseBlockClassIndex(m_StartingBlockClasses, triedIndices);
+		if (randomInt < 0)
+		{
+			triedAll = true;
+		}
+
+		TSubclassOf<ABlock> startingBlockClass = m_StartingBlockClasses[randomInt];
+		FIntVector location = FIntVector(m_TileCount.X / 2, m_TileCount.Y / 2, 0);
+		CreateLevel(startingBlockClass, location, spawnBlocks, blockTypes, neighbourIndices);
+		
+		//----|
+		/*
 		//TODO: Check if block is null
 		//Choose block
 		int randomInt = rand() % m_StartingBlockClasses.Num();
@@ -53,26 +69,21 @@ void ADLevelGenerator::BeginPlay()
 		spawnBlocks.Add(startingBlock);
 		blockTypes.Add(m_StartingBlockClasses[randomInt]);
 		neighbourIndices.Add(TArray<int>());
+		*/
+		//Reset control variables		
+		//triedIndices.Empty();
+		//triedIndices.Init(false, m_BlockClasses.Num());
+		//randomInt = rand() % m_BlockClasses.Num();		
 		
-		//Reset control variables
-		TArray<bool> triedIndices = TArray<bool>();
-		triedIndices.Init(false, m_BlockClasses.Num());
-		randomInt = rand() % m_BlockClasses.Num();
-		bool triedAll = false;
-
-		//TODO?: refactoring the creation of the level in order to avoid having basically the same code repeatedly, as well as to avoid mistakes with resetting variables.
-
 		//Spawn blocks from starting block to staircase
+		/*
 		while (spawnBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
 		{				
 			//Choose block and set world coordinates
 			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt]; 			
 			FBlockData nextBlock;
 			bool success = SpawnNextBlock(blockClass, nextBlock, spawnBlocks.Last());
-
-			bool tass = success;
-			tass;
-
+			
 			if (success) 
 			{				
 				//Add to lists
@@ -107,6 +118,9 @@ void ADLevelGenerator::BeginPlay()
 				}
 			}
 		}
+		*/
+		
+		/*
 		//Reset control variables
 		FBlockData lastBlock;
 		bool success = false;
@@ -158,7 +172,7 @@ void ADLevelGenerator::BeginPlay()
 		}
 
 		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnBlocks.Num());
-		
+		*/
 		TArray<FBlockData> pathBlocks = spawnBlocks;		
 
 		//Reset control variables
@@ -260,6 +274,16 @@ void ADLevelGenerator::BeginPlay()
 			block->m_BlockData = blockData;					
 			
 			block->SpawnBlockComponents();
+			for (FPortalData& portal : block->m_BlockData.PortalArray)
+			{
+				if (portal.IsPortal && !portal.IsExhausted && portal.ConnectedPortal)
+				{
+					SpawnConnector(block->m_BlockData, portal);
+					portal.IsExhausted = true;
+
+					portal.ConnectedPortal->IsExhausted = true;
+				}				
+			}
 			m_Blocks.Add(block);
 		}
 		//Add pointers to neighbouring blocks
@@ -271,8 +295,9 @@ void ADLevelGenerator::BeginPlay()
 			}
 		}
 		
+		//////////////////////////////////////////
 		//Here starts the part of the code responsible for spawning items and enemies in levels
-
+		//////////////////////////////////////////
 		TArray < TArray<ASpawner*>> spawners;
 		int numberOfSpawners = (int)ESpawnItem::END;
 		spawners.Init(TArray<ASpawner*>(), numberOfSpawners); //number of different types of spawners
@@ -525,9 +550,10 @@ void ADLevelGenerator::SpawnConnector(FBlockData& a_Block, FPortalData a_Portal)
 
 		FIntVector portalLocation = a_Block.BlockLocation + relativePortalLocation;
 
-		AConnector* connector = m_World->SpawnActor<AConnector>(m_ConnectorClasses[0]);
-		connector->SetActorLocation(FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * a_Block.TileSize);
-		connector->SetActorRotation(FRotator(0, (((int)a_Portal.Direction + (int)a_Block.BlockDirection) % 4) * 90, 0));
+		FVector location = FVector(portalLocation.X, portalLocation.Y, portalLocation.Z) * a_Block.TileSize;
+		FRotator rotation = FRotator(0, (((int)a_Portal.Direction + (int)a_Block.BlockDirection) % 4) * 90, 0);
+		AConnector* connector = m_World->SpawnActor<AConnector>(m_ConnectorClasses[0], location, rotation);
+		
 	}
 	else
 	{
@@ -546,7 +572,7 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 		FPortalData& portal = a_PreviousBlock.PortalArray[(randomPortal + i) % a_PreviousBlock.PortalArray.Num()];
 		////Choose one portal and find its direction, reverse it		
 		EDirection wishedPortalDirection = (EDirection)(((int)portal.Direction + (int)a_PreviousBlock.BlockDirection + 2) % 4);
-		
+
 		//STEP ONE NEW SOLUTION
 		//Find tile in front of current portal
 		FIntVector mod = FIntVector(1, 0, 0);
@@ -554,7 +580,7 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 		FIntVector pLocMod = portal.Location + mod;
 		RotateCoordinate(pLocMod, (int)a_PreviousBlock.BlockDirection);
 		FIntVector wT = a_PreviousBlock.BlockLocation + pLocMod;
-				
+
 		bool foundPortal = false;
 
 		int randomDirection = rand() % 4;
@@ -563,14 +589,14 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 		for (int j = 0; j < randomDirection; j++)
 		{
 			RotateGrid(otherBlock);
-		}		
+		}
 
 		for (int direction = 0; direction < 4 && !foundPortal && !portal.IsPortal; direction++)
 		{
 
 			//Find corresponding portal in other block
-			if(otherBlock.PortalArray.Num() == 0)
-			{ 
+			if (otherBlock.PortalArray.Num() == 0)
+			{
 				return false;
 			}
 			int randomInt = rand() % otherBlock.PortalArray.Num();
@@ -578,23 +604,23 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 			{
 				FPortalData& otherPortal = otherBlock.PortalArray[(randomInt + portalIndex) % otherBlock.PortalArray.Num()];
 				int newPortalDirection = ((int)otherBlock.BlockDirection + (int)otherPortal.Direction) % 4;
-				
+
 				if ((int)wishedPortalDirection == newPortalDirection && portal.PortalType == otherPortal.PortalType)
 				{
 					//STEP TWO NEW SOLUTION
 					//Place the next block so that the portals are next to each other
 					FIntVector p2Loc = otherPortal.Location;
-					RotateCoordinate(p2Loc, (int)otherBlock.BlockDirection);			
+					RotateCoordinate(p2Loc, (int)otherBlock.BlockDirection);
 					otherBlock.BlockLocation = wT - p2Loc;
-					
+
 					//Check that the location is clear to build on				
 					if (CheckUnoccupied(otherBlock))
-					{						
-						SpawnConnector(a_PreviousBlock, portal);
+					{
+						//SpawnConnector(a_PreviousBlock, portal);
 
-						foundPortal = true;						
+						foundPortal = true;
 						portal.IsPortal = true;
-						otherPortal.IsPortal = true;		
+						otherPortal.IsPortal = true;
 
 						portal.ConnectedPortal = &otherPortal;
 						otherPortal.ConnectedPortal = &portal;
@@ -610,7 +636,7 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 
 						//Mark the grid tiles as occupied and set actor location and rotation
 						OccupyGrid(otherBlock);
-						
+
 						a_NewBlock = otherBlock;
 						return true;
 					}
@@ -624,4 +650,135 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 		}
 	}
 	return false;
+}
+
+//Add blockClasses and staircaseClasses as arguments and replace the member variables used, in order to facilitate using different blocks for different levels
+bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FIntVector a_Location, TArray<FBlockData>& a_NewBlocks, TArray<TSubclassOf<ABlock>>& a_NewBlockTypes, TArray<TArray<int>>& a_NeighbourIndices)
+{
+	bool levelNotDone = true;
+	while (levelNotDone)
+	{
+		///////////////////////////////////
+		//Spawn startingblock
+		///////////////////////////////////
+		FBlockData newBlock;
+		if (CreateStartingBlock(a_StartingBlockClass, newBlock, a_Location))
+		{
+			a_NewBlocks.Add(newBlock);
+			a_NewBlockTypes.Add(a_StartingBlockClass);
+			a_NeighbourIndices.Add(TArray<int>());
+		}
+
+		///////////////////////////////////
+		//Spawn pathblocks
+		///////////////////////////////////
+		bool triedAll = false;
+		TArray<bool> triedIndices;
+		triedIndices.Init(false, m_BlockClasses.Num());
+		while (a_NewBlocks.Num() < m_BlockDepthLimit - 1 && !triedAll) // while number of rooms is less than room limit		
+		{
+			int randomInt = RandomiseBlockClassIndex(m_BlockClasses, triedIndices);
+			if (randomInt < 0)
+			{
+				triedAll = true;
+				break;
+			}
+			//Choose block and set world coordinates
+			TSubclassOf<class ABlock> blockClass = m_BlockClasses[randomInt];
+			FBlockData nextBlock;
+			if (SpawnNextBlock(blockClass, nextBlock, a_NewBlocks.Last()))
+			{
+				//Add to lists
+				a_NewBlocks.Add(nextBlock);
+				a_NewBlockTypes.Add(blockClass);
+
+				//Update list of connections between blocks
+				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num());
+				a_NeighbourIndices.Add(TArray<int>());
+				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num() - 2);
+
+				//Reset control variables
+				triedAll = false;
+				triedIndices.Empty();
+				triedIndices.Init(false, m_BlockClasses.Num());
+			}
+			else
+			{
+				triedIndices[randomInt] = true;
+			}
+		}
+
+		///////////////////////////////////
+		//Spawn staircase block
+		///////////////////////////////////		
+		FBlockData lastBlock;
+		triedIndices.Empty();
+		triedIndices.Init(false, m_StaircaseBlockClasses.Num());
+
+		//Spawn staircase block - start over if not possible to place
+		while (!triedAll)
+		{
+			int randomInt = RandomiseBlockClassIndex(m_StaircaseBlockClasses, triedIndices);			
+			if (randomInt < 0)
+			{
+				triedAll = true;
+				break;
+			}
+
+			if (SpawnNextBlock(m_StaircaseBlockClasses[randomInt], lastBlock, a_NewBlocks.Last()))
+			{
+				a_NewBlockTypes.Add(m_StaircaseBlockClasses[randomInt]);
+				a_NewBlocks.Add(lastBlock);
+
+				//Update list of connections between blocks
+				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num());
+				a_NeighbourIndices.Add(TArray<int>());
+				a_NeighbourIndices.Last().Add(a_NeighbourIndices.Num() - 2);
+
+				break;
+			}
+			else
+			{
+				triedIndices[randomInt] = true;
+			}
+		}
+
+		//If the last block could not be placed, start over from the beginning. CHANGE THIS TO SOMETHING BETTER!!
+		if (triedAll)
+		{
+			//Reset used variables - occupationgrid, spawnblocks etc.
+			//m_OccupationGrid.Empty();
+			//m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
+			//continue;
+		}
+
+		levelNotDone = false;
+	}
+
+	return false;
+}
+
+bool ADLevelGenerator::CreateStartingBlock(TSubclassOf<ABlock>& a_StartingBlockClass, FBlockData& a_NewBlock, FIntVector a_Location)
+{
+	a_NewBlock= a_StartingBlockClass.GetDefaultObject()->m_BlockData;
+	a_NewBlock.BlockLocation = a_Location;
+	if (OccupyGrid(a_NewBlock))
+	{
+		return true;
+	}
+	return false;
+}
+
+int ADLevelGenerator::RandomiseBlockClassIndex(TArray<TSubclassOf<ABlock>>& a_BlockClasses, TArray<bool> a_TriedIndices)
+{
+	int randomInt = rand() % a_BlockClasses.Num();
+	for (int i = 0; i < a_BlockClasses.Num() && a_TriedIndices[randomInt]; i++)
+	{
+		randomInt = (randomInt + 1) % a_BlockClasses.Num();
+		if ((i == a_BlockClasses.Num() - 1 && a_TriedIndices[randomInt]))
+		{
+			return -1;
+		}
+	}
+	return randomInt;
 }
