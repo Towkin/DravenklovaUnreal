@@ -127,6 +127,12 @@ public:
 
 	bool SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FBlockData& a_NewBlock, FBlockData& a_PreviousBlock);
 
+	bool CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FIntVector a_Location, TArray<FBlockData>& a_NewBlocks, TArray<TSubclassOf<ABlock>>& a_NewBlockTypes, TArray<TArray<int>>& a_NeighbourIndices);
+
+	bool CreateStartingBlock(TSubclassOf<ABlock>& a_StartingBlockClass, FBlockData& a_NewBlock, FIntVector a_Location);
+
+	int RandomiseBlockClassIndex(TArray<TSubclassOf<ABlock>>& a_BlockClasses, TArray<bool> triedIndices);
+
 	UWorld* m_World;
 
 	
