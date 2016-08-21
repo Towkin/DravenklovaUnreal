@@ -49,6 +49,37 @@ void ADCharacter::OnConstruction(const FTransform& Transform)
 	GetCapsuleComponent()->SetCapsuleRadius(m_Attributes->getCharacterRadius());
 	m_HeightTarget = m_Attributes->getCharacterHeight() / 2;
 }
+
+void ADCharacter::OnDeath(ADCharacter* Dchar)
+{
+	
+	if (Dchar)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Something died"));
+		Dchar->GetCapsuleComponent()->SetSimulatePhysics(true);
+	}
+}
+
+
+float ADCharacter::getCurrentHealth() const
+{
+	return getCurrentHealthPercentage() * m_Attributes->getMaxHealth();
+}
+float ADCharacter::getCurrentHealthPercentage() const
+{
+	return m_HealthPercentage;
+}
+void ADCharacter::setCurrentHealth(float a_NewHealth)
+{
+	setCurrentHealthPercentage(a_NewHealth / m_Attributes->getMaxHealth());
+}
+void ADCharacter::setCurrentHealthPercentage(float a_NewHealthPercentage)
+{
+	m_HealthPercentage = FMath::Clamp<float>(a_NewHealthPercentage, 0.f, 1.f);
+}
+
+
+
 // Called when the game starts or when spawned
 void ADCharacter::BeginPlay()
 {
@@ -108,6 +139,7 @@ void ADCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 	InputComponent->BindAxis("Turn", this, &ADCharacter::Turn);
 	InputComponent->BindAxis("LookUp", this, &ADCharacter::LookUp);
 
+	
 	// Jump
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ADCharacter::StartJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ADCharacter::StopJump);
@@ -501,4 +533,11 @@ void ADCharacter::UpdateAttributes()
 	OnAttributesUpdated();
 
 	b_NeedAttributeUpdate = false;
+}
+
+float ADCharacter::TakeDamage(float Damage, const FDamageEvent& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	setCurrentHealth(getCurrentHealth() - Damage);
+	
+	return Damage;
 }

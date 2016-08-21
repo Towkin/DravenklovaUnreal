@@ -20,6 +20,8 @@ EBTNodeResult::Type UResetTarget::ExecuteTask(UBehaviorTreeComponent & OwnerComp
 			UE_LOG(LogTemp, Warning, TEXT("Reseting Target"));
 			BlackboardComp->SetValueAsObject(GhoulCont->PlayerKey, nullptr);
 		}
+
+		//GhoulCont->getactorloc
 	}
 	
 	return EBTNodeResult::Type();

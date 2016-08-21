@@ -19,7 +19,7 @@ UDAttributes::UDAttributes(const FObjectInitializer& ObjectInitializer)
 	m_ListenDistance =			FAttribute(20.f,	60.f,	BlackOnly);
 
 	m_MaxHealth =				FAttribute(5.f,		10.f,	RedOnly);
-	m_Health =					FAttribute(5.f,		10.f,	RedOnly);
+	//m_Health =					FAttribute(5.f,		10.f,	RedOnly);
 	m_HealthRegenTime =			FAttribute(10.f,	20.f,	RedOnly);
 	m_HealthDelayTime =			FAttribute(2.f,		10.f,	RedOnly);
 
@@ -50,7 +50,7 @@ void UDAttributes::UpdateAttributes()
 	m_ListenDistance.UpdateAttribute(this);
 	
 	m_MaxHealth.UpdateAttribute(this);
-	m_Health.UpdateAttribute(this);
+	//m_Health.UpdateAttribute(this);
 	m_HealthRegenTime.UpdateAttribute(this);
 	m_HealthDelayTime.UpdateAttribute(this);
 
@@ -91,10 +91,10 @@ const float UDAttributes::getMaxHealth() const
 	return m_MaxHealth.GetCurrentValue();
 }
 
-const float UDAttributes::getHealth() const
-{
-	return m_Health.GetCurrentValue();
-}
+//const float UDAttributes::getHealth() const
+//{
+//	return m_Health.GetCurrentValue();
+//}
 
 const float UDAttributes::getHealthReg() const
 {
@@ -105,7 +105,6 @@ const float UDAttributes::getHealthDelayTime() const
 {
 	return m_HealthDelayTime.GetCurrentValue();
 }
-
 
 //Movement-gets
 

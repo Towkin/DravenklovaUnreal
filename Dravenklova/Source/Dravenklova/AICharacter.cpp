@@ -5,6 +5,7 @@
 //https://www.youtube.com/watch?v=FGfIbvFL31I
 #include "Dravenklova.h"
 #include "AICharacter.h"
+#include "DAttributes.h"
 
 #include "Ghoul_Ai_CON.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -12,59 +13,72 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 
-AAICharacter::AAICharacter(const FObjectInitializer& ObjectInitializer)
+ADNonPlayableCharacter::ADNonPlayableCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	/* Initialize senses */
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnsensingComp"));
-	PawnSensingComp->SetPeripheralVisionAngle(90.f);
+	PawnSensingComp->SetPeripheralVisionAngle(75.f);
 	PawnSensingComp->SightRadius = 500.f;
+
+	
+
+	//m_Box = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackRangeCollisionBox"));
+	//m_Box->AttachTo(RootComponent);
 	//m_LastSeenLocation = FVector(0.f, 0.f, 0.f);
 }
-void AAICharacter::OnConstruction(const FTransform& Transform)
+void ADNonPlayableCharacter::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 }
 
-void AAICharacter::BeginPlay()
+void ADNonPlayableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	if (PawnSensingComp)
 	{
-		PawnSensingComp->OnSeePawn.AddDynamic(this, &AAICharacter::OnPawnCaught);
-		
+		PawnSensingComp->OnSeePawn.AddDynamic(this, &ADNonPlayableCharacter::OnPawnCaught);
 	}
 }
-void AAICharacter::Tick(float DeltaSeconds)
-{
+void ADNonPlayableCharacter::Tick(float DeltaSeconds)
+{	
 	Super::Tick(DeltaSeconds);
+	
+	ADCharacter* DChar = Cast<ADCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+	if (DChar)
+	{
+		HasLineOfSight = PawnSensingComp->HasLineOfSightTo(DChar);
+
+		if (HasLineOfSight)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("I can see the player"));
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("I can't see the player"));
+		}
+		//if (!PawnSensingComp->HasLineOfSightTo(DChar))
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("I can see player"));
+		//	IsLineOfSight = false;
+		//}
+	}
 }
-void AAICharacter::OnPawnCaught(APawn* Pawn)
+	
+void ADNonPlayableCharacter::OnPawnCaught(APawn* Pawn)
 {
 	
-	AGhoul_Ai_CON* GhoulCont = Cast<AGhoul_Ai_CON>(GetController());
-
-	if (GhoulCont)
-	{
-		GhoulCont->SetPawnCaught(Pawn);
-		
-		//GhoulCont->CanSeePawn(Pawn);
-	//		SetLastSeenLocation(Pawn);
-	}
-
-	//SetLastSeenLocation(Pawn);
 }
-/*void AAICharacter::SetLastSeenLocation(APawn* Pawn)
+
+void ADNonPlayableCharacter::UpdateAttributes()
 {
-	AGhoul_Ai_CON* GhoulCont = Cast<AGhoul_Ai_CON>(GetController());
+	Super::UpdateAttributes();
+
+	PawnSensingComp->SightRadius = m_Attributes->getViewDistance();
 	
-	if (GhoulCont)
-	{
-		//m_LastSeenLocation = Pawn->GetActorLocation();
-		GhoulCont->CanSeePawn(Pawn);
-		
-	}
-}*/
+
+}

@@ -32,6 +32,22 @@ public:
 	UDAttributes* m_Attributes;
 
 	virtual void OnConstruction(const FTransform& Transform) override;
+	UFUNCTION(BlueprintCallable, Category = "PlayerState")
+		void OnDeath(ADCharacter* DChar);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Health")
+	virtual float getCurrentHealth() const;
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Health")
+	float getCurrentHealthPercentage() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes|Health")
+	virtual void setCurrentHealth(float a_NewHealth);
+	UFUNCTION(BlueprintCallable, Category = "Attributes|Health")
+	void setCurrentHealthPercentage(float a_NewHealthPercentage);
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Interact")
 	void ProvideInteractBegin(AActor* Reciever);
@@ -73,62 +89,72 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	void CallUpdateAttributes();
 
-protected:
-
 	void MoveForward(float a_Value);
 	void MoveRight(float a_Value);
 
 	void Turn(float a_Value);
 	void LookUp(float a_Value);
-
+	
 	void StartJump();
 	void StopJump();
+
+	void EnableSprint();
+	void DisableSprint();
+
+	void EnableCrouch();
+	void DisableCrouch();
+
+	void EnableCheckStats();
+	void DisableCheckStats();
+
+	// Primary Equipment (Weapon) actions /E 16-07-25
+	void StartPrimaryAction();
+	void StopPrimaryAction();
+
+	void StartSecondaryAction();
+	void StopSecondaryAction();
+
+	void StartReloadAction();
+	void StopReloadAction();
+
+	UFUNCTION(BlueprintCallable, Category = "Interact")
+		void Use();
+	UFUNCTION(BlueprintCallable, Category = "Interact")
+		void EndUse();
+
+protected:
+
+	float m_HealthPercentage = 1.f;
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnStartJump();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnStopJump();
-
 	
-	void EnableSprint();
-	void DisableSprint();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnSprintEnabled();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnSprintDisabled();
 
-	void EnableCrouch();
-	void DisableCrouch();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnCrouchEnabled();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Movement")
 	void OnCrouchDisabled();
-
-	void EnableCheckStats();
-	void DisableCheckStats();
-
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sampler")
 	void OnEnableCheckStats();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Sampler")
 	void OnDisableCheckStats();
 	
-
-	// Primary Equipment (Weapon) actions /E 16-07-25
-	void StartPrimaryAction();
-	void StopPrimaryAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
 	void OnStartPrimaryAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
 	void OnStopPrimaryAction();
 
-	void StartSecondaryAction();
-	void StopSecondaryAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
 	void OnStartSecondaryAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
 	void OnStopSecondaryAction();
 
-	void StartReloadAction();
-	void StopReloadAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
 	void OnStartReloadAction();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Weapon")
@@ -136,10 +162,7 @@ protected:
 
 
 
-	UFUNCTION(BlueprintCallable, Category = "Interact")
-	void Use();
-	UFUNCTION(BlueprintCallable, Category = "Interact")
-	void EndUse();
+	
 
 	// Old unused functions. Removed. /E 16-07-13
 
@@ -195,6 +218,5 @@ private:
 	bool b_IsJumping = false;
 	float m_SprintAccumulator = 0.f;
 	float m_HeightTarget = 0.f;
-
 	
 };

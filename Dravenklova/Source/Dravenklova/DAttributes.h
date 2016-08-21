@@ -41,8 +41,8 @@ public:
 	//Health-gets
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Attributes|Health")
 		const float getMaxHealth() const;
-	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
-		const float getHealth() const;
+	//UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
+		//const float getHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
 		const float getHealthReg() const;
 	UFUNCTION(BlueprintCallable, Category = "Attributes|Health") 
@@ -161,8 +161,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Attributes|Health")
 		FAttribute m_MaxHealth;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
-		FAttribute m_Health;
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
+		//FAttribute m_Health;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Attributes|Health")
 		FAttribute m_HealthRegenTime;
