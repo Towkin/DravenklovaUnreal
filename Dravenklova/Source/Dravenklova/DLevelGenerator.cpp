@@ -768,15 +768,34 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 		//If the last block could not be placed, start over from the beginning. CHANGE THIS TO SOMETHING BETTER? Kinda did.
 		if (triedAll && levelNotDone)
 		{
+			//TODO: clean neighbour indices array
 			//Remove latest block and reset that block's tried connections
-			triedIndicesArray.Last().Empty();
-			triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
-			
-			a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
-			a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
+			if (a_NewBlocks.Num() > 1)
+			{
+				triedIndicesArray.Last().Empty();
+				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
 
-			triedIndices = triedIndicesArray[a_NewBlocks.Num() - 1];			
-			levelNotDone = true;
+				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
+
+				triedIndices = triedIndicesArray[a_NewBlocks.Num() - 1];
+				levelNotDone = true;
+				
+			}
+			else //If starting block needs to be removed, start over from the beginning of the level creation while-loop
+			{
+				startNotDone = true;
+				levelNotDone = true;
+				triedIndicesArray.Last().Empty();
+				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
+
+				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
+				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
+				UE_LOG(LogTemp, Warning, TEXT("Removing the start block"));
+				a_NeighbourIndices.Empty();
+			}
+
+			
 			//Reset used variables - occupationgrid, spawnblocks etc.
 			//m_OccupationGrid.Empty();
 			//m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
