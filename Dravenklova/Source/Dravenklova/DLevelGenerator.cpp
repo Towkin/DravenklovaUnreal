@@ -13,8 +13,8 @@ ADLevelGenerator::ADLevelGenerator(const FObjectInitializer& ObjectInitializer)
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
 	m_TileCount = FIntVector(50, 50, 1);
-	m_BlockNumberLimit = 20;
-	m_BlockDepthLimit = 5;
+	m_BlockNumberLimit = 8;
+	m_BlockDepthLimit = 3;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
 }
@@ -35,10 +35,13 @@ void ADLevelGenerator::BeginPlay()
 
 	m_World = GetWorld();	
 	bool levelNotSpawned = true;
+	TArray<FBlockData> spawnBlocks;
+	TArray<FBlockData> pathBlocks;
 	
 	while (m_World && levelNotSpawned)
 	{
-		TArray<FBlockData> spawnBlocks;
+		spawnBlocks.Empty();
+		pathBlocks.Empty();
 		TArray<TSubclassOf<ABlock>> blockTypes;
 		TArray<TArray<int>> neighbourIndices;
 		TArray<bool> triedIndices = TArray<bool>();
@@ -173,7 +176,7 @@ void ADLevelGenerator::BeginPlay()
 
 		UE_LOG(LogTemp, Display, TEXT("Number of blocks from start to finish: %d"), spawnBlocks.Num());
 		*/
-		TArray<FBlockData> pathBlocks = spawnBlocks;		
+		pathBlocks = spawnBlocks;		
 
 		//Reset control variables
 		TArray<bool> triedBlocks = TArray<bool>();
@@ -643,6 +646,8 @@ bool ADLevelGenerator::SpawnNextBlock(TSubclassOf<class ABlock> a_BlockClass, FB
 						OccupyGrid(otherBlock);
 
 						a_NewBlock = otherBlock;
+						a_NewBlock.BlockType = TArray<FString>();
+						a_NewBlock.Neighbours = TArray<FBlockData*>();
 						return true;
 					}
 				}
@@ -780,6 +785,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 
 				triedIndices = triedIndicesArray[a_NewBlocks.Num() - 1];
 				levelNotDone = true;
+				triedAll = false;
 				
 			}
 			else //If starting block needs to be removed, start over from the beginning of the level creation while-loop
@@ -793,6 +799,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
 				UE_LOG(LogTemp, Warning, TEXT("Removing the start block"));
 				a_NeighbourIndices.Empty();
+				triedAll = false;
 			}
 
 			
