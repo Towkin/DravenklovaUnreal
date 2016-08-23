@@ -12,9 +12,9 @@ ADLevelGenerator::ADLevelGenerator(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
-	m_TileCount = FIntVector(50, 50, 1);
-	m_BlockNumberLimit = 8;
-	m_BlockDepthLimit = 3;
+	m_TileCount = FIntVector(30, 30, 1);
+	m_BlockNumberLimit = 20;
+	m_BlockDepthLimit = 5;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 
 }
@@ -23,7 +23,7 @@ void ADLevelGenerator::OnConstruction(const FTransform& transform)
 {
 	Super::OnConstruction(transform);
 
-	m_TileCount = FIntVector(50, 50, 1);
+	m_TileCount = FIntVector(30, 30, 1);
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 }
 
@@ -266,6 +266,9 @@ void ADLevelGenerator::BeginPlay()
 		{
 			FBlockData blockData = spawnBlocks[i];
 			TSubclassOf<class ABlock> blockClass = blockTypes[i];
+			TSubclassOf<class ABlock> previousClass;
+			
+		
 
 			FVector location = FVector(blockData.BlockLocation.X*blockData.TileSize.X,
 				blockData.BlockLocation.Y*blockData.TileSize.Y,
@@ -273,6 +276,10 @@ void ADLevelGenerator::BeginPlay()
 
 			FRotator rotation = FRotator(0, (int)blockData.BlockDirection * 90, 0);
 
+			if (i > 0)
+			{
+				previousClass = blockTypes[i - 1];
+			}
 			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);
 
 			// TODO: Make sure block ALWAYS spawn. As of now, SpawnActor may return nullptr.
@@ -779,6 +786,23 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 			{
 				triedIndicesArray.Last().Empty();
 				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
+				
+
+				//Remove neighbour indices pointing to this block
+				int removedBlockIndex = a_NewBlocks.Num() - 1;
+				for (int j = 0; j < a_NewBlocks.Num(); j++)
+				{
+					for (int k = 0; k < a_NeighbourIndices[j].Num(); k++)
+					{
+						if (a_NeighbourIndices[j][k] == removedBlockIndex)
+						{
+							a_NeighbourIndices[j].RemoveAt(k);
+							k--;
+						}
+					}
+				}
+				//Remove neighbour indices pointing from this block
+				a_NeighbourIndices.RemoveAt(removedBlockIndex);
 
 				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
 				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);
@@ -794,6 +818,7 @@ bool ADLevelGenerator::CreateLevel(TSubclassOf<ABlock>& a_StartingBlockClass, FI
 				levelNotDone = true;
 				triedIndicesArray.Last().Empty();
 				triedIndicesArray.Last().Init(false, m_BlockClasses.Num());
+				
 
 				a_NewBlocks.RemoveAt(a_NewBlocks.Num() - 1);
 				a_NewBlockTypes.RemoveAt(a_NewBlockTypes.Num() - 1);

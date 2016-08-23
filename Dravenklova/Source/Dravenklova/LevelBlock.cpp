@@ -12,6 +12,7 @@ void ABlock::OnConstruction(const FTransform& Transform)
 	//OccupationGrid.Init(false, TileCount.X * TileCount.Y * TileCount.Z);
 	//m_BlockData->OccupationGrid.SetNum(m_BlockData->TileCount.X * m_BlockData->TileCount.Y * m_BlockData->TileCount.Z);
 	m_BlockData.OccupationGrid.SetNum(m_BlockData.TileCount.X * m_BlockData.TileCount.Y * m_BlockData.TileCount.Z);
+	
 }
 
 ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
@@ -19,6 +20,7 @@ ABlock::ABlock(const FObjectInitializer& ObjectInitializer)
 {
 	m_BlockData.TileCount = FIntVector::ZeroValue;
 	m_BlockData.TileSize = FVector(200, 200, 400);
+	m_BlockData.Neighbours = TArray<FBlockData*>();
 }
 
 FIntVector ABlock::GetLocalCoordinate(int Index) const
