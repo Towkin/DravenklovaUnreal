@@ -8,8 +8,8 @@ ADravenklovaGameMode::ADravenklovaGameMode()
 	: Super()
 {
 	// Set the Half Vampire blueprint as our default pawn class
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Dravenklova/BP_HalfVampire"));
-	DefaultPawnClass = PlayerPawnClassFinder.Class;
+	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Dravenklova/BP_HalfVampire"));
+	//DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	UE_LOG(LogTemp, Warning, TEXT("Default pawning"));
 }
