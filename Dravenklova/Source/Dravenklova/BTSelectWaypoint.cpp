@@ -11,7 +11,7 @@ EBTNodeResult::Type UBTSelectWaypoint::ExecuteTask(UBehaviorTreeComponent & Owne
 {
 	AGhoul_Ai_CON* GhoulCon = Cast<AGhoul_Ai_CON>(OwnerComp.GetAIOwner());
 
-	if (GhoulCon)
+	if (GhoulCon && GhoulCon->GetPatrolPoints().Num() > 0)
 	{
 		/* Get BB Component*/
 		UBlackboardComponent* BlackboardComp = GhoulCon->GetBlackboardComp();
