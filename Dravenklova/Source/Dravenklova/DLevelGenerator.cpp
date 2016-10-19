@@ -11,12 +11,11 @@ ADLevelGenerator::ADLevelGenerator(const FObjectInitializer& ObjectInitializer)
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Chnage this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
+	//Change this value in order to update the blueprint to use the value in OnConstruction ... This is stupid.
 	m_TileCount = FIntVector(30, 30, 1);
 	m_BlockNumberLimit = 20;
 	m_BlockDepthLimit = 5;
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
-
 }
 
 void ADLevelGenerator::OnConstruction(const FTransform& transform)
@@ -26,7 +25,6 @@ void ADLevelGenerator::OnConstruction(const FTransform& transform)
 	m_TileCount = FIntVector(30, 30, 1);
 	m_OccupationGrid.Init(false, m_TileCount.X*m_TileCount.Y*m_TileCount.Z);
 }
-
 
 // Called when the game starts or when spawned
 void ADLevelGenerator::BeginPlay()
@@ -280,7 +278,12 @@ void ADLevelGenerator::BeginPlay()
 			{
 				previousClass = blockTypes[i - 1];
 			}
-			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation);
+			
+			// 16-10-19 Testing new block parameters: could this be the solution to the actor not always spawning?
+			FActorSpawnParameters blockParameters;
+			blockParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+			ABlock* block = m_World->SpawnActor<ABlock>(blockClass, location, rotation, blockParameters);
 
 			// TODO: Make sure block ALWAYS spawn. As of now, SpawnActor may return nullptr.
 			if (block)
