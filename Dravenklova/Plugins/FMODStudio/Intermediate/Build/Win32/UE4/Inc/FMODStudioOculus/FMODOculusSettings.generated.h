@@ -5,8 +5,6 @@
 	DO NOT modify this manually! Edit the corresponding .h files instead!
 ===========================================================================*/
 
-#include "ObjectBase.h"
-
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #ifdef FMODSTUDIOOCULUS_FMODOculusSettings_generated_h
 #error "FMODOculusSettings.generated.h already included, missing '#pragma once' in FMODOculusSettings.h"
@@ -67,10 +65,12 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UFMODOculusSettings); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODOculusSettings)
 
 
+#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_PRIVATE_PROPERTY_OFFSET
 #define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_9_PROLOG
 #define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_RPC_WRAPPERS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_INCLASS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_STANDARD_CONSTRUCTORS \
@@ -81,6 +81,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 #define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_RPC_WRAPPERS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_INCLASS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusSettings_h_12_ENHANCED_CONSTRUCTORS \

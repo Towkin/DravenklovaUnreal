@@ -6,6 +6,7 @@
 ===========================================================================*/
 
 #include "Private/FMODStudioPrivatePCH.h"
+#include "GeneratedCppIncludes.h"
 #include "FMODStudio.generated.dep.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCode1FMODStudio() {}
@@ -38,35 +39,35 @@ static FCompiledInDeferEnum Z_CompiledInDeferEnum_UEnum_EFMODEventProperty(EFMOD
 		FNativeFunctionRegistrar::RegisterFunction(UFMODAudioComponent::StaticClass(), "Stop",(Native)&UFMODAudioComponent::execStop);
 		FNativeFunctionRegistrar::RegisterFunction(UFMODAudioComponent::StaticClass(), "TriggerCue",(Native)&UFMODAudioComponent::execTriggerCue);
 	}
-	IMPLEMENT_CLASS(UFMODAudioComponent, 1625940978);
+	IMPLEMENT_CLASS(UFMODAudioComponent, 1122481496);
 	void AFMODAmbientSound::StaticRegisterNativesAFMODAmbientSound()
 	{
 	}
-	IMPLEMENT_CLASS(AFMODAmbientSound, 2096511143);
+	IMPLEMENT_CLASS(AFMODAmbientSound, 1232695691);
 	void UFMODAsset::StaticRegisterNativesUFMODAsset()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODAsset, 1016715394);
+	IMPLEMENT_CLASS(UFMODAsset, 3081617350);
 	void UFMODBank::StaticRegisterNativesUFMODBank()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODBank, 912996440);
+	IMPLEMENT_CLASS(UFMODBank, 167175473);
 	void UFMODBus::StaticRegisterNativesUFMODBus()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODBus, 4222725858);
+	IMPLEMENT_CLASS(UFMODBus, 3291247499);
 	void UFMODEvent::StaticRegisterNativesUFMODEvent()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODEvent, 2212964271);
+	IMPLEMENT_CLASS(UFMODEvent, 3162176198);
 	void UFMODSnapshot::StaticRegisterNativesUFMODSnapshot()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODSnapshot, 1582035611);
+	IMPLEMENT_CLASS(UFMODSnapshot, 71631019);
 	void UFMODVCA::StaticRegisterNativesUFMODVCA()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODVCA, 2689923715);
+	IMPLEMENT_CLASS(UFMODVCA, 2680760298);
 class UScriptStruct* FFMODEventInstance::StaticStruct()
 {
 	extern FMODSTUDIO_API class UPackage* Z_Construct_UPackage__Script_FMODStudio();
@@ -123,7 +124,7 @@ static struct FScriptStruct_FMODStudio_StaticRegisterNativesFFMODEventInstance
 		FNativeFunctionRegistrar::RegisterFunction(UFMODBlueprintStatics::StaticClass(), "UnloadEventSampleData",(Native)&UFMODBlueprintStatics::execUnloadEventSampleData);
 		FNativeFunctionRegistrar::RegisterFunction(UFMODBlueprintStatics::StaticClass(), "VCASetFaderLevel",(Native)&UFMODBlueprintStatics::execVCASetFaderLevel);
 	}
-	IMPLEMENT_CLASS(UFMODBlueprintStatics, 475059574);
+	IMPLEMENT_CLASS(UFMODBlueprintStatics, 377279548);
 static class UEnum* EFMODSpeakerMode_StaticEnum()
 {
 	extern FMODSTUDIO_API class UPackage* Z_Construct_UPackage__Script_FMODStudio();
@@ -139,11 +140,11 @@ static FCompiledInDeferEnum Z_CompiledInDeferEnum_UEnum_EFMODSpeakerMode(EFMODSp
 	void UFMODSettings::StaticRegisterNativesUFMODSettings()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODSettings, 1394830326);
+	IMPLEMENT_CLASS(UFMODSettings, 3625389234);
 	void UFMODSnapshotReverb::StaticRegisterNativesUFMODSnapshotReverb()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODSnapshotReverb, 3096634352);
+	IMPLEMENT_CLASS(UFMODSnapshotReverb, 531802905);
 #if USE_COMPILED_IN_NATIVES
 // Cross Module References
 	ENGINE_API class UClass* Z_Construct_UClass_USceneComponent();
@@ -725,7 +726,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 				UMetaData* MetaData = OuterClass->GetOutermost()->GetMetaData();
 				MetaData->SetValue(OuterClass, TEXT("BlueprintSpawnableComponent"), TEXT(""));
 				MetaData->SetValue(OuterClass, TEXT("ClassGroupNames"), TEXT("Audio Common"));
-				MetaData->SetValue(OuterClass, TEXT("HideCategories"), TEXT("Object ActorComponent Physics Rendering Mobility LOD PhysicsVolume ComponentReplication"));
+				MetaData->SetValue(OuterClass, TEXT("HideCategories"), TEXT("Object ActorComponent Physics Rendering Mobility LOD PhysicsVolume"));
 				MetaData->SetValue(OuterClass, TEXT("IncludePath"), TEXT("FMODAudioComponent.h"));
 				MetaData->SetValue(OuterClass, TEXT("ModuleRelativePath"), TEXT("Classes/FMODAudioComponent.h"));
 				MetaData->SetValue(OuterClass, TEXT("ToolTip"), TEXT("Plays FMOD Studio events."));
@@ -2223,7 +2224,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 			ReturnPackage = CastChecked<UPackage>(StaticFindObjectFast(UPackage::StaticClass(), NULL, FName(TEXT("/Script/FMODStudio")), false, false));
 			ReturnPackage->SetPackageFlags(PKG_CompiledIn | 0x00000000);
 			FGuid Guid;
-			Guid.A = 0xA5479543;
+			Guid.A = 0xB6874253;
 			Guid.B = 0xB4C6A46A;
 			Guid.C = 0x00000000;
 			Guid.D = 0x00000000;

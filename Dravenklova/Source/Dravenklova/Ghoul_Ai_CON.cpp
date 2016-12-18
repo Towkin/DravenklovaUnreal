@@ -37,7 +37,7 @@ void AGhoul_Ai_CON::BeginPlay()
 	{
 		GetWorld()->GetTimerManager().SetTimer(UpdateAITimer, this, &AGhoul_Ai_CON::UpdateAI, 0.1f, true);
 
-		if (GetWorld()->GetFirstPlayerController())
+		if (GetWorld()->GetFirstPlayerController() && GetWorld()->GetFirstPlayerController()->GetPawn())
 		{
 			m_Player = Cast<ADCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 		}
@@ -52,7 +52,7 @@ void AGhoul_Ai_CON::Tick(float DeltaSeconds)
 
 void AGhoul_Ai_CON::UpdateAI()
 {
-	if (BlackboardComp && m_ControlledCharacter)
+	if (BlackboardComp && m_ControlledCharacter && m_Player)
 	{
 		FVector PlayerAIDirection = m_Player->GetActorLocation() - m_ControlledCharacter->GetActorLocation();
 		

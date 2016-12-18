@@ -14,7 +14,7 @@ class UFMODEvent;
 #endif
 #define FMODSTUDIO_FMODAudioComponent_generated_h
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_60_DELEGATE \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_60_DELEGATE \
 struct _Script_FMODStudio_eventOnTimelineBeat_Parms \
 { \
 	int32 Bar; \
@@ -37,7 +37,7 @@ static inline void FOnTimelineBeat_DelegateWrapper(const FMulticastScriptDelegat
 }
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_58_DELEGATE \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_58_DELEGATE \
 struct _Script_FMODStudio_eventOnTimelineMarker_Parms \
 { \
 	FString Name; \
@@ -52,7 +52,7 @@ static inline void FOnTimelineMarker_DelegateWrapper(const FMulticastScriptDeleg
 }
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_56_DELEGATE \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_56_DELEGATE \
 static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegate& OnEventStopped) \
 { \
 	OnEventStopped.ProcessMulticastDelegate<UObject>(NULL); \
@@ -61,7 +61,7 @@ static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegat
 
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS \
  \
 	DECLARE_FUNCTION(execSetProgrammerSoundName) \
 	{ \
@@ -187,7 +187,7 @@ static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegat
 	}
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS_NO_PURE_DECLS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS_NO_PURE_DECLS \
  \
 	DECLARE_FUNCTION(execSetProgrammerSoundName) \
 	{ \
@@ -313,7 +313,7 @@ static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegat
 	}
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS_NO_PURE_DECLS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS_NO_PURE_DECLS \
 	private: \
 	static void StaticRegisterNativesUFMODAudioComponent(); \
 	friend FMODSTUDIO_API class UClass* Z_Construct_UClass_UFMODAudioComponent(); \
@@ -324,7 +324,7 @@ static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegat
 	enum {IsIntrinsic=COMPILED_IN_INTRINSIC};
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS \
 	private: \
 	static void StaticRegisterNativesUFMODAudioComponent(); \
 	friend FMODSTUDIO_API class UClass* Z_Construct_UClass_UFMODAudioComponent(); \
@@ -335,7 +335,7 @@ static inline void FOnEventStopped_DelegateWrapper(const FMulticastScriptDelegat
 	enum {IsIntrinsic=COMPILED_IN_INTRINSIC};
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_STANDARD_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODAudioComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODAudioComponent) \
@@ -348,7 +348,7 @@ private: \
 public:
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_ENHANCED_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_ENHANCED_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODAudioComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()) : Super(ObjectInitializer) { }; \
 private: \
@@ -361,29 +361,29 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UFMODAudioComponent); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODAudioComponent)
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_79_PROLOG
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_GENERATED_BODY_LEGACY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_79_PROLOG
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_STANDARD_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_GENERATED_BODY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_ENHANCED_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_RPC_WRAPPERS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_INCLASS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h_82_ENHANCED_CONSTRUCTORS \
 static_assert(false, "Unknown access specifier for GENERATED_BODY() macro in class FMODAudioComponent."); \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h
+#define CURRENT_FILE_ID Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAudioComponent_h
 
 
 #define FOREACH_ENUM_EFMODEVENTPROPERTY(op) \

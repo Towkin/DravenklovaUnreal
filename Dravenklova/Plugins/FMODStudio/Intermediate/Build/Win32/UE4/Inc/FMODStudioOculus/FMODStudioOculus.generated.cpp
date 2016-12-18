@@ -6,6 +6,7 @@
 ===========================================================================*/
 
 #include "Private/FMODStudioOculusPrivatePCH.h"
+#include "GeneratedCppIncludes.h"
 #include "FMODStudioOculus.generated.dep.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCode1FMODStudioOculus() {}
@@ -35,11 +36,11 @@ static struct FScriptStruct_FMODStudioOculus_StaticRegisterNativesFFMODOculusRoo
 		FNativeFunctionRegistrar::RegisterFunction(UFMODOculusBlueprintStatics::StaticClass(), "SetLateReverberationEnabled",(Native)&UFMODOculusBlueprintStatics::execSetLateReverberationEnabled);
 		FNativeFunctionRegistrar::RegisterFunction(UFMODOculusBlueprintStatics::StaticClass(), "SetRoomParameters",(Native)&UFMODOculusBlueprintStatics::execSetRoomParameters);
 	}
-	IMPLEMENT_CLASS(UFMODOculusBlueprintStatics, 926502230);
+	IMPLEMENT_CLASS(UFMODOculusBlueprintStatics, 1024805916);
 	void UFMODOculusSettings::StaticRegisterNativesUFMODOculusSettings()
 	{
 	}
-	IMPLEMENT_CLASS(UFMODOculusSettings, 3738364583);
+	IMPLEMENT_CLASS(UFMODOculusSettings, 1441172963);
 #if USE_COMPILED_IN_NATIVES
 // Cross Module References
 	ENGINE_API class UClass* Z_Construct_UClass_UBlueprintFunctionLibrary();

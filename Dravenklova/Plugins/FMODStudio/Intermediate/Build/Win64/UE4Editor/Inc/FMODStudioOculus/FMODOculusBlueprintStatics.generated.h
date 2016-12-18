@@ -14,7 +14,7 @@ struct FFMODOculusRoomParameters;
 #endif
 #define FMODSTUDIOOCULUS_FMODOculusBlueprintStatics_generated_h
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS \
  \
 	DECLARE_FUNCTION(execSetRoomParameters) \
 	{ \
@@ -44,7 +44,7 @@ struct FFMODOculusRoomParameters;
 	}
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS_NO_PURE_DECLS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS_NO_PURE_DECLS \
  \
 	DECLARE_FUNCTION(execSetRoomParameters) \
 	{ \
@@ -74,7 +74,7 @@ struct FFMODOculusRoomParameters;
 	}
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS_NO_PURE_DECLS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS_NO_PURE_DECLS \
 	private: \
 	static void StaticRegisterNativesUFMODOculusBlueprintStatics(); \
 	friend FMODSTUDIOOCULUS_API class UClass* Z_Construct_UClass_UFMODOculusBlueprintStatics(); \
@@ -85,7 +85,7 @@ struct FFMODOculusRoomParameters;
 	enum {IsIntrinsic=COMPILED_IN_INTRINSIC};
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS \
 	private: \
 	static void StaticRegisterNativesUFMODOculusBlueprintStatics(); \
 	friend FMODSTUDIOOCULUS_API class UClass* Z_Construct_UClass_UFMODOculusBlueprintStatics(); \
@@ -96,7 +96,7 @@ struct FFMODOculusRoomParameters;
 	enum {IsIntrinsic=COMPILED_IN_INTRINSIC};
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_STANDARD_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODOculusBlueprintStatics(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODOculusBlueprintStatics) \
@@ -109,7 +109,7 @@ private: \
 public:
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_ENHANCED_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_ENHANCED_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODOculusBlueprintStatics(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()) : Super(ObjectInitializer) { }; \
 private: \
@@ -122,29 +122,29 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UFMODOculusBlueprintStatics); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODOculusBlueprintStatics)
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_8_PROLOG
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_GENERATED_BODY_LEGACY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_8_PROLOG
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_STANDARD_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_GENERATED_BODY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_ENHANCED_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_RPC_WRAPPERS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_INCLASS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h_11_ENHANCED_CONSTRUCTORS \
 static_assert(false, "Unknown access specifier for GENERATED_BODY() macro in class FMODOculusBlueprintStatics."); \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID HostProject_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h
+#define CURRENT_FILE_ID Dravenklova_Plugins_FMODStudio_Source_FMODStudioOculus_Classes_FMODOculusBlueprintStatics_h
 
 
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

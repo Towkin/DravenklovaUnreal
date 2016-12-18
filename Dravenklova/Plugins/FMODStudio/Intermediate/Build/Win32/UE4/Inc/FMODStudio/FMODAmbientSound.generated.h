@@ -5,8 +5,6 @@
 	DO NOT modify this manually! Edit the corresponding .h files instead!
 ===========================================================================*/
 
-#include "ObjectBase.h"
-
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #ifdef FMODSTUDIO_FMODAmbientSound_generated_h
 #error "FMODAmbientSound.generated.h already included, missing '#pragma once' in FMODAmbientSound.h"
@@ -63,10 +61,12 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AFMODAmbientSound); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(AFMODAmbientSound)
 
 
+#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_PRIVATE_PROPERTY_OFFSET
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_10_PROLOG
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_RPC_WRAPPERS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_INCLASS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_STANDARD_CONSTRUCTORS \
@@ -77,6 +77,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_RPC_WRAPPERS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_INCLASS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODAmbientSound_h_13_ENHANCED_CONSTRUCTORS \

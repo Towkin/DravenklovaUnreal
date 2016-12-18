@@ -13,9 +13,9 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define FMODSTUDIO_FMODSettings_generated_h
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS_NO_PURE_DECLS
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS_NO_PURE_DECLS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS_NO_PURE_DECLS
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS_NO_PURE_DECLS \
 	private: \
 	static void StaticRegisterNativesUFMODSettings(); \
 	friend FMODSTUDIO_API class UClass* Z_Construct_UClass_UFMODSettings(); \
@@ -28,7 +28,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS \
 	private: \
 	static void StaticRegisterNativesUFMODSettings(); \
 	friend FMODSTUDIO_API class UClass* Z_Construct_UClass_UFMODSettings(); \
@@ -41,7 +41,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_STANDARD_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODSettings(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODSettings) \
@@ -54,7 +54,7 @@ private: \
 public:
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_ENHANCED_CONSTRUCTORS \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_ENHANCED_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API UFMODSettings(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()) : Super(ObjectInitializer) { }; \
 private: \
@@ -67,29 +67,29 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UFMODSettings); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODSettings)
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_22_PROLOG
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY_LEGACY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_22_PROLOG
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_STANDARD_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY \
+#define Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS_NO_PURE_DECLS \
-	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_ENHANCED_CONSTRUCTORS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS_NO_PURE_DECLS \
+	Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_ENHANCED_CONSTRUCTORS \
 static_assert(false, "Unknown access specifier for GENERATED_BODY() macro in class FMODSettings."); \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h
+#define CURRENT_FILE_ID Dravenklova_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h
 
 
 #define FOREACH_ENUM_EFMODSPEAKERMODE(op) \

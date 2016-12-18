@@ -5,8 +5,6 @@
 	DO NOT modify this manually! Edit the corresponding .h files instead!
 ===========================================================================*/
 
-#include "ObjectBase.h"
-
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #ifdef FMODSTUDIO_FMODSettings_generated_h
 #error "FMODSettings.generated.h already included, missing '#pragma once' in FMODSettings.h"
@@ -67,10 +65,12 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(UFMODSettings); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(UFMODSettings)
 
 
+#define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_PRIVATE_PROPERTY_OFFSET
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_22_PROLOG
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_STANDARD_CONSTRUCTORS \
@@ -81,6 +81,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 #define HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_PRIVATE_PROPERTY_OFFSET \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_RPC_WRAPPERS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_INCLASS_NO_PURE_DECLS \
 	HostProject_Plugins_FMODStudio_Source_FMODStudio_Classes_FMODSettings_h_25_ENHANCED_CONSTRUCTORS \
